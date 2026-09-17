@@ -1,11 +1,21 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import About from "./pages/About";
 
-import { AuthProvider, useAuth } from "./context/AuthContext";
+import BackofficeRoute from "./backoffice/BackofficeRoute";
+
+import {
+  AuthProvider,
+  useAuth,
+} from "./context/AuthContext";
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuth();
@@ -21,25 +31,30 @@ function AppRoutes() {
   return (
     <Routes>
 
-      {/* Première page quand on lance le site */}
+      {/* =========================
+          SITE PUBLIC
+      ========================== */}
+
       <Route
         path="/"
         element={<Navigate to="/register" replace />}
       />
 
-      {/* INSCRIPTION VISITEUR */}
       <Route
         path="/register"
         element={<Register />}
       />
 
-      {/* CONNEXION VISITEUR */}
       <Route
         path="/login"
         element={<Login />}
       />
 
-      {/* SITE VISITEUR APRÈS CONNEXION */}
+
+      {/* =========================
+          SITE VISITEUR PROTÉGÉ
+      ========================== */}
+
       <Route
         path="/home"
         element={
@@ -58,7 +73,21 @@ function AppRoutes() {
         }
       />
 
-      {/* Toute autre URL */}
+
+      {/* =========================
+          BACK-OFFICE
+      ========================== */}
+
+      <Route
+        path="/admin/*"
+        element={<BackofficeRoute />}
+      />
+
+
+      {/* =========================
+          URL INCONNUE
+      ========================== */}
+
       <Route
         path="*"
         element={<Navigate to="/register" replace />}
@@ -79,4 +108,3 @@ function App() {
 }
 
 export default App;
-

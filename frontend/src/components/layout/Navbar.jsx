@@ -72,7 +72,7 @@ export default function Navbar() {
 
         {/* ESPACE PRO */}
         <Link
-          to="/login"
+          to="/admin"
           className="ml-auto rounded-[7px] bg-[#FBBF00] px-[18px] py-[9px] text-[14px] font-bold text-[#073B2D] transition hover:bg-[#F5B900]"
         >
           Espace Pro
