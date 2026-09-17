@@ -54,7 +54,7 @@ function Register() {
     <div className="min-h-screen bg-gray-50">
 
     {/* HEADER */}
-<header className="bg-green-700">
+<header className="bg-[#064E3B]">
   <div className="max-w-7xl mx-auto px-6 py-5">
     <h1 className="text-2xl font-bold text-white">
       ANCPS
@@ -145,7 +145,7 @@ function Register() {
 
             <button
               type="submit"
-              className="w-full bg-green-700 text-white py-3 rounded-lg font-semibold hover:bg-green-800 transition"
+              className="w-full bg-[#064E3B] text-white py-3 rounded-lg font-semibold hover:bg-[#053B2C] transition"
             >
               S'inscrire
             </button>
@@ -158,7 +158,7 @@ function Register() {
             <button
               type="button"
               onClick={() => navigate("/login")}
-              className="text-green-700 font-semibold hover:underline"
+              className="text-[#064E3B] font-semibold hover:underline"
             >
               Se connecter
             </button>
