@@ -33,14 +33,7 @@ function Login() {
   return (
     <div className="min-h-screen bg-gray-50">
 
-     {/* HEADER */}
-<header className="bg-[#064E3B]">
-  <div className="max-w-7xl mx-auto px-6 py-5">
-    <h1 className="text-2xl font-bold text-white">
-      ANCPS
-    </h1>
-  </div>
-</header>
+    
       {/* FORMULAIRE */}
       <main className="flex justify-center px-4 py-12">
 
