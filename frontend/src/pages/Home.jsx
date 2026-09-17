@@ -159,7 +159,7 @@ export default function Home() {
       {/* =====================================================
           HERO
       ====================================================== */}
-      <section className="bg-[#064E3B]">
+      <section className="bg-[#064E3B] pt-[74px]">
         <div className="mx-auto flex min-h-[460px] max-w-[1220px] flex-col items-center justify-center px-6 pb-10 pt-8 text-center">
 
           <h1 className="max-w-[950px] text-[44px] font-extrabold leading-[1.08] tracking-[-1.2px] text-white md:text-[50px]">

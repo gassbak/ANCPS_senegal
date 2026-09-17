@@ -15,10 +15,9 @@ function LogoIcon() {
           stroke="white"
           strokeWidth="1.7"
         />
+
         <path
-          d="M8 7H16M8 11H16M8 
-          
-          15H13"
+          d="M8 7H16M8 11H16M8 15H13"
           stroke="white"
           strokeWidth="1.7"
           strokeLinecap="round"
@@ -30,7 +29,7 @@ function LogoIcon() {
 
 export default function Navbar() {
   return (
-   <header className="relative z-50 h-[74px] bg-[#064E3B] text-white shadow-[0_4px_12px_rgba(0,0,0,0.18)]">
+    <header className="fixed top-0 left-0 right-0 z-50 h-[74px] bg-[#064E3B] text-white shadow-[0_4px_12px_rgba(0,0,0,0.18)]">
       <div className="mx-auto flex h-full max-w-[1220px] items-center px-8">
 
         {/* LOGO */}
@@ -47,6 +46,7 @@ export default function Navbar() {
 
         {/* NAVIGATION */}
         <nav className="ml-[68px] flex items-center gap-[38px]">
+
           <Link
             to="/"
             className="text-[15px] font-semibold transition hover:text-yellow-300"
@@ -61,12 +61,13 @@ export default function Navbar() {
             L'Annuaire
           </Link>
 
-        <Link
-  to="/about"
-  className="text-[15px] font-semibold transition hover:text-yellow-300"
->
-  À propos
-</Link>
+          <Link
+            to="/about"
+            className="text-[15px] font-semibold transition hover:text-yellow-300"
+          >
+            À propos
+          </Link>
+
         </nav>
 
         {/* ESPACE PRO */}
@@ -76,7 +77,9 @@ export default function Navbar() {
         >
           Espace Pro
         </Link>
+
       </div>
     </header>
   );
 }
+
