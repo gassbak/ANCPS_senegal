@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import BackofficeRoute from "./backoffice/BackofficeRoute";
+import AdminRoutes from "./admin/routes/AdminRoutes";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/admin/*" element={<BackofficeRoute />} />
+        <Route path="/admin/*" element={<AdminRoutes />} />
         <Route
           path="*"
           element={
