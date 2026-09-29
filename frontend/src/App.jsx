@@ -1,17 +1,28 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import About from "./pages/About";
 
-import { AuthProvider, useAuth } from "./context/AuthContext";
+import AdminRoutes from "./admin/routes/AdminRoutes";
+
+import {
+  AuthProvider,
+  useAuth,
+} from "./context/AuthContext";
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuth();
 
   if (!isAuthenticated) {
-    return <Navigate to="/register" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return children;
@@ -21,17 +32,14 @@ function AppRoutes() {
   return (
     <Routes>
 
-      {/* Première page quand on lance le site */}
+      {/* PREMIÈRE PAGE : CONNEXION */}
+
       <Route
         path="/"
-        element={<Navigate to="/register" replace />}
+        element={<Navigate to="/login" replace />}
       />
 
-      {/* INSCRIPTION VISITEUR */}
-      <Route
-        path="/register"
-        element={<Register />}
-      />
+      {/* CONNEXION */}
 
       {/* CONNEXION VISITEUR */}
       <Route
@@ -58,10 +66,18 @@ function AppRoutes() {
         }
       />
 
-      {/* Toute autre URL */}
+      {/* BACK-OFFICE */}
+
+      <Route
+        path="/admin/*"
+        element={<AdminRoutes />}
+      />
+
+      {/* URL INCONNUE */}
+
       <Route
         path="*"
-        element={<Navigate to="/register" replace />}
+        element={<Navigate to="/login" replace />}
       />
 
     </Routes>
