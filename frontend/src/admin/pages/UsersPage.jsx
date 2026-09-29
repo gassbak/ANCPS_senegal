@@ -1,34 +1,38 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { UserPlus } from "lucide-react";
 import { roles } from "../services/adminStore";
-import { makeAuditEntry, withAuditEntry } from "../utils/audit";
-import { useAdminStore } from "../hooks/useAdminStore";
+import { loadUsers, saveUser } from "../services/adminApi";
 import { PageHeader, Button, Badge, Table, Modal, Input, Select } from "../components/ui";
 
-export default function UsersPage({ session }) {
-  const { store, update } = useAdminStore();
+export default function UsersPage() {
+  const [users, setUsers] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState({});
 
-  const users = store.users || [];
+  const reload = useCallback(async () => {
+    try {
+      setUsers(await loadUsers());
+    } catch (error) {
+      alert(error.message);
+    }
+  }, []);
 
-  const save = () => {
-    const user = { ...form, id: form.id || "usr_" + Date.now(), status: "Actif", lastLogin: "Jamais" };
+  useEffect(() => {
+    reload();
+  }, [reload]);
 
-    update({
-      ...store,
-      users: form.id ? users.map((x) => (x.id === form.id ? user : x)) : [user, ...users],
-      audit: withAuditEntry(
-        store.audit,
-        makeAuditEntry({ user: session.name, action: "Gestion utilisateur", entity: user.email, newValue: user.role })
-      ),
-    });
-
-    setModalOpen(false);
+  const save = async () => {
+    try {
+      await saveUser(form);
+      setModalOpen(false);
+      await reload();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const openForm = (user) => {
-    setForm(user || {});
+    setForm(user || { role: roles[0] });
     setModalOpen(true);
   };
 
@@ -40,7 +44,7 @@ export default function UsersPage({ session }) {
         action={<Button icon={UserPlus} onClick={() => openForm(null)}>Ajouter un utilisateur</Button>}
       />
 
-      <Table headers={["Utilisateur", "Email", "Rôle", "Statut", "Dernière connexion", "Actions"]}>
+      <Table headers={["Utilisateur", "Email", "Rôle", "Statut", "Actions"]}>
         {users.map((u) => (
           <tr key={u.id}>
             <td className="px-5 py-4 font-bold">{u.name}</td>
@@ -51,7 +55,6 @@ export default function UsersPage({ session }) {
             <td className="px-5 py-4">
               <Badge tone="green">{u.status}</Badge>
             </td>
-            <td className="px-5 py-4 text-gray-500">{u.lastLogin}</td>
             <td className="px-5 py-4 text-right">
               <Button variant="ghost" onClick={() => openForm(u)}>Modifier</Button>
             </td>
@@ -68,6 +71,14 @@ export default function UsersPage({ session }) {
             value={form.email || ""}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
+          {!form.id && (
+            <Input
+              label="Mot de passe"
+              type="password"
+              value={form.password || ""}
+              onChange={(e) => setForm({ ...form, password: e.target.value })}
+            />
+          )}
           <Select
             label="Rôle"
             value={form.role || roles[0]}

@@ -111,7 +111,11 @@ const certificationSchema =
           type: mongoose.Schema.Types.ObjectId,
           ref: "Etablissement"
         }
-      ]
+      ],
+
+      published: { type: Boolean, default: false },
+      archived: { type: Boolean, default: false },
+      competencesLibres: [{ type: String }]
     },
 
     {

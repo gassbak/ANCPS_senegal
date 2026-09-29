@@ -1,40 +1,41 @@
-// Authentification de démonstration de l'espace admin.
-// Reprend telle quelle la logique de l'ancien backoffice/BackofficeRoute.jsx.
+import { api, setToken, clearToken, getToken } from "../../services/api";
 import { loadStore, saveStore } from "./adminStore";
 
-export const DEMO_ACCOUNTS = {
-  "admin@ancps.sn": { password: "admin", name: "Super Admin", role: "Super administrateur" },
-  "editor@ancps.sn": { password: "editor", name: "Équipe éditoriale", role: "Administrateur éditorial" },
-  "verif@ancps.sn": { password: "verif", name: "Équipe qualité", role: "Vérificateur" },
-  "etablissement@ancps.sn": { password: "demo", name: "Établissement démo", role: "Établissement / institution" },
+// Rôles du backend -> rôles utilisés par les permissions du back-office
+const ROLE_LABELS = {
+  admin: "Super administrateur",
+  editor: "Administrateur éditorial",
+  verifier: "Vérificateur",
+  etablissement: "Établissement / institution",
 };
 
 /**
- * Vérifie les identifiants et ouvre une session admin si valides.
- * Retourne la session créée, ou null si les identifiants sont invalides.
+ * Connexion via l'API. Lance une erreur si les identifiants sont invalides.
  */
-export function login(email, password) {
-  const account = DEMO_ACCOUNTS[email.trim().toLowerCase()];
-
-  if (!account || account.password !== password) {
-    return null;
-  }
+export async function login(email, password) {
+  const data = await api.login({
+    email: email.trim().toLowerCase(),
+    password,
+  });
 
   const session = {
-    email: email.trim().toLowerCase(),
-    name: account.name,
-    role: account.role,
+    email: data.user.email,
+    name: data.user.name,
+    role: ROLE_LABELS[data.user.role] || ROLE_LABELS.etablissement,
+    backendRole: data.user.role,
     loginAt: new Date().toISOString(),
   };
 
+  setToken(data.token);
   saveStore({ ...loadStore(), session });
   return session;
 }
 
 export function getSession() {
-  return loadStore().session || null;
+  return getToken() ? loadStore().session || null : null;
 }
 
 export function logout() {
+  clearToken();
   saveStore({ ...loadStore(), session: null });
 }

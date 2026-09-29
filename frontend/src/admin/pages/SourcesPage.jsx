@@ -1,13 +1,12 @@
 import SimpleQualityTable from "../components/quality/SimpleQualityTable";
 
-export default function SourcesPage({ session }) {
+export default function SourcesPage() {
   return (
     <SimpleQualityTable
       title="Sources"
-      description="Sources vérifiables, autorités, références et dates."
-      storeKey="sources"
-      columns={["name", "authority", "reference", "type", "date"]}
-      session={session}
+      description="Sources vérifiables, références et dates de publication."
+      resource="sources"
+      columns={["name", "type", "reference", "url", "date"]}
       itemType="source"
     />
   );

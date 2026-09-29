@@ -72,7 +72,13 @@ const login = async (req, res) => {
 
     res.json({
       message: "Connexion réussie",
-      token
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
     });
   } catch (error) {
   console.error(error);

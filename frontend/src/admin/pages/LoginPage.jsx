@@ -2,21 +2,24 @@ import { useState } from "react";
 import { login } from "../services/adminAuth";
 
 export default function LoginPage({ onLogin }) {
-  const [email, setEmail] = useState("admin@ancps.sn");
-  const [password, setPassword] = useState("admin");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
+    setError("");
+    setLoading(true);
 
-    const session = login(email, password);
-
-    if (!session) {
-      setError("Identifiants de démonstration invalides.");
-      return;
+    try {
+      const session = await login(email, password);
+      onLogin(session);
+    } catch (err) {
+      setError(err.message || "Identifiants invalides.");
+    } finally {
+      setLoading(false);
     }
-
-    onLogin(session);
   };
 
   return (
@@ -56,15 +59,19 @@ export default function LoginPage({ onLogin }) {
 
           {error && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
 
-          <button className="w-full rounded-lg bg-emerald-700 py-3 font-bold text-white hover:bg-emerald-800">
-            Se connecter
+          <button
+            type="submit"
+            className="w-full rounded-lg bg-emerald-700 py-3 font-bold text-white hover:bg-emerald-800"
+            disabled={loading}
+          >
+            {loading ? "Connexion ..." : "Se connecter"}
           </button>
         </form>
 
-        <div className="mt-6 rounded-xl bg-emerald-50 p-4 text-xs text-emerald-900">
+        {/* <div className="mt-6 rounded-xl bg-emerald-50 p-4 text-xs text-emerald-900">
           <p className="font-bold">Comptes de démonstration</p>
           <p className="mt-1">admin@ancps.sn / admin · editor@ancps.sn / editor · verif@ancps.sn / verif</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

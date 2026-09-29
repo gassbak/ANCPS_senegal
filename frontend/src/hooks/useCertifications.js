@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { api } from "../services/api";
-
+import { mapCertification } from "../utils/mapCertification";
 export default function useCertifications(search = "") {
   const [certifications, setCertifications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -10,7 +10,7 @@ export default function useCertifications(search = "") {
 
     try {
       const data = await api.getCertifications();
-      setCertifications(data);
+         setCertifications(data.map(mapCertification));
     } catch (error) {
       console.error("Erreur certifications :", error);
     } finally {

@@ -1,16 +1,31 @@
+import { useCallback, useEffect, useState } from "react";
 import { Bell, Check, RefreshCw } from "lucide-react";
-import { useAdminStore } from "../hooks/useAdminStore";
+import { loadNotifications, markNotificationRead } from "../services/adminApi";
 import { PageHeader, Button } from "../components/ui";
 
 export default function NotificationsPage() {
-  const { store, refresh, update } = useAdminStore();
-  const notifications = store.notifications || [];
+  const [notifications, setNotifications] = useState([]);
 
-  const markAsRead = (notification) => {
-    update({
-      ...store,
-      notifications: notifications.map((x) => (x.id === notification.id ? { ...x, read: true } : x)),
-    });
+  const refresh = useCallback(async () => {
+    try {
+      setNotifications(await loadNotifications());
+    } catch (error) {
+      alert(error.message);
+    }
+  }, []);
+
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  const markAsRead = async (notification) => {
+    try {
+      await markNotificationRead(notification.id);
+      setNotifications((list) => list.map((x) => (x.id === notification.id ? { ...x, read: true } : x)));
+      window.dispatchEvent(new Event("ancps-store-change"));
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (

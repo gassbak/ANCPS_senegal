@@ -1,7 +1,6 @@
 import { useMemo, useState } from "react";
 import * as XLSX from "xlsx";
-import { loadStore, saveStore } from "../services/adminStore";
-import { makeAuditEntry, withAuditEntry } from "../utils/audit";
+import { saveCertification } from "../services/adminApi";
 import { PageHeader } from "../components/ui";
 import ImportUploadPanel from "../components/imports/ImportUploadPanel";
 import ImportPreviewTable from "../components/imports/ImportPreviewTable";
@@ -78,43 +77,27 @@ export default function ImportPage({ session }) {
     return nextErrors;
   };
 
-  const importNow = () => {
+  const importNow = async () => {
     if (validate().length > 0) return;
 
-    const store = loadStore();
-    const today = new Date().toISOString().slice(0, 10);
-
-    const added = preview.map((row, index) => ({
-      id: "cert_imp_" + Date.now() + "_" + index,
-      title: row.title,
-      organizationName: row.organizationName,
-      domain: row.domain || "Non classé",
-      level: row.level || "Non renseigné",
-      duration: row.duration,
-      status: row.status || "En cours de vérification",
-      verificationStatus: row.status || "En cours de vérification",
-      published: false,
-      archived: false,
-      updatedAt: today,
-      createdAt: today,
-      objectives: [],
-      skills: [],
-      establishmentIds: [],
-      jobIds: [],
-      skillIds: [],
-      decisions: [],
-    }));
-
-    saveStore({
-      ...store,
-      certifications: [...added, ...store.certifications],
-      audit: withAuditEntry(
-        store.audit,
-        makeAuditEntry({ user: session.name, action: "Import massif", entity: `${added.length} certifications`, newValue: "Importé" })
-      ),
-    });
-
-    setDone(true);
+    try {
+      for (const row of preview) {
+        await saveCertification({
+          title: row.title,
+          organizationName: row.organizationName,
+          domain: row.domain || "Non classé",
+          level: row.level || "",
+          duration: row.duration,
+          status: row.status || "En cours de vérification",
+          published: false,
+          archived: false,
+          decisions: [],
+        });
+      }
+      setDone(true);
+    } catch (error) {
+      setErrors([error.message]);
+    }
   };
 
   return (

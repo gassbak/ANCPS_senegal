@@ -1,83 +1,70 @@
-import initialCertifications from "./mock/certifications";
-import organizations from "./mock/organizations";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const TOKEN_KEY = "ancps_token";
 
-const STORAGE_KEY = "ancps_certifications";
+export const getToken = () => localStorage.getItem(TOKEN_KEY);
+export const setToken = (token) => localStorage.setItem(TOKEN_KEY, token);
+export const clearToken = () => localStorage.removeItem(TOKEN_KEY);
 
-const wait = (ms = 300) =>
-  new Promise((resolve) => setTimeout(resolve, ms));
+export async function request(endpoint, options = {}) {
+  const token = getToken();
+  const isFormData = options.body instanceof FormData;
 
-function getStoredCertifications() {
-  const saved = localStorage.getItem(STORAGE_KEY);
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    ...options,
+    headers: {
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...options.headers,
+    },
+  });
 
-  if (saved) {
-    return JSON.parse(saved);
+  let data = null;
+  try {
+    data = await response.json();
+  } catch {
+    // réponse sans corps
   }
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(initialCertifications)
-  );
+  if (!response.ok) {
+    throw new Error(data?.message || "Une erreur est survenue");
+  }
 
-  return initialCertifications;
+  return data;
 }
 
+// Génère list / get / create / update / remove pour une ressource
+const crud = (resource) => ({
+  list: () => request(`/${resource}`),
+  get: (id) => request(`/${resource}/${id}`),
+  create: (data) => request(`/${resource}`, { method: "POST", body: JSON.stringify(data) }),
+  update: (id, data) => request(`/${resource}/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  remove: (id) => request(`/${resource}/${id}`, { method: "DELETE" }),
+});
+
 export const api = {
-  async getCertifications() {
-    await wait();
+  // Authentification
+  login: (data) => request("/auth/login", { method: "POST", body: JSON.stringify(data) }),
+  register: (data) => request("/auth/register", { method: "POST", body: JSON.stringify(data) }),
+  getProfile: () => request("/auth/profile"),
 
-    return getStoredCertifications();
-  },
+  // Certifications (méthodes existantes conservées)
+  getCertifications: () => request("/certifications?published=true"),
+  getCertification: (id) => request(`/certifications/${id}`),
+  createCertification: (data) => request("/certifications", { method: "POST", body: JSON.stringify(data) }),
+  updateCertification: (id, data) => request(`/certifications/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteCertification: (id) => request(`/certifications/${id}`, { method: "DELETE" }),
+  searchCertifications: (params = {}) =>
+    request(`/search/certifications?${new URLSearchParams(params).toString()}`),
 
-  async getCertification(id) {
-    await wait();
+  getOrganizations: () => request("/organismes"),
 
-    const certifications = getStoredCertifications();
-
-    return certifications.find(
-      (certification) => String(certification.id) === String(id)
-    );
-  },
-
-  async createCertification(data) {
-    await wait();
-
-    const certifications = getStoredCertifications();
-
-    const newCertification = {
-      ...data,
-      id: Date.now(),
-    };
-
-    const updated = [newCertification, ...certifications];
-
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(updated)
-    );
-
-    return newCertification;
-  },
-
-  async deleteCertification(id) {
-    await wait();
-
-    const certifications = getStoredCertifications();
-
-    const updated = certifications.filter(
-      (certification) =>
-        String(certification.id) !== String(id)
-    );
-
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(updated)
-    );
-
-    return true;
-  },
-
-  async getOrganizations() {
-    await wait();
-    return organizations;
-  },
+  // Référentiels (prêts pour l'étape suivante)
+  domaines: crud("domaines"),
+  metiers: crud("metiers"),
+  competences: crud("competences"),
+  organismes: crud("organismes"),
+  etablissements: crud("etablissements"),
+  sources: crud("sources"),
+  documents: crud("documents"),
+  niveaux: crud("niveaux"),
 };

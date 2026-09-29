@@ -28,25 +28,31 @@ const createCertification = async (req, res) => {
 
 const getCertifications = async (req, res) => {
   try {
-   const certifications =
-  await Certification.find()
-    .populate("niveauEntree")
-    .populate("niveauSortie")
-    .populate("type")
-    .populate("nature")
-    .populate("statutVerification")
-    .populate("domaine")
-    .populate("sousDomaine")
-    .populate("metiers")
-    .populate("competences")
-    .populate("organisme")
-    .populate("etablissements");
+    const filter = {};
+
+    // Site public : uniquement les fiches publiées
+    if (req.query.published === "true") {
+      filter.published = true;
+      filter.archived = { $ne: true };
+    }
+
+    const certifications = await Certification.find(filter)
+      .populate("niveauEntree")
+      .populate("niveauSortie")
+      .populate("type")
+      .populate("nature")
+      .populate("statutVerification")
+      .populate("domaine")
+      .populate("sousDomaine")
+      .populate("metiers")
+      .populate("competences")
+      .populate("organisme")
+      .populate("etablissements")
+      .sort({ createdAt: -1 });
 
     res.json(certifications);
   } catch (error) {
-    res.status(500).json({
-      message: error.message
-    });
+    res.status(500).json({ message: error.message });
   }
 };
 

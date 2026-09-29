@@ -1,77 +1,56 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Check, X } from "lucide-react";
-import { loadStore, saveStore, can } from "../services/adminStore";
-import { makeAuditEntry, withAuditEntry, makeNotificationId } from "../utils/audit";
+import { can } from "../services/adminStore";
+import { loadRequests, createRequest, setRequestStatus } from "../services/adminApi";
 import { PageHeader, SearchBar, Table, Badge, Button, Modal, Input, Select, Textarea, statusTone, EmptyState } from "../components/ui";
 
 const EMPTY_REQUEST_FORM = { type: "Nouvelle certification", entity: "", note: "" };
 
 export default function RequestsPage({ session }) {
-  const [store, setStore] = useState(loadStore() || {});
+  const [requests, setRequests] = useState([]);
   const [query, setQuery] = useState("");
   const [viewed, setViewed] = useState(null);
   const [newModalOpen, setNewModalOpen] = useState(false);
   const [form, setForm] = useState(EMPTY_REQUEST_FORM);
 
-  const requests = store.requests || [];
+  const reload = useCallback(async () => {
+    try {
+      setRequests(await loadRequests());
+    } catch {
+      setRequests([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    reload();
+  }, [reload]);
 
   const list = requests.filter((r) =>
     `${r.entity} ${r.requester} ${r.type}`.toLowerCase().includes(query.toLowerCase())
   );
 
-  const submitRequest = () => {
-    const request = {
-      id: "req_" + Date.now(),
-      entity: form.entity,
-      type: form.type,
-      note: form.note,
-      requester: session.name,
-      submittedAt: new Date().toISOString().slice(0, 10),
-      priority: "Normale",
-      status: "À vérifier",
-    };
-
-    const next = {
-      ...store,
-      requests: [request, ...requests],
-      audit: withAuditEntry(
-        store.audit,
-        makeAuditEntry({ user: session.name, action: "Soumission", entity: request.entity, newValue: "À vérifier" })
-      ),
-    };
-
-    saveStore(next);
-    setStore(next);
-    setNewModalOpen(false);
-    setForm(EMPTY_REQUEST_FORM);
+  const submitRequest = async () => {
+    try {
+      await createRequest(form);
+      setNewModalOpen(false);
+      setForm(EMPTY_REQUEST_FORM);
+      await reload();
+      window.dispatchEvent(new Event("ancps-store-change"));
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
-  // Fait avancer une demande dans le workflow (accepter / compléter / rejeter),
-  // journalise le changement et notifie l'utilisateur concerné.
-  const applyDecision = (request, status) => {
-    const next = {
-      ...store,
-      requests: requests.map((x) => (x.id === request.id ? { ...x, status } : x)),
-      notifications: [
-        {
-          id: makeNotificationId(),
-          title: `Demande ${status.toLowerCase()}`,
-          text: request.entity,
-          type: "workflow",
-          read: false,
-          date: new Date().toISOString().slice(0, 10),
-        },
-        ...(store.notifications || []),
-      ],
-      audit: withAuditEntry(
-        store.audit,
-        makeAuditEntry({ user: session.name, action: "Workflow", entity: request.entity, oldValue: request.status, newValue: status })
-      ),
-    };
-
-    saveStore(next);
-    setStore(next);
-    setViewed(null);
+  // Fait avancer une demande (accepter / compléter / rejeter). Le backend
+  // journalise le changement et notifie l'auteur.
+  const applyDecision = async (request, status) => {
+    try {
+      await setRequestStatus(request.id, status);
+      setViewed(null);
+      await reload();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (

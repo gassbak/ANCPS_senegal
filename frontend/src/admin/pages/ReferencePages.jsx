@@ -1,7 +1,6 @@
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Plus } from "lucide-react";
-import { loadStore, saveStore } from "../services/adminStore";
-import { makeAuditEntry, withAuditEntry } from "../utils/audit";
+import { loadReference, saveReference, removeReference } from "../services/adminApi";
 import {
   PageHeader,
   Button,
@@ -16,28 +15,25 @@ import {
   EmptyState,
 } from "../components/ui";
 
-// Configuration des 4 référentiels partageant la même page générique :
-// organismes certificateurs, établissements, métiers, compétences.
+// Configuration des 4 référentiels partageant la même page générique.
+// Les champs correspondent à ceux du backend (voir adminApi.js).
 const REFERENCE_CONFIGS = {
   organizations: {
     title: "Organismes certificateurs",
     desc: "Organismes qui délivrent les certifications.",
-    key: "organizations",
     name: "organisme",
     fields: [
       ["name", "Nom"],
-      ["acronym", "Sigle"],
       ["type", "Type"],
-      ["city", "Ville"],
-      ["email", "Email"],
+      ["country", "Pays"],
       ["website", "Site web"],
+      ["description", "Description"],
     ],
     types: ["Public", "Privé", "ONG"],
   },
   establishments: {
     title: "Établissements",
     desc: "Établissements qui préparent les certifications.",
-    key: "establishments",
     name: "établissement",
     fields: [
       ["name", "Nom"],
@@ -45,46 +41,55 @@ const REFERENCE_CONFIGS = {
       ["region", "Région"],
       ["city", "Ville"],
       ["address", "Adresse"],
-      ["phone", "Téléphone"],
-      ["email", "Email"],
       ["website", "Site web"],
+      ["description", "Description"],
     ],
     types: ["Public", "Privé"],
   },
   jobs: {
     title: "Métiers",
     desc: "Référentiel des métiers associés aux compétences et certifications.",
-    key: "jobs",
     name: "métier",
     fields: [
       ["name", "Intitulé"],
       ["description", "Description"],
-      ["level", "Niveau habituel"],
     ],
   },
   skills: {
     title: "Compétences",
     desc: "Référentiel des compétences associées aux métiers et certifications.",
-    key: "skills",
     name: "compétence",
     fields: [
       ["name", "Nom"],
-      ["category", "Catégorie"],
       ["description", "Description"],
     ],
   },
 };
 
-export default function ReferencePages({ type, session }) {
+export default function ReferencePages({ type }) {
   const config = REFERENCE_CONFIGS[type];
 
-  const [store, setStore] = useState(loadStore());
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [query, setQuery] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState({});
 
-  const data = useMemo(() => store[config.key] || [], [store, config.key]);
-  const refresh = () => setStore(loadStore());
+  const reload = useCallback(async () => {
+    setLoading(true);
+    try {
+      setData(await loadReference(type));
+    } catch (error) {
+      alert(error.message);
+      setData([]);
+    } finally {
+      setLoading(false);
+    }
+  }, [type]);
+
+  useEffect(() => {
+    reload();
+  }, [reload]);
 
   const list = useMemo(
     () => data.filter((item) => Object.values(item).join(" ").toLowerCase().includes(query.toLowerCase())),
@@ -92,50 +97,34 @@ export default function ReferencePages({ type, session }) {
   );
 
   const openForm = (item) => {
-    setForm(
-      item
-        ? { ...item }
-        : { id: undefined, name: "", type: config.types?.[0] || "", description: "", category: "Technique" }
-    );
+    setForm(item ? { ...item } : { id: undefined, name: "", type: config.types?.[0] || "", description: "" });
     setModalOpen(true);
   };
 
-  const save = () => {
-    const item = { ...form, id: form.id || `${type.slice(0, -1)}_${Date.now()}`, status: form.status || "Actif" };
+  const save = async () => {
+    if (!form.name?.trim()) {
+      alert("Le nom est obligatoire.");
+      return;
+    }
 
-    const next = {
-      ...store,
-      [config.key]: form.id ? data.map((x) => (x.id === form.id ? item : x)) : [item, ...data],
-      audit: withAuditEntry(
-        store.audit,
-        makeAuditEntry({
-          user: session.name,
-          action: form.id ? "Modification" : "Création",
-          entity: item.name,
-          newValue: "Enregistré",
-        })
-      ),
-    };
-
-    saveStore(next);
-    setModalOpen(false);
-    refresh();
+    try {
+      await saveReference(type, form);
+      setModalOpen(false);
+      await reload();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
-  const remove = (id) => {
+  const remove = async (id) => {
     if (!confirm("Supprimer cet élément ?")) return;
 
-    const next = {
-      ...store,
-      [config.key]: data.filter((x) => x.id !== id),
-      audit: withAuditEntry(
-        store.audit,
-        makeAuditEntry({ user: session.name, action: "Suppression", entity: id, oldValue: "Présent", newValue: "Supprimé" })
-      ),
-    };
-
-    saveStore(next);
-    refresh();
+    try {
+      await removeReference(type, id);
+      await reload();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
@@ -150,7 +139,9 @@ export default function ReferencePages({ type, session }) {
         <SearchBar value={query} onChange={setQuery} placeholder={`Rechercher un ${config.name}...`} />
       </div>
 
-      {list.length === 0 ? (
+      {loading ? (
+        <p className="py-10 text-center text-gray-500">Chargement...</p>
+      ) : list.length === 0 ? (
         <EmptyState />
       ) : (
         <Table headers={[config.fields[0][1], "Informations", "Statut", "Actions"]}>
@@ -168,7 +159,7 @@ export default function ReferencePages({ type, session }) {
                 ))}
               </td>
               <td className="px-5 py-4">
-                <Badge tone={item.status === "Actif" ? "green" : "yellow"}>{item.status || "Actif"}</Badge>
+                <Badge tone="green">{item.status || "Actif"}</Badge>
               </td>
               <td className="px-5 py-4">
                 <RowActions onEdit={() => openForm(item)} onDelete={() => remove(item.id)} />
@@ -178,7 +169,11 @@ export default function ReferencePages({ type, session }) {
         </Table>
       )}
 
-      <Modal open={modalOpen} onClose={() => setModalOpen(false)} title={form.id ? `Modifier ${config.name}` : `Nouveau ${config.name}`}>
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={form.id ? `Modifier ${config.name}` : `Nouveau ${config.name}`}
+      >
         <div className="grid gap-4 md:grid-cols-2">
           {config.fields.map(([key, label]) => {
             if (key === "description") {

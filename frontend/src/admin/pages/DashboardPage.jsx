@@ -8,8 +8,9 @@ import {
   CheckCircle2,
   AlertTriangle,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
-import { loadStore } from "../services/adminStore";
+import { loadRemoteStore } from "../services/adminApi";
 import { StatCard, Badge, PageHeader, Table } from "../components/ui";
 
 // Échéance de reconnaissance : couleur et libellé selon le nombre de jours restants.
@@ -56,7 +57,11 @@ function getCompleteness(certification, documents) {
 }
 
 export default function DashboardPage() {
-  const s = loadStore() || {};
+   const [s, setS] = useState({});
+
+  useEffect(() => {
+    loadRemoteStore().then(setS).catch(() => setS({}));
+  }, []);
 
   const cert = Array.isArray(s.certifications) ? s.certifications : [];
   const requests = Array.isArray(s.requests) ? s.requests : [];
