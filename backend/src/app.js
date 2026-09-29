@@ -45,7 +45,14 @@ const typeRoutes =
 
 const natureRoutes =
   require("./routes/natureCertification.routes");
-
+const historiqueRoutes =
+  require(
+    "./routes/historiqueCertification.routes"
+  );
+  const completudeRoutes =
+  require(
+    "./routes/completude.routes"
+  );
 const statutRoutes =
   require("./routes/statutVerification.routes");
 const app = express();
@@ -139,6 +146,14 @@ app.use(
 app.use(
   "/api/statuts-verification",
   statutRoutes
+);
+app.use(
+  "/api/historique",
+  historiqueRoutes
+);
+app.use(
+  "/api/completude",
+  completudeRoutes
 );
 app.get("/", (req, res) => {
   res.json({
