@@ -4,6 +4,32 @@ const Certification =
 const Reconnaissance =
   require("../models/Reconnaissance");
 
+const normalizeModalite = (value) => {
+  if (!value) {
+    return value;
+  }
+
+  const text =
+    value.toLowerCase();
+
+  if (
+    text === "présentiel" ||
+    text === "presentiel"
+  ) {
+    return "presentiel";
+  }
+
+  if (text === "distance") {
+    return "distance";
+  }
+
+  if (text === "hybride") {
+    return "hybride";
+  }
+
+  return value;
+};
+
 const searchCertifications =
   async (filters) => {
 
@@ -26,8 +52,14 @@ const searchCertifications =
       ];
     }
 
-    if (filters.niveau) {
-      query.niveau = filters.niveau;
+    if (filters.niveauEntree) {
+      query.niveauEntree =
+        filters.niveauEntree;
+    }
+
+    if (filters.niveauSortie) {
+      query.niveauSortie =
+        filters.niveauSortie;
     }
 
     if (filters.duree) {
@@ -35,11 +67,15 @@ const searchCertifications =
     }
 
     if (filters.modalite) {
-      query.modalite = filters.modalite;
+      query.modalite =
+        normalizeModalite(
+          filters.modalite
+        );
     }
 
     if (filters.domaine) {
-      query.domaine = filters.domaine;
+      query.domaine =
+        filters.domaine;
     }
 
     if (filters.sousDomaine) {
@@ -68,37 +104,67 @@ const searchCertifications =
     }
 
     const results =
-      await Certification.find(query)
+      await Certification.find(
+        query
+      )
+        .populate("niveauEntree")
+        .populate("niveauSortie")
+        .populate("type")
+        .populate("nature")
+        .populate(
+          "statutVerification"
+        )
         .populate("domaine")
         .populate("sousDomaine")
         .populate("metiers")
         .populate("competences")
         .populate("organisme")
         .populate({
-          path: "etablissements",
-          match: {
-            ...(filters.region && {
-              region: {
-                $regex: filters.region,
-                $options: "i"
-              }
-            }),
-
-            ...(filters.ville && {
-              ville: {
-                $regex: filters.ville,
-                $options: "i"
-              }
-            })
-          }
+          path: "etablissements"
         });
 
-    if (filters.region || filters.ville) {
-      return results.filter(
-        (certification) =>
-          certification.etablissements
-            .length > 0
-      );
+    let filtered =
+      results;
+
+    if (
+      filters.region ||
+      filters.ville
+    ) {
+      filtered =
+        filtered.filter(
+          (certification) => {
+
+            return certification
+              .etablissements
+              .some(
+                (etablissement) => {
+
+                  const regionOk =
+                    !filters.region ||
+                    new RegExp(
+                      filters.region,
+                      "i"
+                    ).test(
+                      etablissement.region
+                    );
+
+                  const villeOk =
+                    !filters.ville ||
+                    new RegExp(
+                      filters.ville,
+                      "i"
+                    ).test(
+                      etablissement.ville
+                    );
+
+                  return (
+                    regionOk &&
+                    villeOk
+                  );
+                }
+              );
+          }
+        );
     }
 
     if (filters.statut) {
@@ -117,15 +183,16 @@ const searchCertifications =
             item.certification.toString()
         );
 
-      return results.filter(
-        (certification) =>
-          ids.includes(
-            certification._id.toString()
-          )
-      );
+      filtered =
+        filtered.filter(
+          (certification) =>
+            ids.includes(
+              certification._id.toString()
+            )
+        );
     }
 
-    return results;
+    return filtered;
   };
 
 module.exports = {
