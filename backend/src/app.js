@@ -65,7 +65,7 @@ app.use(
   cors({
     origin:
       clientUrl ||
-      "http://localhost:5173"
+      "ancps-senegal.vercel.app"
   })
 );
 

@@ -1,4 +1,4 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+const API_URL = import.meta.env.VITE_API_URL || "https://ancps-senegal.onrender.com/api";
 const TOKEN_KEY = "ancps_token";
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
