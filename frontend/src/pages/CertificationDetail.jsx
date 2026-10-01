@@ -105,80 +105,79 @@ export default function CertificationDetail() {
             {/* =========================
                 HERO
             ========================== */}
-            <section className="border-b border-slate-200 bg-white">
-                <div className="mx-auto max-w-[1180px] px-6 pb-14 pt-32">
+            {/* =========================
+    HERO
+========================= */}
+<section className="border-b border-slate-200 bg-white">
+    <div className="mx-auto max-w-[1180px] px-6 pb-14 pt-32">
 
-                    <Link
-                        to="/annuaire"
-                        className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-emerald-700"
-                    >
-                        ← Retour à l'annuaire
-                    </Link>
+        <Link
+            to="/annuaire"
+            className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-emerald-700"
+        >
+            ← Retour à l'annuaire
+        </Link>
 
-                    <div className="mt-9 max-w-[900px]">
+        <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between">
 
-                        <div className="flex flex-wrap gap-3">
-                            <Badge variant="green">
-                                {type}
-                            </Badge>
+            {/* INFORMATIONS */}
+            <div className="max-w-[850px]">
 
-                            <Badge variant="blue">
-                                {niveau}
-                            </Badge>
+                <div className="flex flex-wrap gap-3">
+                    <Badge variant="green">
+                        {type}
+                    </Badge>
 
-                            {certification.statutVerification?.nom && (
-                                <Badge variant="gray">
-                                    {certification.statutVerification.nom}
-                                </Badge>
-                            )}
-                        </div>
+                    <Badge variant="blue">
+                        {niveau}
+                    </Badge>
 
-                        <h1 className="mt-6 text-4xl font-bold leading-[1.15] tracking-tight text-slate-950 md:text-5xl">
-                            {certification.title}
-                        </h1>
-
-                        <p className="mt-5 text-lg text-slate-600">
-                            {organisme}
-                        </p>
-
-                        <div className="mt-3 flex flex-wrap items-center gap-5 text-sm text-slate-500">
-                            <span>
-                                Sénégal
-                            </span>
-
-                            {certification.sigle && (
-                                <span>
-                                    Sigle :{" "}
-                                    <strong className="text-slate-700">
-                                        {certification.sigle}
-                                    </strong>
-                                </span>
-                            )}
-                        </div>
-
-                        <div className="mt-8 flex flex-wrap gap-3">
-                            <button
-                                onClick={() =>
-                                    downloadCertificationPDF(certification)
-                                }
-                                className="inline-flex items-center gap-2 rounded-lg bg-[#064E3B] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#053C2E]"
-                            >
-                                Télécharger la fiche PDF
-                            </button>
-
-                            <button
-                                onClick={() =>
-                                    window.print()
-                                }
-                                className="rounded-lg border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
-                            >
-                                Imprimer
-                            </button>
-                        </div>
-                    </div>
+                    {certification.statutVerification?.nom && (
+                        <Badge variant="gray">
+                            {certification.statutVerification.nom}
+                        </Badge>
+                    )}
                 </div>
-            </section>
 
+                <h1 className="mt-6 text-4xl font-bold leading-[1.15] tracking-tight text-slate-950 md:text-5xl">
+                    {certification.title}
+                </h1>
+
+                <p className="mt-5 text-lg text-slate-600">
+                    {organisme}
+                </p>
+
+                <div className="mt-3 flex flex-wrap items-center gap-5 text-sm text-slate-500">
+                    <span>
+                        Sénégal
+                    </span>
+
+                    {certification.sigle && (
+                        <span>
+                            Sigle :{" "}
+                            <strong className="text-slate-700">
+                                {certification.sigle}
+                            </strong>
+                        </span>
+                    )}
+                </div>
+            </div>
+
+            {/* BOUTON PDF À DROITE */}
+            <div className="shrink-0 lg:pt-1">
+                <button
+                    onClick={() =>
+                        downloadCertificationPDF(certification)
+                    }
+                    className="inline-flex items-center gap-2 rounded-lg bg-[#064E3B] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#053C2E]"
+                >
+                    <span>↓</span>
+                    Télécharger le PDF
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
             {/* =========================
                 CONTENU
             ========================== */}
