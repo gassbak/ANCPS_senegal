@@ -339,13 +339,22 @@ function CertificationCard({ certification }) {
           {certification.sector}
         </span>
 
-        <button
-          type="button"
-          className="flex items-center gap-1 text-[14px] font-semibold text-emerald-700"
-        >
-          Détails
-          <ArrowRight />
-        </button>
+      <Link
+                          to={
+                              `/certification/${certification.id}`
+                          }
+                          className="
+                              flex
+                              items-center
+                              gap-1
+                              text-[14px]
+                              font-semibold
+                              text-emerald-700
+                          "
+                      >
+                          Détails
+                          <ArrowRight />
+                      </Link>
 
       </div>
     </div>
