@@ -50,7 +50,7 @@ const natureRoutes =
   require("./routes/natureCertification.routes");
 const historiqueRoutes =
   require(
-    "./routes/HistoriqueCertification.routes"
+    "./routes/historiqueCertification.routes"
   );
   const completudeRoutes =
   require(
