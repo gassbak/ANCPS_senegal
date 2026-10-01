@@ -1,50 +1,98 @@
+
 import { useEffect, useMemo, useState } from "react";
-import { api } from "../services/api";
+
+import { request } from "../services/api";
 import { mapCertification } from "../utils/mapCertification";
-export default function useCertifications(search = "") {
-  const [certifications, setCertifications] = useState([]);
-  const [loading, setLoading] = useState(true);
 
-  const loadCertifications = async () => {
-    setLoading(true);
+export default function useCertifications(
+    search = "",
+    page = 1
+) {
+    const [certifications, setCertifications] =
+        useState([]);
 
-    try {
-      const data = await api.getCertifications();
-         setCertifications(data.map(mapCertification));
-    } catch (error) {
-      console.error("Erreur certifications :", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const [pagination, setPagination] =
+        useState({
+            page: 1,
+            limit: 6,
+            total: 0,
+            totalPages: 0,
+        });
 
-  useEffect(() => {
-    loadCertifications();
-  }, []);
+    const [loading, setLoading] =
+        useState(true);
 
-  const filteredCertifications = useMemo(() => {
-    if (!search.trim()) {
-      return certifications;
-    }
+    const loadCertifications = async () => {
+        setLoading(true);
 
-    const value = search.toLowerCase();
+        try {
+            const response = await request(
+                `/certifications?published=true&page=${page}&limit=6`
+            );
 
-    return certifications.filter((certification) =>
-      [
-        certification.title,
-        certification.organization,
-        certification.sector,
-        certification.type,
-      ]
-        .join(" ")
-        .toLowerCase()
-        .includes(value)
-    );
-  }, [certifications, search]);
+            setCertifications(
+                (response.data || []).map(
+                    mapCertification
+                )
+            );
 
-  return {
-    certifications: filteredCertifications,
-    loading,
-    reload: loadCertifications,
-  };
+            setPagination(
+                response.pagination || {
+                    page: 1,
+                    limit: 6,
+                    total: 0,
+                    totalPages: 0,
+                }
+            );
+        } catch (error) {
+            console.error(
+                "Erreur certifications :",
+                error
+            );
+
+            setCertifications([]);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadCertifications();
+    }, [page]);
+
+    const filteredCertifications =
+        useMemo(() => {
+            if (!search.trim()) {
+                return certifications;
+            }
+
+            const value =
+                search.toLowerCase();
+
+            return certifications.filter(
+                (certification) =>
+                    [
+                        certification.title,
+                        certification.organization,
+                        certification.sector,
+                        certification.type,
+                        certification.niveau,
+                    ]
+                        .join(" ")
+                        .toLowerCase()
+                        .includes(value)
+            );
+        }, [certifications, search]);
+
+    return {
+        certifications:
+            filteredCertifications,
+
+        loading,
+
+        pagination,
+
+        reload:
+            loadCertifications,
+    };
 }

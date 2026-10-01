@@ -7,14 +7,6 @@ import Footer from "../components/layout/Footer";
 import Badge from "../components/ui/Badge";
 import useCertifications from "../hooks/useCertifications";
 
-const sectors = [
-  "Informatique & Numérique",
-  "Gestion & Management",
-  "Santé & Social",
-  "Industrie & BTP",
-  "Agriculture & Environnement",
-  "Commerce & Marketing",
-];
 
 function SearchIcon() {
   return (
@@ -147,6 +139,16 @@ export default function Home() {
 
   const { certifications, loading } =
     useCertifications(search);
+    const sectors = [
+    ...new Set(
+        certifications
+            .map(
+                (certification) =>
+                    certification.sector
+            )
+            .filter(Boolean)
+    ),
+];
 
   const latestCertifications =
     certifications.slice(0, 3);
@@ -208,28 +210,31 @@ export default function Home() {
             Secteurs Porteurs
           </h2>
 
-          <div className="mt-[35px] grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+<div className="mt-[35px] grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
 
-            {sectors.map((sector) => (
-              <div
-                key={sector}
-                className="flex h-[135px] items-center justify-center rounded-[8px] border border-slate-200 bg-white px-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition hover:-translate-y-1 hover:shadow-md"
-              >
-                <div className="text-center">
+    {sectors.map((sector) => (
+        <Link
+            key={sector}
+            to={`/annuaire?domaine=${encodeURIComponent(sector)}`}
+            className="flex h-[135px] items-center justify-center rounded-[8px] border border-slate-200 bg-white px-4 shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition hover:-translate-y-1 hover:shadow-md"
+        >
 
-                  <div className="mx-auto mb-4 flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[#D1FAE5] text-[#059669]">
+            <div className="text-center">
+
+                <div className="mx-auto mb-4 flex h-[40px] w-[40px] items-center justify-center rounded-full bg-[#D1FAE5] text-[#059669]">
                     <BriefcaseIcon />
-                  </div>
-
-                  <p className="text-[15px] font-medium leading-[22px] text-[#0F172A]">
-                    {sector}
-                  </p>
-
                 </div>
-              </div>
-            ))}
 
-          </div>
+                <p className="text-[15px] font-medium leading-[22px] text-[#0F172A]">
+                    {sector}
+                </p>
+
+            </div>
+
+        </Link>
+    ))}
+
+</div>
         </div>
       </section>
 

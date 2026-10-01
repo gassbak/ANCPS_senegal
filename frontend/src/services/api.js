@@ -48,7 +48,13 @@ export const api = {
   getProfile: () => request("/auth/profile"),
 
   // Certifications (méthodes existantes conservées)
-  getCertifications: () => request("/certifications?published=true"),
+  getCertifications: async () => {
+  const response = await request(
+    "/certifications?published=true"
+  );
+
+  return response.data || [];
+},
   getCertification: (id) => request(`/certifications/${id}`),
   createCertification: (data) => request("/certifications", { method: "POST", body: JSON.stringify(data) }),
   updateCertification: (id, data) => request(`/certifications/${id}`, { method: "PUT", body: JSON.stringify(data) }),

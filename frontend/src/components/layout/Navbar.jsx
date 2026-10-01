@@ -48,14 +48,14 @@ export default function Navbar() {
         <nav className="ml-[68px] flex items-center gap-[38px]">
 
           <Link
-            to="/"
+            to="/Home"
             className="text-[15px] font-semibold transition hover:text-yellow-300"
           >
             Accueil
           </Link>
 
           <Link
-            to="/"
+            to="/annuaire"
             className="text-[15px] font-semibold transition hover:text-yellow-300"
           >
             L'Annuaire

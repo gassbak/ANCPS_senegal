@@ -142,11 +142,20 @@ async function certificationToBack(form) {
 }
 
 export async function loadCertifications() {
-  const [certs, recos] = await Promise.all([request("/certifications"), safeList("/reconnaissances")]);
+  const [certificationResponse, recos] = await Promise.all([
+    request("/certifications"),
+    safeList("/reconnaissances"),
+  ]);
+
+  const certs = Array.isArray(certificationResponse)
+    ? certificationResponse
+    : certificationResponse.data || [];
 
   const byCert = {};
+
   recos.forEach((r) => {
     const key = idOf(r.certification);
+
     (byCert[key] = byCert[key] || []).push(r);
   });
 
@@ -154,15 +163,26 @@ export async function loadCertifications() {
     certificationFromBack(
       c,
       (byCert[c._id] || [])
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt) -
+            new Date(a.createdAt)
+        )
         .map(decisionFromBack)
     )
   );
 }
-
 export async function loadCertificationOptions() {
-  const certs = await safeList("/certifications");
-  return certs.map((c) => ({ id: c._id, title: c.title }));
+  const response = await safeList("/certifications");
+
+  const certs = Array.isArray(response)
+    ? response
+    : response.data || [];
+
+  return certs.map((c) => ({
+    id: c._id,
+    title: c.title,
+  }));
 }
 
 export async function saveCertification(form) {

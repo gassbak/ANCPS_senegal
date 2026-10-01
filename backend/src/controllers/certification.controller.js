@@ -4,7 +4,8 @@ const Certification =
 const {
   createAuditLog
 } = require("../services/audit.service");
-
+const getPagination =
+  require("../utils/pagination");
 const createCertification = async (req, res) => {
   try {
     const certification =
@@ -36,23 +37,48 @@ const getCertifications = async (req, res) => {
       filter.archived = { $ne: true };
     }
 
-    const certifications = await Certification.find(filter)
-      .populate("niveauEntree")
-      .populate("niveauSortie")
-      .populate("type")
-      .populate("nature")
-      .populate("statutVerification")
-      .populate("domaine")
-      .populate("sousDomaine")
-      .populate("metiers")
-      .populate("competences")
-      .populate("organisme")
-      .populate("etablissements")
-      .sort({ createdAt: -1 });
+    const {
+      page,
+      limit,
+      skip
+    } = getPagination(req);
 
-    res.json(certifications);
+    const certifications =
+      await Certification.find(filter)
+        .populate("niveauEntree")
+        .populate("niveauSortie")
+        .populate("type")
+        .populate("nature")
+        .populate("statutVerification")
+        .populate("domaine")
+        .populate("sousDomaine")
+        .populate("metiers")
+        .populate("competences")
+        .populate("organisme")
+        .populate("etablissements")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit);
+
+    const total =
+      await Certification.countDocuments(filter);
+
+    const totalPages =
+      Math.ceil(total / limit);
+
+    res.json({
+      data: certifications,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages
+      }
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: error.message
+    });
   }
 };
 
