@@ -1,6 +1,6 @@
-
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import Badge from "../components/ui/Badge";
@@ -21,9 +21,7 @@ export default function CertificationDetail() {
                 setCertification(data);
             } catch (error) {
                 console.error(error);
-                setError(
-                    "Impossible de charger cette certification."
-                );
+                setError("Impossible de charger cette certification.");
             } finally {
                 setLoading(false);
             }
@@ -36,8 +34,9 @@ export default function CertificationDetail() {
         return (
             <>
                 <Navbar />
-                <main className="px-6 pt-[130px]">
-                    <div className="mx-auto max-w-[1220px]">
+
+                <main className="min-h-screen bg-[#F8FAFC] px-6 pt-32">
+                    <div className="mx-auto max-w-[1180px]">
                         <p className="text-slate-500">
                             Chargement de la certification...
                         </p>
@@ -51,20 +50,21 @@ export default function CertificationDetail() {
         return (
             <>
                 <Navbar />
-                <main className="px-6 pt-[130px]">
-                    <div className="mx-auto max-w-[1220px]">
-                        <div className="rounded-lg border bg-white p-8">
-                            <h1 className="text-xl font-bold">
+
+                <main className="min-h-screen bg-[#F8FAFC] px-6 pt-32">
+                    <div className="mx-auto max-w-[1180px]">
+                        <div className="rounded-2xl border border-slate-200 bg-white p-8">
+                            <h1 className="text-2xl font-bold text-slate-900">
                                 Certification introuvable
                             </h1>
 
-                            <p className="mt-2 text-slate-500">
+                            <p className="mt-3 text-slate-500">
                                 {error}
                             </p>
 
                             <Link
                                 to="/annuaire"
-                                className="mt-5 inline-block font-semibold text-emerald-700"
+                                className="mt-6 inline-block font-semibold text-emerald-700"
                             >
                                 ← Retour à l'annuaire
                             </Link>
@@ -84,178 +84,278 @@ export default function CertificationDetail() {
         certification.niveauSortie?.nom ||
         "Non renseigné";
 
-    const duree =
-        certification.duree ||
-        "Non renseignée";
+    const type =
+        certification.type?.nom ||
+        certification.nature?.nom ||
+        "Certification";
 
-    const modalite =
-        certification.modalite ||
-        "Non renseignée";
+    const domaine =
+        certification.domaine?.nom ||
+        certification.domaine ||
+        certification.sector ||
+        "Non renseigné";
+
+    const metiers = getNames(certification.metiers);
+    const etablissements = getNames(certification.etablissements);
 
     return (
         <div className="min-h-screen bg-[#F8FAFC]">
             <Navbar />
 
-            <main className="pt-[74px]">
+            {/* =========================
+                HERO
+            ========================== */}
+            <section className="border-b border-slate-200 bg-white">
+                <div className="mx-auto max-w-[1180px] px-6 pb-14 pt-32">
 
-                {/* En-tête */}
-                <section className="border-b bg-white">
-                    <div className="mx-auto max-w-[1220px] px-6 py-10">
+                    <Link
+                        to="/annuaire"
+                        className="inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-emerald-700"
+                    >
+                        ← Retour à l'annuaire
+                    </Link>
 
-                        <Link
-                            to="/annuaire"
-                            className="text-sm font-medium text-emerald-700"
-                        >
-                            ← Retour à l'annuaire
-                        </Link>
+                    <div className="mt-9 max-w-[900px]">
 
-                        <div className="mt-7 flex flex-wrap gap-2">
+                        <div className="flex flex-wrap gap-3">
                             <Badge variant="green">
-                                {certification.type?.nom ||
-                                    certification.nature?.nom ||
-                                    "Certification"}
+                                {type}
                             </Badge>
 
                             <Badge variant="blue">
                                 {niveau}
                             </Badge>
+
+                            {certification.statutVerification?.nom && (
+                                <Badge variant="gray">
+                                    {certification.statutVerification.nom}
+                                </Badge>
+                            )}
                         </div>
 
-                        <h1 className="mt-4 max-w-[850px] text-[38px] font-bold leading-tight">
+                        <h1 className="mt-6 text-4xl font-bold leading-[1.15] tracking-tight text-slate-950 md:text-5xl">
                             {certification.title}
                         </h1>
 
-                        <p className="mt-4 text-[16px] text-slate-600">
+                        <p className="mt-5 text-lg text-slate-600">
                             {organisme}
                         </p>
 
-                        <p className="mt-1 text-[14px] text-slate-500">
-                            Sénégal
-                        </p>
+                        <div className="mt-3 flex flex-wrap items-center gap-5 text-sm text-slate-500">
+                            <span>
+                                Sénégal
+                            </span>
 
-                        <button
-                            onClick={() =>
-                                downloadCertificationPDF(
-                                    certification
-                                )
-                            }
-                            className="mt-6 rounded-md bg-[#064E3B] px-5 py-3 text-sm font-semibold text-white hover:bg-[#053c2e]"
-                        >
-                            Télécharger la fiche PDF
-                        </button>
-                    </div>
-                </section>
-
-                {/* Contenu */}
-                <section className="px-6 py-10">
-                    <div className="mx-auto grid max-w-[1220px] gap-8 lg:grid-cols-[1fr_320px]">
-
-                        {/* Colonne principale */}
-                        <div className="space-y-7">
-
-                            <InfoSection title="Présentation">
-                                {certification.description ||
-                                    "Aucune description disponible."}
-                            </InfoSection>
-
-                            <InfoSection title="Objectifs de la formation">
-                                {certification.objectifs ||
-                                    "Les objectifs de cette certification ne sont pas encore renseignés."}
-                            </InfoSection>
-
-                            <section className="rounded-lg border border-slate-200 bg-white p-7">
-                                <h2 className="text-[22px] font-bold">
-                                    Blocs de compétences
-                                </h2>
-
-                                {certification.competencesLibres?.length ? (
-                                    <ul className="mt-4 space-y-3">
-                                        {certification.competencesLibres.map(
-                                            (competence, index) => (
-                                                <li
-                                                    key={index}
-                                                    className="rounded-md bg-slate-50 px-4 py-3 text-slate-600"
-                                                >
-                                                    {competence}
-                                                </li>
-                                            )
-                                        )}
-                                    </ul>
-                                ) : (
-                                    <p className="mt-4 text-slate-500">
-                                        Aucun bloc de compétences renseigné.
-                                    </p>
-                                )}
-                            </section>
-
-                            <section className="rounded-lg border border-slate-200 bg-white p-7">
-                                <h2 className="text-[22px] font-bold">
-                                    Informations complémentaires
-                                </h2>
-
-                                <div className="mt-5">
-                                    <InfoRow
-                                        label="Sigle"
-                                        value={certification.sigle}
-                                    />
-
-                                    <InfoRow
-                                        label="Métiers"
-                                        value={getNames(certification.metiers)}
-                                    />
-
-                                    <InfoRow
-                                        label="Établissements"
-                                        value={getNames(
-                                            certification.etablissements
-                                        )}
-                                    />
-                                </div>
-                            </section>
+                            {certification.sigle && (
+                                <span>
+                                    Sigle :{" "}
+                                    <strong className="text-slate-700">
+                                        {certification.sigle}
+                                    </strong>
+                                </span>
+                            )}
                         </div>
 
-                        {/* Informations clés */}
-                        <aside>
-                            <div className="sticky top-[95px] rounded-lg border border-slate-200 bg-white p-6">
+                        <div className="mt-8 flex flex-wrap gap-3">
+                            <button
+                                onClick={() =>
+                                    downloadCertificationPDF(certification)
+                                }
+                                className="inline-flex items-center gap-2 rounded-lg bg-[#064E3B] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#053C2E]"
+                            >
+                                Télécharger la fiche PDF
+                            </button>
 
-                                <h2 className="text-[18px] font-bold">
-                                    Informations clés
-                                </h2>
+                            <button
+                                onClick={() =>
+                                    window.print()
+                                }
+                                className="rounded-lg border border-slate-300 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                            >
+                                Imprimer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-                                <div className="mt-5 divide-y">
-                                    <InfoRow
+            {/* =========================
+                CONTENU
+            ========================== */}
+            <main className="mx-auto max-w-[1180px] px-6 py-12">
+                <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_330px]">
+
+                    {/* =====================
+                        COLONNE PRINCIPALE
+                    ====================== */}
+                    <div className="space-y-6">
+
+                        <InfoSection title="Présentation">
+                            <p>
+                                {certification.description ||
+                                    "Aucune description disponible pour cette certification."}
+                            </p>
+                        </InfoSection>
+
+                        <InfoSection title="Objectifs de la formation">
+                            <p>
+                                {certification.objectifs ||
+                                    "Les objectifs de cette certification ne sont pas encore renseignés."}
+                            </p>
+                        </InfoSection>
+
+                        {/* COMPETENCES */}
+                        <section className="rounded-2xl border border-slate-200 bg-white p-7 md:p-8">
+                            <h2 className="text-2xl font-bold text-slate-950">
+                                Blocs de compétences
+                            </h2>
+
+                            <p className="mt-2 text-sm text-slate-500">
+                                Compétences associées à cette certification.
+                            </p>
+
+                            {certification.competencesLibres?.length ? (
+                                <div className="mt-6 space-y-3">
+                                    {certification.competencesLibres.map(
+                                        (competence, index) => (
+                                            <div
+                                                key={index}
+                                                className="flex gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4"
+                                            >
+                                                <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-700">
+                                                    {index + 1}
+                                                </span>
+
+                                                <p className="pt-1 text-sm leading-6 text-slate-700">
+                                                    {competence}
+                                                </p>
+                                            </div>
+                                        )
+                                    )}
+                                </div>
+                            ) : (
+                                <p className="mt-6 rounded-xl bg-slate-50 p-5 text-sm text-slate-500">
+                                    Aucun bloc de compétences renseigné.
+                                </p>
+                            )}
+                        </section>
+
+                        {/* INFORMATIONS COMPLEMENTAIRES */}
+                        <section className="rounded-2xl border border-slate-200 bg-white p-7 md:p-8">
+                            <h2 className="text-2xl font-bold text-slate-950">
+                                Informations complémentaires
+                            </h2>
+
+                            <div className="mt-6 divide-y divide-slate-200">
+                                <InfoRow
+                                    label="Sigle"
+                                    value={certification.sigle}
+                                />
+
+                                <InfoRow
+                                    label="Domaine"
+                                    value={domaine}
+                                />
+
+                                <InfoRow
+                                    label="Métiers associés"
+                                    value={metiers}
+                                />
+
+                                <InfoRow
+                                    label="Établissements"
+                                    value={etablissements}
+                                />
+                            </div>
+                        </section>
+                    </div>
+
+                    {/* =====================
+                        SIDEBAR
+                    ====================== */}
+                    <aside className="lg:relative">
+                        <div className="lg:sticky lg:top-24">
+
+                            <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white">
+
+                                <div className="border-b border-slate-200 px-6 py-5">
+                                    <h2 className="text-lg font-bold text-slate-950">
+                                        Informations clés
+                                    </h2>
+
+                                    <p className="mt-1 text-sm text-slate-500">
+                                        Les principales informations de la certification.
+                                    </p>
+                                </div>
+
+                                <div className="px-6">
+
+                                    <SideInfo
                                         label="Niveau"
                                         value={niveau}
                                     />
 
-                                    <InfoRow
+                                    <SideInfo
+                                        label="Type"
+                                        value={type}
+                                    />
+
+                                    <SideInfo
                                         label="Durée"
-                                        value={duree}
+                                        value={
+                                            certification.duree ||
+                                            "Non renseignée"
+                                        }
                                     />
 
-                                    <InfoRow
+                                    <SideInfo
                                         label="Modalité"
-                                        value={modalite}
+                                        value={
+                                            certification.modalite ||
+                                            "Non renseignée"
+                                        }
                                     />
 
-                                    <InfoRow
-                                        label="Organisme"
+                                    <SideInfo
+                                        label="Organisme certificateur"
                                         value={organisme}
                                     />
 
-                                    <InfoRow
-                                        label="Statut"
-                                        value={
-                                            certification.statutVerification?.nom ||
-                                            "Non renseigné"
-                                        }
+                                    <SideInfo
+                                        label="Domaine"
+                                        value={domaine}
+                                    />
+
+                                    <SideInfo
+                                        label="Pays"
+                                        value="Sénégal"
                                     />
                                 </div>
                             </div>
-                        </aside>
 
-                    </div>
-                </section>
+                            {/* PDF CARD */}
+                            <div className="mt-5 rounded-2xl bg-[#064E3B] p-6 text-white">
+                                <p className="text-sm font-semibold">
+                                    Besoin de conserver cette fiche ?
+                                </p>
+
+                                <p className="mt-2 text-sm leading-6 text-emerald-50">
+                                    Téléchargez les informations de cette
+                                    certification au format PDF.
+                                </p>
+
+                                <button
+                                    onClick={() =>
+                                        downloadCertificationPDF(certification)
+                                    }
+                                    className="mt-5 w-full rounded-lg bg-white px-4 py-3 text-sm font-semibold text-[#064E3B] transition hover:bg-emerald-50"
+                                >
+                                    Télécharger le PDF
+                                </button>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
             </main>
 
             <Footer />
@@ -263,38 +363,70 @@ export default function CertificationDetail() {
     );
 }
 
+/* =========================
+   SECTION
+========================= */
+
 function InfoSection({ title, children }) {
     return (
-        <section className="rounded-lg border border-slate-200 bg-white p-7">
-            <h2 className="text-[22px] font-bold">
+        <section className="rounded-2xl border border-slate-200 bg-white p-7 md:p-8">
+            <h2 className="text-2xl font-bold text-slate-950">
                 {title}
             </h2>
 
-            <p className="mt-4 whitespace-pre-line leading-7 text-slate-600">
+            <div className="mt-5 text-[15px] leading-7 text-slate-600">
                 {children}
-            </p>
+            </div>
         </section>
     );
 }
 
+/* =========================
+   LIGNE INFORMATIONS
+========================= */
+
 function InfoRow({ label, value }) {
     return (
-        <div className="border-b py-4 last:border-0">
-            <p className="text-xs font-semibold uppercase text-slate-400">
+        <div className="py-5">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
                 {label}
             </p>
 
-            <p className="mt-1 text-sm text-slate-700">
+            <p className="mt-2 text-sm leading-6 text-slate-700">
                 {value || "Non renseigné"}
             </p>
         </div>
     );
 }
 
-function getNames(items) {
+/* =========================
+   SIDEBAR
+========================= */
+
+function SideInfo({ label, value }) {
     return (
-        items
-            ?.map((item) => item.nom || item)
-            .join(", ") || "Non renseigné"
+        <div className="border-b border-slate-200 py-5 last:border-0">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                {label}
+            </p>
+
+            <p className="mt-1.5 text-sm font-medium leading-6 text-slate-800">
+                {value || "Non renseigné"}
+            </p>
+        </div>
     );
+}
+
+/* =========================
+   LISTES
+========================= */
+
+function getNames(items) {
+    if (!items?.length) {
+        return "Non renseigné";
+    }
+
+    return items
+        .map((item) => item.nom || item)
+        .join(", ");
 }
