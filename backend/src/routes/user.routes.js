@@ -1,38 +1,52 @@
-const express =
-  require("express");
+const express = require("express");
 
 const {
   getUsers,
-  getUser
-} = require(
-  "../controllers/user.controller"
-);
+  getUser,
+  updateRole,
+  updatePermissions
+} = require("../controllers/user.controller");
 
-const protect =
-  require(
-    "../middlewares/auth.middleware"
-  );
+const protect = require("../middlewares/auth.middleware");
+const requirePermission = require("../middlewares/permission.middleware");
 
-const authorize =
-  require(
-    "../middlewares/role.middleware"
-  );
+const router = express.Router();
 
-const router =
-  express.Router();
 
+// Voir les utilisateurs
 router.get(
   "/",
   protect,
-  authorize("admin"),
+  requirePermission("users.view"),
   getUsers
 );
 
+
+// Voir un utilisateur
 router.get(
   "/:id",
   protect,
-  authorize("admin"),
+  requirePermission("users.view"),
   getUser
 );
+
+
+// Modifier le rôle
+router.put(
+  "/:id/role",
+  protect,
+  requirePermission("users.manage_roles"),
+  updateRole
+);
+
+
+// Modifier les permissions
+router.put(
+  "/:id/permissions",
+  protect,
+  requirePermission("users.manage_permissions"),
+  updatePermissions
+);
+
 
 module.exports = router;
