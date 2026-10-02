@@ -3,12 +3,6 @@ const express = require("express");
 const {
   getUsers,
   getUser,
-  updateRole,
-  updatePermissions
-} = require("../controllers/user.controller");
-const {
-  getUsers,
-  getUser,
   createUser,
   updateRole,
   updatePermissions
@@ -20,12 +14,21 @@ const requirePermission = require("../middlewares/permission.middleware");
 const router = express.Router();
 
 
-// Voir les utilisateurs
+// Voir tous les utilisateurs
 router.get(
   "/",
   protect,
   requirePermission("users.view"),
   getUsers
+);
+
+
+// Ajouter un utilisateur
+router.post(
+  "/",
+  protect,
+  requirePermission("users.create"),
+  createUser
 );
 
 
@@ -45,12 +48,7 @@ router.put(
   requirePermission("users.manage_roles"),
   updateRole
 );
-router.post(
-  "/",
-  protect,
-  requirePermission("users.create"),
-  createUser
-);
+
 
 // Modifier les permissions
 router.put(

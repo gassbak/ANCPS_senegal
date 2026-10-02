@@ -1,16 +1,19 @@
+const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 const permissions = require("../config/permissions");
 
-// Voir tous les utilisateurs
+
+// ===============================
+// VOIR TOUS LES UTILISATEURS
+// ===============================
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find()
-      .select("-password");
+    const users = await User.find().select("-password");
 
     res.json(users);
 
   } catch (error) {
-    console.error(error);
+    console.error("Erreur utilisateurs :", error);
 
     res.status(500).json({
       message: "Erreur serveur"
@@ -19,7 +22,9 @@ const getUsers = async (req, res) => {
 };
 
 
-// Voir un utilisateur
+// ===============================
+// VOIR UN UTILISATEUR
+// ===============================
 const getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id)
@@ -34,7 +39,7 @@ const getUser = async (req, res) => {
     res.json(user);
 
   } catch (error) {
-    console.error(error);
+    console.error("Erreur utilisateur :", error);
 
     res.status(500).json({
       message: "Erreur serveur"
@@ -43,9 +48,89 @@ const getUser = async (req, res) => {
 };
 
 
-// Modifier le rôle
+// ===============================
+// AJOUTER UN UTILISATEUR
+// ===============================
+const createUser = async (req, res) => {
+  try {
+
+    const {
+      name,
+      email,
+      password,
+      role
+    } = req.body;
+
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({
+        message: "Tous les champs sont obligatoires"
+      });
+    }
+
+    const existingUser = await User.findOne({
+      email
+    });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Cet email existe déjà"
+      });
+    }
+
+    const roles = [
+      "admin",
+      "editor",
+      "verifier",
+      "etablissement",
+      "visiteur"
+    ];
+
+    if (!roles.includes(role)) {
+      return res.status(400).json({
+        message: "Rôle invalide"
+      });
+    }
+
+    const hashedPassword =
+      await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      role
+    });
+
+    res.status(201).json({
+      message: "Utilisateur créé avec succès",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        permissions: user.permissions
+      }
+    });
+
+  } catch (error) {
+    console.error(
+      "Erreur création utilisateur :",
+      error
+    );
+
+    res.status(500).json({
+      message: "Erreur serveur"
+    });
+  }
+};
+
+
+// ===============================
+// MODIFIER LE RÔLE
+// ===============================
 const updateRole = async (req, res) => {
   try {
+
     const { role } = req.body;
 
     const roles = [
@@ -63,7 +148,9 @@ const updateRole = async (req, res) => {
       });
     }
 
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(
+      req.params.id
+    );
 
     if (!user) {
       return res.status(404).json({
@@ -87,7 +174,10 @@ const updateRole = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
+    console.error(
+      "Erreur modification rôle :",
+      error
+    );
 
     res.status(500).json({
       message: "Erreur serveur"
@@ -96,21 +186,28 @@ const updateRole = async (req, res) => {
 };
 
 
-// Modifier les permissions
+// ===============================
+// MODIFIER LES PERMISSIONS
+// ===============================
 const updatePermissions = async (req, res) => {
   try {
-    const { permissions: newPermissions } = req.body;
+
+    const {
+      permissions: newPermissions
+    } = req.body;
 
     if (!Array.isArray(newPermissions)) {
       return res.status(400).json({
-        message: "Les permissions doivent être un tableau"
+        message:
+          "Les permissions doivent être un tableau"
       });
     }
 
-    // Vérifier que les permissions existent
-    const invalidPermissions = newPermissions.filter(
-      permission => !permissions.includes(permission)
-    );
+    const invalidPermissions =
+      newPermissions.filter(
+        permission =>
+          !permissions.includes(permission)
+      );
 
     if (invalidPermissions.length > 0) {
       return res.status(400).json({
@@ -119,7 +216,9 @@ const updatePermissions = async (req, res) => {
       });
     }
 
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(
+      req.params.id
+    );
 
     if (!user) {
       return res.status(404).json({
@@ -132,7 +231,8 @@ const updatePermissions = async (req, res) => {
     await user.save();
 
     res.json({
-      message: "Permissions modifiées avec succès",
+      message:
+        "Permissions modifiées avec succès",
       user: {
         id: user._id,
         name: user.name,
@@ -143,75 +243,10 @@ const updatePermissions = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      message: "Erreur serveur"
-    });
-  }
-};
-const bcrypt = require("bcryptjs");
-const User = require("../models/User");
-
-const createUser = async (req, res) => {
-  try {
-    const {
-      name,
-      email,
-      password,
-      role
-    } = req.body;
-
-    if (!name || !email || !password || !role) {
-      return res.status(400).json({
-        message: "Tous les champs sont obligatoires"
-      });
-    }
-
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res.status(400).json({
-        message: "Cet email existe déjà"
-      });
-    }
-
-    const roles = [
-      "admin",
-      "editor",
-      "verifier",
-      "etablissement",
-      "visiteur"
-    ];
-
-    if (!roles.includes(role)) {
-      return res.status(400).json({
-        message: "Rôle invalide"
-      });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({
-      name,
-      email,
-      password: hashedPassword,
-      role
-    });
-
-    res.status(201).json({
-      message: "Utilisateur créé avec succès",
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        permissions: user.permissions
-      }
-    });
-
-  } catch (error) {
-    console.error("Erreur création utilisateur :", error);
+    console.error(
+      "Erreur modification permissions :",
+      error
+    );
 
     res.status(500).json({
       message: "Erreur serveur"
