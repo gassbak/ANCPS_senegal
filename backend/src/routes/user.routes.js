@@ -6,6 +6,13 @@ const {
   updateRole,
   updatePermissions
 } = require("../controllers/user.controller");
+const {
+  getUsers,
+  getUser,
+  createUser,
+  updateRole,
+  updatePermissions
+} = require("../controllers/user.controller");
 
 const protect = require("../middlewares/auth.middleware");
 const requirePermission = require("../middlewares/permission.middleware");
@@ -38,7 +45,12 @@ router.put(
   requirePermission("users.manage_roles"),
   updateRole
 );
-
+router.post(
+  "/",
+  protect,
+  requirePermission("users.create"),
+  createUser
+);
 
 // Modifier les permissions
 router.put(

@@ -1,18 +1,20 @@
-const Certification =
-  require("../models/Certification");
+const Certification = require("../models/Certification");
 
 const {
   createAuditLog
 } = require("../services/audit.service");
-const getPagination =
-  require("../utils/pagination");
+
+const getPagination = require("../utils/pagination");
+
+
+// CRÉER
 const createCertification = async (req, res) => {
   try {
-    const certification =
-      await Certification.create(req.body);
+
+    const certification = await Certification.create(req.body);
 
     await createAuditLog({
-      utilisateur: req.userId,
+      utilisateur: req.user._id,
       action: "CREATION",
       entite: "Certification",
       entiteId: certification._id,
@@ -20,15 +22,21 @@ const createCertification = async (req, res) => {
     });
 
     res.status(201).json(certification);
+
   } catch (error) {
+    console.error("Erreur création certification :", error);
+
     res.status(400).json({
       message: error.message
     });
   }
 };
 
+
+// LISTE
 const getCertifications = async (req, res) => {
   try {
+
     const filter = {};
 
     // Site public : uniquement les fiches publiées
@@ -75,19 +83,23 @@ const getCertifications = async (req, res) => {
         totalPages
       }
     });
+
   } catch (error) {
+    console.error("Erreur liste certifications :", error);
+
     res.status(500).json({
       message: error.message
     });
   }
 };
 
+
+// DÉTAIL
 const getCertification = async (req, res) => {
   try {
+
     const certification =
-      await Certification.findById(
-        req.params.id
-      )
+      await Certification.findById(req.params.id)
         .populate("domaine")
         .populate("sousDomaine")
         .populate("metiers")
@@ -107,15 +119,21 @@ const getCertification = async (req, res) => {
     }
 
     res.json(certification);
+
   } catch (error) {
+    console.error("Erreur détail certification :", error);
+
     res.status(500).json({
       message: error.message
     });
   }
 };
 
+
+// MODIFIER
 const updateCertification = async (req, res) => {
   try {
+
     const certification =
       await Certification.findByIdAndUpdate(
         req.params.id,
@@ -133,7 +151,7 @@ const updateCertification = async (req, res) => {
     }
 
     await createAuditLog({
-      utilisateur: req.userId,
+      utilisateur: req.user._id,
       action: "MODIFICATION",
       entite: "Certification",
       entiteId: certification._id,
@@ -141,15 +159,21 @@ const updateCertification = async (req, res) => {
     });
 
     res.json(certification);
+
   } catch (error) {
+    console.error("Erreur modification certification :", error);
+
     res.status(400).json({
       message: error.message
     });
   }
 };
 
+
+// SUPPRIMER
 const deleteCertification = async (req, res) => {
   try {
+
     const certification =
       await Certification.findByIdAndDelete(
         req.params.id
@@ -162,7 +186,7 @@ const deleteCertification = async (req, res) => {
     }
 
     await createAuditLog({
-      utilisateur: req.userId,
+      utilisateur: req.user._id,
       action: "SUPPRESSION",
       entite: "Certification",
       entiteId: certification._id,
@@ -172,12 +196,16 @@ const deleteCertification = async (req, res) => {
     res.json({
       message: "Certification supprimée"
     });
+
   } catch (error) {
+    console.error("Erreur suppression certification :", error);
+
     res.status(500).json({
       message: error.message
     });
   }
 };
+
 
 module.exports = {
   createCertification,

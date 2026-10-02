@@ -1,4 +1,3 @@
-
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { jwtSecret } = require("../config/env");
@@ -15,6 +14,12 @@ const protect = async (req, res, next) => {
 
     const token = authHeader.split(" ")[1];
 
+    if (!token) {
+      return res.status(401).json({
+        message: "Token manquant"
+      });
+    }
+
     const decoded = jwt.verify(token, jwtSecret);
 
     const user = await User.findById(decoded.id);
@@ -30,6 +35,8 @@ const protect = async (req, res, next) => {
     next();
 
   } catch (error) {
+    console.error("Erreur auth :", error.message);
+
     return res.status(401).json({
       message: "Token invalide"
     });

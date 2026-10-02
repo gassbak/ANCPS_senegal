@@ -7,7 +7,7 @@ const requireRole = (...roles) => {
       });
     }
 
-    // Le superadmin a toujours accès
+    // Le superadmin a tous les accès
     if (req.user.role === "superadmin") {
       return next();
     }

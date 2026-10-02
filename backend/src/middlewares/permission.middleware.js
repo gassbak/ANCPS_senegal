@@ -7,14 +7,15 @@ const requirePermission = (...permissions) => {
       });
     }
 
-    // Le superadmin a toutes les permissions
+    // Superadmin = accès complet
     if (req.user.role === "superadmin") {
       return next();
     }
 
+    const userPermissions = req.user.permissions || [];
+
     const hasPermission = permissions.some(
-      permission =>
-        req.user.permissions.includes(permission)
+      permission => userPermissions.includes(permission)
     );
 
     if (!hasPermission) {

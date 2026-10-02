@@ -150,11 +150,80 @@ const updatePermissions = async (req, res) => {
     });
   }
 };
+const bcrypt = require("bcryptjs");
+const User = require("../models/User");
+
+const createUser = async (req, res) => {
+  try {
+    const {
+      name,
+      email,
+      password,
+      role
+    } = req.body;
+
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({
+        message: "Tous les champs sont obligatoires"
+      });
+    }
+
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({
+        message: "Cet email existe déjà"
+      });
+    }
+
+    const roles = [
+      "admin",
+      "editor",
+      "verifier",
+      "etablissement",
+      "visiteur"
+    ];
+
+    if (!roles.includes(role)) {
+      return res.status(400).json({
+        message: "Rôle invalide"
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      role
+    });
+
+    res.status(201).json({
+      message: "Utilisateur créé avec succès",
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        permissions: user.permissions
+      }
+    });
+
+  } catch (error) {
+    console.error("Erreur création utilisateur :", error);
+
+    res.status(500).json({
+      message: "Erreur serveur"
+    });
+  }
+};
 
 
 module.exports = {
   getUsers,
   getUser,
+  createUser,
   updateRole,
   updatePermissions
 };
