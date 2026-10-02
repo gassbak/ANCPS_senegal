@@ -16,15 +16,16 @@ const userSchema = new mongoose.Schema({
     required: true
   },
 
-  role: {
-    type: String,
-    enum: [
-      "admin",
-      "editor",
-      "verifier",
-      "etablissement"
-    ],
-    default: "etablissement"
-  }
+role: {
+  type: String,
+  enum: [
+    "admin",
+    "editor",
+    "verifier",
+    "etablissement",
+    "visiteur"
+  ],
+  default: "visiteur"
+}
 });
 module.exports = mongoose.model("User", userSchema);

@@ -145,13 +145,14 @@ export default function CertificationDetail() {
 
                 <p className="mt-5 text-lg text-slate-600">
                     {organisme}
-                </p>
-
-                <div className="mt-3 flex flex-wrap items-center gap-5 text-sm text-slate-500">
                     <span>
                         Sénégal
                     </span>
 
+                </p>
+
+                <div className="mt-3 flex flex-wrap items-center gap-5 text-sm text-slate-500">
+                    
                     {certification.sigle && (
                         <span>
                             Sigle :{" "}

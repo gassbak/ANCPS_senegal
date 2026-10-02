@@ -1,9 +1,11 @@
+
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
+const generateToken = require("../utils/generateToken");
 
+// REGISTER
 const register = async (req, res) => {
   try {
-    
     const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
@@ -33,18 +35,22 @@ const register = async (req, res) => {
       user: {
         id: user._id,
         name: user.name,
-        email: user.email
+        email: user.email,
+        role: user.role
       }
     });
+
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       message: "Erreur serveur"
     });
   }
 };
-// login
-const generateToken = require("../utils/generateToken");
 
+
+// LOGIN
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -80,27 +86,38 @@ const login = async (req, res) => {
         role: user.role
       }
     });
+
   } catch (error) {
-  console.error(error);
+    console.error(error);
 
-  res.status(500).json({
-    message: "Erreur serveur"
-  });
-}
-};
-
-const getProfile = async (req, res) => {
-  try {
-    const user = await User.findById(req.userId)
-      .select("-password");
-
-    res.json(user);
-  } catch (error) {
     res.status(500).json({
       message: "Erreur serveur"
     });
   }
 };
+
+
+// PROFILE
+const getProfile = async (req, res) => {
+  try {
+    const user = req.user;
+
+    res.json({
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      message: "Erreur serveur"
+    });
+  }
+};
+
 
 module.exports = {
   register,

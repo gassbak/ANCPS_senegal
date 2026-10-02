@@ -1,3 +1,4 @@
+
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { jwtSecret } = require("../config/env");
@@ -18,13 +19,18 @@ const protect = async (req, res, next) => {
 
     const user = await User.findById(decoded.id);
 
-    req.userId = user._id;
-    req.userRole = user.role;
+    if (!user) {
+      return res.status(401).json({
+        message: "Utilisateur introuvable"
+      });
+    }
+
+    req.user = user;
 
     next();
 
   } catch (error) {
-    res.status(401).json({
+    return res.status(401).json({
       message: "Token invalide"
     });
   }
