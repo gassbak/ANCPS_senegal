@@ -7,6 +7,11 @@ const requireRole = (...roles) => {
       });
     }
 
+    // Le superadmin a toujours accès
+    if (req.user.role === "superadmin") {
+      return next();
+    }
+
     if (!roles.includes(req.user.role)) {
       return res.status(403).json({
         message: "Accès interdit"

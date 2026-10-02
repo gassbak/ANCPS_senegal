@@ -9,7 +9,6 @@ const {
 } = require("../controllers/certification.controller");
 
 const protect = require("../middlewares/auth.middleware");
-
 const authorize = require("../middlewares/role.middleware");
 
 const router = express.Router();

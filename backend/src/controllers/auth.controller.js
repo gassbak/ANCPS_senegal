@@ -79,12 +79,13 @@ const login = async (req, res) => {
     res.json({
       message: "Connexion réussie",
       token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
+     user: {
+  id: user._id,
+  name: user.name,
+  email: user.email,
+  role: user.role,
+  permissions: user.permissions
+}
     });
 
   } catch (error) {
@@ -106,7 +107,8 @@ const getProfile = async (req, res) => {
       id: user._id,
       name: user.name,
       email: user.email,
-      role: user.role
+      role: user.role,
+      permissions: user.permissions
     });
 
   } catch (error) {
