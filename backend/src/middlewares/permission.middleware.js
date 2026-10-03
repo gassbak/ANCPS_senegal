@@ -1,5 +1,8 @@
 const requirePermission = (...permissions) => {
   return (req, res, next) => {
+    console.log("Utilisateur :", req.user.email);
+console.log("Rôle :", req.user.role);
+console.log("Permissions :", req.user.permissions);
 
     if (!req.user) {
       return res.status(401).json({
