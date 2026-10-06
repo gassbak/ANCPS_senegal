@@ -47,20 +47,23 @@ export default function Navbar() {
         {/* NAVIGATION */}
         <nav className="ml-[68px] flex items-center gap-[38px]">
 
+          {/* ACCUEIL */}
           <Link
-            to="/"
+            to="/home"
             className="text-[15px] font-semibold transition hover:text-yellow-300"
           >
             Accueil
           </Link>
 
+          {/* ANNUAIRE */}
           <Link
-            to="/"
+            to="/annuaire"
             className="text-[15px] font-semibold transition hover:text-yellow-300"
           >
             L'Annuaire
           </Link>
 
+          {/* À PROPOS */}
           <Link
             to="/about"
             className="text-[15px] font-semibold transition hover:text-yellow-300"

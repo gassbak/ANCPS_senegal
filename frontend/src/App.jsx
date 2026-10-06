@@ -4,6 +4,8 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import About from "./pages/About";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 import { AuthProvider, useAuth } from "./context/AuthContext";
 
@@ -26,6 +28,19 @@ function AppRoutes() {
         path="/"
         element={<Navigate to="/register" replace />}
       />
+       
+
+
+       <Route
+  path="/mot-de-passe-oublie"
+  element={<ForgotPassword />}
+/>
+
+<Route
+  path="/reinitialiser-mot-de-passe"
+  element={<ResetPassword />}
+/>
+
 
       {/* INSCRIPTION VISITEUR */}
       <Route
@@ -57,6 +72,8 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+     
 
       {/* Toute autre URL */}
       <Route
