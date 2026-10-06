@@ -1,17 +1,30 @@
 
 const express = require("express");
+const rateLimit = require("express-rate-limit");
 
 const {
   register,
   login,
-  getProfile
+  getProfile,
+  forgotPassword,
+  resetPassword
 } = require("../controllers/auth.controller");
 
 const protect = require("../middlewares/auth.middleware");
 const authorize = require("../middlewares/role.middleware");
 
 const router = express.Router();
+const forgotPasswordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // maximum 5 demandes
+  standardHeaders: true,
+  legacyHeaders: false,
 
+  message: {
+    message:
+      "Trop de demandes. Veuillez réessayer dans 15 minutes."
+  }
+});
 
 // Inscription
 router.post("/register", register);
@@ -19,6 +32,13 @@ router.post("/register", register);
 
 // Connexion
 router.post("/login", login);
+
+router.post(
+  "/forgot-password",
+  forgotPasswordLimiter,
+  forgotPassword
+);
+router.post("/reset-password", resetPassword);
 
 
 // Utilisateur connecté
