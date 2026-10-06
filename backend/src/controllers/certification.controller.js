@@ -34,17 +34,58 @@ const createCertification = async (req, res) => {
 
 
 // LISTE
+// LISTE
 const getCertifications = async (req, res) => {
   try {
-
     const filter = {};
 
-    // Site public : uniquement les fiches publiées
+    /*
+     * ================================
+     * ANNuaire PUBLIC
+     * ================================
+     * /api/certifications?published=true
+     *
+     * Retourne TOUTES les certifications
+     * publiées et non archivées.
+     */
     if (req.query.published === "true") {
       filter.published = true;
       filter.archived = { $ne: true };
+
+      const certifications =
+        await Certification.find(filter)
+          .populate("niveauEntree")
+          .populate("niveauSortie")
+          .populate("type")
+          .populate("nature")
+          .populate("statutVerification")
+          .populate("domaine")
+          .populate("sousDomaine")
+          .populate("metiers")
+          .populate("competences")
+          .populate("organisme")
+          .populate("etablissements")
+          .sort({ createdAt: -1 });
+
+      return res.json({
+        data: certifications,
+        pagination: {
+          page: 1,
+          limit: certifications.length,
+          total: certifications.length,
+          totalPages: 1
+        }
+      });
     }
 
+    /*
+     * ================================
+     * ADMINISTRATION
+     * ================================
+     *
+     * Retourne toutes les certifications
+     * avec pagination.
+     */
     const {
       page,
       limit,
@@ -85,14 +126,16 @@ const getCertifications = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Erreur liste certifications :", error);
+    console.error(
+      "Erreur liste certifications :",
+      error
+    );
 
     res.status(500).json({
       message: error.message
     });
   }
 };
-
 
 // DÉTAIL
 const getCertification = async (req, res) => {
@@ -133,6 +176,14 @@ const getCertification = async (req, res) => {
 // MODIFIER
 const updateCertification = async (req, res) => {
   try {
+    const ancienneCertification =
+      await Certification.findById(req.params.id);
+
+    if (!ancienneCertification) {
+      return res.status(404).json({
+        message: "Certification introuvable"
+      });
+    }
 
     const certification =
       await Certification.findByIdAndUpdate(
@@ -144,24 +195,84 @@ const updateCertification = async (req, res) => {
         }
       );
 
-    if (!certification) {
-      return res.status(404).json({
-        message: "Certification introuvable"
-      });
+    let action = "MODIFICATION";
+    let details =
+      "Modification d'une certification";
+
+    // PUBLICATION
+    if (
+      ancienneCertification.published === false &&
+      certification.published === true
+    ) {
+      action = "PUBLICATION";
+      details =
+        "Publication d'une certification";
+    }
+
+    // DÉPUBLICATION
+    else if (
+      ancienneCertification.published === true &&
+      certification.published === false
+    ) {
+      action = "DEPUBLICATION";
+      details =
+        "Dépublication d'une certification";
+    }
+
+    // ARCHIVAGE
+    else if (
+      ancienneCertification.archived === false &&
+      certification.archived === true
+    ) {
+      action = "ARCHIVAGE";
+      details =
+        "Archivage d'une certification";
+    }
+
+    // DÉSARCHIVAGE
+    else if (
+      ancienneCertification.archived === true &&
+      certification.archived === false
+    ) {
+      action = "DESARCHIVAGE";
+      details =
+        "Désarchivage d'une certification";
+    }
+
+    // VÉRIFICATION
+    else if (
+      String(
+        ancienneCertification.statutVerification
+      ) !==
+      String(
+        certification.statutVerification
+      )
+    ) {
+      action = "VERIFICATION";
+      details =
+        "Modification du statut de vérification";
     }
 
     await createAuditLog({
       utilisateur: req.user._id,
-      action: "MODIFICATION",
+      action,
       entite: "Certification",
       entiteId: certification._id,
-      details: "Modification d'une certification"
+      details,
+      ancienneValeur:
+        ancienneCertification.toObject(),
+      nouvelleValeur:
+        certification.toObject(),
+      ip: req.ip
     });
 
     res.json(certification);
 
   } catch (error) {
-    console.error("Erreur modification certification :", error);
+    console.error(
+      "Erreur modification certification :",
+      error
+    );
 
     res.status(400).json({
       message: error.message
