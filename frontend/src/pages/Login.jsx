@@ -1,5 +1,8 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
+import { login } from "../services/auth";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -7,6 +10,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,16 +22,28 @@ export default function Login() {
       return;
     }
 
-    const result = await login(email, password);
+    try {
+      setLoading(true);
 
-    navigate("/");
+      await login(email, password);
+
+      navigate("/");
+    } catch (error) {
+      console.error("Erreur connexion :", error);
+
+      setError(
+        error.message ||
+          "Email ou mot de passe incorrect."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#f8fafc] px-5 py-10">
       <div className="mx-auto w-full max-w-[448px]">
 
-        {/* FORMULAIRE */}
         <div className="rounded-[12px] border border-black bg-white px-8 py-9 shadow-sm">
 
           {/* TITRE */}
@@ -61,7 +77,9 @@ export default function Login() {
               id="email"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
               placeholder="votre@email.com"
               autoComplete="email"
               className="h-[50px] w-full rounded-lg border border-[#cbd5e1] bg-white px-4 text-[15px] text-[#334155] outline-none transition placeholder:text-[#94a3b8] focus:border-[#065f46] focus:ring-1 focus:ring-[#065f46]"
@@ -81,7 +99,9 @@ export default function Login() {
               id="password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
               placeholder="Votre mot de passe"
               autoComplete="current-password"
               className="h-[50px] w-full rounded-lg border border-[#cbd5e1] bg-white px-4 text-[15px] text-[#334155] outline-none transition placeholder:text-[#94a3b8] focus:border-[#065f46] focus:ring-1 focus:ring-[#065f46]"
@@ -100,16 +120,20 @@ export default function Login() {
 
           {/* BOUTON */}
           <button
-            type="button"
+            type="submit"
             onClick={handleSubmit}
-            className="h-[48px] w-full rounded-lg bg-[#065f46] text-[15px] font-bold text-white transition hover:bg-[#064e3b]"
+            disabled={loading}
+            className="h-[48px] w-full rounded-lg bg-[#065f46] text-[15px] font-bold text-white transition hover:bg-[#064e3b] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Se connecter
+            {loading
+              ? "Connexion..."
+              : "Se connecter"}
           </button>
 
           {/* INSCRIPTION */}
           <p className="mt-6 text-center text-[14px] text-[#64748b]">
             Vous n'avez pas encore de compte ?{" "}
+
             <Link
               to="/inscription"
               className="font-semibold text-[#065f46] hover:underline"

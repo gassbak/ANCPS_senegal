@@ -8,6 +8,7 @@ import Annuaire from "./pages/Annuaire";
 import AdminRoutes from "./admin/routes/AdminRoutes";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import CertificationDetail from "./pages/CertificationDetail";
+import ForgotPassword from "./pages/ForgotPassword";
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuth();
 
@@ -26,6 +27,11 @@ export default function App() {
           <Route path="/" element={<Navigate to="/register" replace />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route
+  path="/mot-de-passe-oublie"
+  element={<ForgotPassword />}
+/>
+          
 <Route
     path="/annuaire"
     element={<Annuaire />}
