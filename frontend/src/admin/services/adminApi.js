@@ -475,37 +475,20 @@ export async function loadNotifications() {
 
   return notifications.map((notification) => ({
     id: notification._id || notification.id,
-
-    title:
-      notification.title ||
-      "Notification",
-
-    text:
-      notification.message ||
-      notification.text ||
-      "",
-
-    read:
-      notification.read ||
-      notification.isRead ||
-      false,
-
+    title: notification.title || "Notification",
+    text: notification.message || notification.text || "",
+    read: notification.read || notification.isRead || false,
     date: notification.createdAt
-      ? new Date(
-          notification.createdAt
-        ).toLocaleString("fr-FR")
+      ? new Date(notification.createdAt).toLocaleString("fr-FR")
       : "",
   }));
 }
-export async function markNotificationRead(id) {
-  return request(
-    `/notifications/${id}/read`,
-    {
-      method: "PUT",
-    }
-  );
-}
 
+export async function markNotificationRead(id) {
+  return request(`/notifications/${id}/read`, {
+    method: "PUT",
+  });
+}
 /* ============================== TABLEAU DE BORD ============================== */
 
 export async function loadRemoteStore() {
