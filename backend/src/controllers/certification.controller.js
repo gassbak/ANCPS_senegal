@@ -39,15 +39,9 @@ const getCertifications = async (req, res) => {
   try {
     const filter = {};
 
-    /*
-     * ================================
-     * ANNuaire PUBLIC
-     * ================================
-     * /api/certifications?published=true
-     *
-     * Retourne TOUTES les certifications
-     * publiées et non archivées.
-     */
+    // ==========================================
+    // ANNuaire PUBLIC
+    // ==========================================
     if (req.query.published === "true") {
       filter.published = true;
       filter.archived = { $ne: true };
@@ -73,27 +67,17 @@ const getCertifications = async (req, res) => {
           page: 1,
           limit: certifications.length,
           total: certifications.length,
-          totalPages: 1
-        }
+          totalPages: 1,
+        },
       });
     }
 
-    /*
-     * ================================
-     * ADMINISTRATION
-     * ================================
-     *
-     * Retourne toutes les certifications
-     * avec pagination.
-     */
-    const {
-      page,
-      limit,
-      skip
-    } = getPagination(req);
-
+    // ==========================================
+    // ADMIN
+    // Toutes les certifications
+    // ==========================================
     const certifications =
-      await Certification.find(filter)
+      await Certification.find({})
         .populate("niveauEntree")
         .populate("niveauSortie")
         .populate("type")
@@ -105,24 +89,16 @@ const getCertifications = async (req, res) => {
         .populate("competences")
         .populate("organisme")
         .populate("etablissements")
-        .sort({ createdAt: -1 })
-        .skip(skip)
-        .limit(limit);
+        .sort({ createdAt: -1 });
 
-    const total =
-      await Certification.countDocuments(filter);
-
-    const totalPages =
-      Math.ceil(total / limit);
-
-    res.json({
+    return res.json({
       data: certifications,
       pagination: {
-        page,
-        limit,
-        total,
-        totalPages
-      }
+        page: 1,
+        limit: certifications.length,
+        total: certifications.length,
+        totalPages: 1,
+      },
     });
 
   } catch (error) {
@@ -132,11 +108,10 @@ const getCertifications = async (req, res) => {
     );
 
     res.status(500).json({
-      message: error.message
+      message: error.message,
     });
   }
 };
-
 // DÉTAIL
 const getCertification = async (req, res) => {
   try {
