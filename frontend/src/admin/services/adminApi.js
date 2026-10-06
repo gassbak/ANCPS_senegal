@@ -143,7 +143,7 @@ async function certificationToBack(form) {
 
 export async function loadCertifications() {
   const [certificationResponse, recos] = await Promise.all([
-    request("/certifications"),
+    request("/certifications?limit=10000"),
     safeList("/reconnaissances"),
   ]);
 
