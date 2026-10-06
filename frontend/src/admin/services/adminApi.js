@@ -406,14 +406,26 @@ export async function loadNotifications() {
 export const markNotificationRead = (id) => request(`/notifications/${id}/read`, { method: "PUT" });
 
 export async function loadAudit() {
-  const items = await request("/audit");
-  return items.map((a) => ({
-    id: a._id,
-    date: new Date(a.createdAt).toLocaleString("fr-FR"),
-    user: a.utilisateur?.name || "—",
-    action: a.action,
-    entity: a.entite,
-    details: a.details || "—",
+  const response = await request("/audit");
+
+  const audits = Array.isArray(response)
+    ? response
+    : Array.isArray(response?.data)
+      ? response.data
+      : [];
+
+  return audits.map((a) => ({
+    id: a._id || a.id,
+    date: a.createdAt
+      ? new Date(a.createdAt).toLocaleString("fr-FR")
+      : "",
+    user:
+      a.utilisateur?.name ||
+      a.utilisateur?.email ||
+      "Utilisateur inconnu",
+    action: a.action || "",
+    entity: a.entite || "",
+    details: a.details || "",
   }));
 }
 
