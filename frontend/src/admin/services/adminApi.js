@@ -143,20 +143,23 @@ async function certificationToBack(form) {
 
 export async function loadCertifications() {
   const [response, recos] = await Promise.all([
-    request("/certifications?limit=10000&page=1"),
+    request("/certifications"),
     safeList("/reconnaissances"),
   ]);
 
-  // Le backend peut retourner :
+  // L'API renvoie maintenant :
   // { data: [...], pagination: {...} }
-  // ou directement [...]
+
   const certs = Array.isArray(response)
     ? response
     : Array.isArray(response?.data)
       ? response.data
       : [];
 
-  console.log("CERTIFICATIONS RECUES :", certs.length);
+  console.log(
+    "✅ Certifications reçues :",
+    certs.length
+  );
 
   const byCert = {};
 
