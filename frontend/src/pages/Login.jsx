@@ -2,15 +2,12 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { login } from "../services/auth";
-
 export default function Login() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,25 +20,21 @@ export default function Login() {
     }
 
     try {
-      setLoading(true);
-
-      await login(email, password);
+      // Garde ici ton système actuel de connexion
+      // await login(email, password);
 
       navigate("/");
     } catch (error) {
-      console.error("Erreur connexion :", error);
-
       setError(
         error.message ||
-          "Email ou mot de passe incorrect."
+        "Erreur lors de la connexion."
       );
-    } finally {
-      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-[#f8fafc] px-5 py-10">
+
       <div className="mx-auto w-full max-w-[448px]">
 
         <div className="rounded-[12px] border border-black bg-white px-8 py-9 shadow-sm">
@@ -57,6 +50,7 @@ export default function Login() {
             </p>
           </div>
 
+
           {/* ERREUR */}
           {error && (
             <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
@@ -64,8 +58,10 @@ export default function Login() {
             </div>
           )}
 
+
           {/* EMAIL */}
           <div className="mb-5">
+
             <label
               htmlFor="email"
               className="mb-2 block text-[14px] font-medium text-[#0f2b4d]"
@@ -84,10 +80,13 @@ export default function Login() {
               autoComplete="email"
               className="h-[50px] w-full rounded-lg border border-[#cbd5e1] bg-white px-4 text-[15px] text-[#334155] outline-none transition placeholder:text-[#94a3b8] focus:border-[#065f46] focus:ring-1 focus:ring-[#065f46]"
             />
+
           </div>
 
+
           {/* MOT DE PASSE */}
-          <div className="mb-2">
+          <div>
+
             <label
               htmlFor="password"
               className="mb-2 block text-[14px] font-medium text-[#0f2b4d]"
@@ -106,32 +105,36 @@ export default function Login() {
               autoComplete="current-password"
               className="h-[50px] w-full rounded-lg border border-[#cbd5e1] bg-white px-4 text-[15px] text-[#334155] outline-none transition placeholder:text-[#94a3b8] focus:border-[#065f46] focus:ring-1 focus:ring-[#065f46]"
             />
+
           </div>
 
+
           {/* MOT DE PASSE OUBLIÉ */}
-          <div className="mb-6 text-right">
+          <div className="mt-3 mb-6 flex justify-end">
+
             <Link
               to="/mot-de-passe-oublie"
-              className="text-[14px] font-medium text-[#065f46] hover:underline"
+              className="text-[14px] font-semibold text-[#065f46] hover:text-[#064e3b] hover:underline"
             >
               Mot de passe oublié ?
             </Link>
+
           </div>
+
 
           {/* BOUTON */}
           <button
             type="submit"
             onClick={handleSubmit}
-            disabled={loading}
-            className="h-[48px] w-full rounded-lg bg-[#065f46] text-[15px] font-bold text-white transition hover:bg-[#064e3b] disabled:cursor-not-allowed disabled:opacity-60"
+            className="h-[48px] w-full rounded-lg bg-[#065f46] text-[15px] font-bold text-white transition hover:bg-[#064e3b]"
           >
-            {loading
-              ? "Connexion..."
-              : "Se connecter"}
+            Se connecter
           </button>
+
 
           {/* INSCRIPTION */}
           <p className="mt-6 text-center text-[14px] text-[#64748b]">
+
             Vous n'avez pas encore de compte ?{" "}
 
             <Link
@@ -140,10 +143,13 @@ export default function Login() {
             >
               Créer un compte
             </Link>
+
           </p>
 
         </div>
+
       </div>
+
     </div>
   );
 }
