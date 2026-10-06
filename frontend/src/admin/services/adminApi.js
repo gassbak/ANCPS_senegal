@@ -509,14 +509,15 @@ export async function markNotificationRead(id) {
 /* ============================== TABLEAU DE BORD ============================== */
 
 export async function loadRemoteStore() {
-  const [certifications, organizations, establishments, documents, requests, audit] = await Promise.all([
+  const [certifications, organizations, establishments, documents, requests, audit,  notifications] = await Promise.all([
     loadCertifications().catch(() => []),
     loadReference("organizations").catch(() => []),
     loadReference("establishments").catch(() => []),
     loadQuality("documents").catch(() => []),
     loadRequests().catch(() => []),
     loadAudit().catch(() => []),
+     loadNotifications().catch(() => []),
   ]);
 
-  return { certifications, organizations, establishments, documents, requests, audit };
+  return { certifications, organizations, establishments, documents, requests, audit, notifications };
 }
