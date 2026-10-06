@@ -475,19 +475,32 @@ export async function loadNotifications() {
 
   return notifications.map((notification) => ({
     id: notification._id || notification.id,
-    title: notification.title || "Notification",
-    text: notification.message || notification.text || "",
-    read: notification.read || notification.isRead || false,
+
+    title: notification.type
+      ? notification.type.charAt(0).toUpperCase() +
+        notification.type.slice(1)
+      : "Notification",
+
+    text: notification.message || "",
+
+    read: notification.lu === true,
+
     date: notification.createdAt
-      ? new Date(notification.createdAt).toLocaleString("fr-FR")
-      : "",
+      ? new Date(
+          notification.createdAt
+        ).toLocaleString("fr-FR")
+      : ""
   }));
 }
 
+
 export async function markNotificationRead(id) {
-  return request(`/notifications/${id}/read`, {
-    method: "PUT",
-  });
+  return request(
+    `/notifications/${id}/read`,
+    {
+      method: "PUT"
+    }
+  );
 }
 /* ============================== TABLEAU DE BORD ============================== */
 
