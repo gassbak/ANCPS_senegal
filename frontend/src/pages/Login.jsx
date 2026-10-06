@@ -1,6 +1,9 @@
-
+```jsx
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate
+} from "react-router-dom";
 
 import { login } from "../services/auth";
 
@@ -18,17 +21,26 @@ export default function Login() {
 
     setError("");
 
-    if (!email.trim() || !password.trim()) {
-      setError("Veuillez remplir tous les champs.");
+    if (!email.trim()) {
+      setError("Veuillez saisir votre adresse email.");
+      return;
+    }
+
+    if (!password.trim()) {
+      setError("Veuillez saisir votre mot de passe.");
       return;
     }
 
     try {
       setLoading(true);
 
-      await login(email, password);
+      await login(
+        email.trim(),
+        password
+      );
 
       navigate("/home");
+
     } catch (error) {
       console.error(
         "Erreur de connexion :",
@@ -39,36 +51,37 @@ export default function Login() {
         error.message ||
         "Email ou mot de passe incorrect."
       );
+
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] px-5 py-10">
+    <div className="min-h-screen bg-[#f8fafc] px-4 py-8 sm:px-6 sm:py-12">
 
       <div className="mx-auto w-full max-w-[448px]">
 
         {/* CARTE */}
-        <div className="rounded-[12px] border border-black bg-white px-8 py-9 shadow-sm">
+        <div className="rounded-2xl border border-gray-200 bg-white px-5 py-7 shadow-sm sm:px-8 sm:py-9">
 
-          {/* TITRE */}
+          {/* EN-TÊTE */}
           <div className="mb-8 text-center">
 
-            <h1 className="text-[24px] font-bold text-[#0f172a]">
+            <h1 className="text-2xl font-bold text-[#0f172a]">
               Se connecter
             </h1>
 
-            <p className="mt-2 text-[15px] text-[#64748b]">
+            <p className="mt-2 text-sm leading-6 text-[#64748b]">
               Connectez-vous pour accéder à votre compte
             </p>
 
           </div>
 
 
-          {/* ERREUR */}
+          {/* MESSAGE D'ERREUR */}
           {error && (
-            <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+            <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm leading-5 text-red-600">
               {error}
             </div>
           )}
@@ -82,21 +95,24 @@ export default function Login() {
 
               <label
                 htmlFor="email"
-                className="mb-2 block text-[14px] font-medium text-[#0f2b4d]"
+                className="mb-2 block text-sm font-medium text-[#0f2b4d]"
               >
                 Adresse email
               </label>
 
               <input
                 id="email"
+                name="email"
                 type="email"
                 value={email}
-                onChange={(e) =>
-                  setEmail(e.target.value)
-                }
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setError("");
+                }}
                 placeholder="votre@email.com"
                 autoComplete="email"
-                className="h-[50px] w-full rounded-lg border border-[#cbd5e1] bg-white px-4 text-[15px] text-[#334155] outline-none transition placeholder:text-[#94a3b8] focus:border-[#065f46] focus:ring-1 focus:ring-[#065f46]"
+                disabled={loading}
+                className="h-12 w-full rounded-lg border border-[#cbd5e1] bg-white px-4 text-sm text-[#334155] outline-none transition placeholder:text-[#94a3b8] focus:border-[#065f46] focus:ring-2 focus:ring-[#065f46]/10 disabled:cursor-not-allowed disabled:bg-gray-50"
               />
 
             </div>
@@ -107,21 +123,24 @@ export default function Login() {
 
               <label
                 htmlFor="password"
-                className="mb-2 block text-[14px] font-medium text-[#0f2b4d]"
+                className="mb-2 block text-sm font-medium text-[#0f2b4d]"
               >
                 Mot de passe
               </label>
 
               <input
                 id="password"
+                name="password"
                 type="password"
                 value={password}
-                onChange={(e) =>
-                  setPassword(e.target.value)
-                }
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setError("");
+                }}
                 placeholder="Votre mot de passe"
                 autoComplete="current-password"
-                className="h-[50px] w-full rounded-lg border border-[#cbd5e1] bg-white px-4 text-[15px] text-[#334155] outline-none transition placeholder:text-[#94a3b8] focus:border-[#065f46] focus:ring-1 focus:ring-[#065f46]"
+                disabled={loading}
+                className="h-12 w-full rounded-lg border border-[#cbd5e1] bg-white px-4 text-sm text-[#334155] outline-none transition placeholder:text-[#94a3b8] focus:border-[#065f46] focus:ring-2 focus:ring-[#065f46]/10 disabled:cursor-not-allowed disabled:bg-gray-50"
               />
 
             </div>
@@ -132,7 +151,7 @@ export default function Login() {
 
               <Link
                 to="/mot-de-passe-oublie"
-                className="text-[14px] font-semibold text-[#065f46] hover:text-[#064e3b] hover:underline"
+                className="text-sm font-semibold text-[#065f46] hover:text-[#064e3b] hover:underline"
               >
                 Mot de passe oublié ?
               </Link>
@@ -140,11 +159,11 @@ export default function Login() {
             </div>
 
 
-            {/* BOUTON */}
+            {/* BOUTON CONNEXION */}
             <button
               type="submit"
               disabled={loading}
-              className="h-[48px] w-full rounded-lg bg-[#065f46] text-[15px] font-bold text-white transition hover:bg-[#064e3b] disabled:cursor-not-allowed disabled:opacity-60"
+              className="h-12 w-full rounded-lg bg-[#065f46] text-sm font-bold text-white transition hover:bg-[#064e3b] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading
                 ? "Connexion..."
@@ -155,7 +174,7 @@ export default function Login() {
 
 
           {/* INSCRIPTION */}
-          <p className="mt-6 text-center text-[14px] text-[#64748b]">
+          <p className="mt-6 text-center text-sm leading-6 text-[#64748b]">
 
             Vous n'avez pas encore de compte ?{" "}
 
