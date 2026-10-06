@@ -47,6 +47,7 @@ export default function Navbar() {
         {/* NAVIGATION */}
         <nav className="ml-[68px] flex items-center gap-[38px]">
 
+          {/* ACCUEIL */}
           <Link
             to="/Home"
             className="text-[15px] font-semibold transition hover:text-yellow-300"
@@ -54,6 +55,7 @@ export default function Navbar() {
             Accueil
           </Link>
 
+          {/* ANNUAIRE */}
           <Link
             to="/annuaire"
             className="text-[15px] font-semibold transition hover:text-yellow-300"
@@ -61,6 +63,7 @@ export default function Navbar() {
             L'Annuaire
           </Link>
 
+          {/* À PROPOS */}
           <Link
             to="/about"
             className="text-[15px] font-semibold transition hover:text-yellow-300"
