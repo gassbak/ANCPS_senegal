@@ -142,21 +142,32 @@ async function certificationToBack(form) {
 }
 
 export async function loadCertifications() {
-  const [certificationResponse, recos] = await Promise.all([
-request("/certifications?limit=10000&page=1"),
+  const [response, recos] = await Promise.all([
+    request("/certifications?limit=10000&page=1"),
     safeList("/reconnaissances"),
   ]);
 
-  const certs = Array.isArray(certificationResponse)
-    ? certificationResponse
-    : certificationResponse.data || [];
+  // Le backend peut retourner :
+  // { data: [...], pagination: {...} }
+  // ou directement [...]
+  const certs = Array.isArray(response)
+    ? response
+    : Array.isArray(response?.data)
+      ? response.data
+      : [];
+
+  console.log("CERTIFICATIONS RECUES :", certs.length);
 
   const byCert = {};
 
   recos.forEach((r) => {
     const key = idOf(r.certification);
 
-    (byCert[key] = byCert[key] || []).push(r);
+    if (!byCert[key]) {
+      byCert[key] = [];
+    }
+
+    byCert[key].push(r);
   });
 
   return certs.map((c) =>
