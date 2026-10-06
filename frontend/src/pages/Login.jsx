@@ -1,14 +1,12 @@
 
 import { useState } from "react";
-import {
-  Link,
-  useNavigate
-} from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import { login } from "../services/auth";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,176 +19,142 @@ export default function Login() {
 
     setError("");
 
-    if (!email.trim()) {
-      setError("Veuillez saisir votre adresse email.");
+    if (!email || !password) {
+      setError("Veuillez remplir tous les champs.");
       return;
     }
 
-    if (!password.trim()) {
-      setError("Veuillez saisir votre mot de passe.");
-      return;
-    }
+    setLoading(true);
 
-    try {
-      setLoading(true);
+    const result = await login(
+      email.trim(),
+      password
+    );
 
-      await login(
-        email.trim(),
-        password
-      );
+    setLoading(false);
 
-      navigate("/home");
-
-    } catch (error) {
-      console.error(
-        "Erreur de connexion :",
-        error
-      );
-
+    if (!result.success) {
       setError(
-        error.message ||
-        "Email ou mot de passe incorrect."
+        result.message ||
+          "Email ou mot de passe incorrect."
       );
-
-    } finally {
-      setLoading(false);
+      return;
     }
+
+    navigate("/home");
   };
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] px-4 py-8 sm:px-6 sm:py-12">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
+      <div className="w-full max-w-md">
 
-      <div className="mx-auto w-full max-w-[448px]">
+    
 
-        {/* CARTE */}
-        <div className="rounded-2xl border border-gray-200 bg-white px-5 py-7 shadow-sm sm:px-8 sm:py-9">
-
-          {/* EN-TÊTE */}
-          <div className="mb-8 text-center">
-
-            <h1 className="text-2xl font-bold text-[#0f172a]">
+        {/* Formulaire */}
+        <form
+          onSubmit={handleSubmit}
+          className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+        >
+          <div className="mb-6">
+            <h2 className="text-xl font-bold text-slate-900">
               Se connecter
-            </h1>
+            </h2>
 
-            <p className="mt-2 text-sm leading-6 text-[#64748b]">
-              Connectez-vous pour accéder à votre compte
+            <p className="mt-1 text-sm text-slate-500">
+              Accédez à votre espace ANCPS.
             </p>
-
           </div>
 
-
-          {/* MESSAGE D'ERREUR */}
           {error && (
-            <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm leading-5 text-red-600">
+            <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
               {error}
             </div>
           )}
 
+          {/* Email */}
+          <div>
+            <label
+              htmlFor="email"
+              className="mb-2 block text-sm font-semibold text-slate-700"
+            >
+              Adresse email
+            </label>
 
-          {/* FORMULAIRE */}
-          <form onSubmit={handleSubmit}>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
+              placeholder="exemple@email.com"
+              autoComplete="email"
+              required
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+            />
+          </div>
 
-            {/* EMAIL */}
-            <div className="mb-5">
-
-              <label
-                htmlFor="email"
-                className="mb-2 block text-sm font-medium text-[#0f2b4d]"
-              >
-                Adresse email
-              </label>
-
-              <input
-                id="email"
-                name="email"
-                type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setError("");
-                }}
-                placeholder="votre@email.com"
-                autoComplete="email"
-                disabled={loading}
-                className="h-12 w-full rounded-lg border border-[#cbd5e1] bg-white px-4 text-sm text-[#334155] outline-none transition placeholder:text-[#94a3b8] focus:border-[#065f46] focus:ring-2 focus:ring-[#065f46]/10 disabled:cursor-not-allowed disabled:bg-gray-50"
-              />
-
-            </div>
-
-
-            {/* MOT DE PASSE */}
-            <div>
-
+          {/* Mot de passe */}
+          <div className="mt-5">
+            <div className="mb-2 flex items-center justify-between gap-3">
               <label
                 htmlFor="password"
-                className="mb-2 block text-sm font-medium text-[#0f2b4d]"
+                className="block text-sm font-semibold text-slate-700"
               >
                 Mot de passe
               </label>
 
-              <input
-                id="password"
-                name="password"
-                type="password"
-                value={password}
-                onChange={(e) => {
-                  setPassword(e.target.value);
-                  setError("");
-                }}
-                placeholder="Votre mot de passe"
-                autoComplete="current-password"
-                disabled={loading}
-                className="h-12 w-full rounded-lg border border-[#cbd5e1] bg-white px-4 text-sm text-[#334155] outline-none transition placeholder:text-[#94a3b8] focus:border-[#065f46] focus:ring-2 focus:ring-[#065f46]/10 disabled:cursor-not-allowed disabled:bg-gray-50"
-              />
-
-            </div>
-
-
-            {/* MOT DE PASSE OUBLIÉ */}
-            <div className="mt-3 mb-6 text-right">
-
               <Link
                 to="/mot-de-passe-oublie"
-                className="text-sm font-semibold text-[#065f46] hover:text-[#064e3b] hover:underline"
+                className="text-sm font-medium text-emerald-700 hover:text-emerald-800"
               >
                 Mot de passe oublié ?
               </Link>
-
             </div>
 
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
+              placeholder="••••••••"
+              autoComplete="current-password"
+              required
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+            />
+          </div>
 
-            {/* BOUTON CONNEXION */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="h-12 w-full rounded-lg bg-[#065f46] text-sm font-bold text-white transition hover:bg-[#064e3b] disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {loading
-                ? "Connexion..."
-                : "Se connecter"}
-            </button>
+          {/* Bouton */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-6 w-full rounded-lg bg-emerald-700 px-5 py-3 font-bold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {loading
+              ? "Connexion..."
+              : "Se connecter"}
+          </button>
 
-          </form>
-
-
-          {/* INSCRIPTION */}
-          <p className="mt-6 text-center text-sm leading-6 text-[#64748b]">
-
-            Vous n'avez pas encore de compte ?{" "}
-
-            <Link
-              to="/register"
-              className="font-semibold text-[#065f46] hover:underline"
-            >
-              Créer un compte
-            </Link>
-
+          {/* Inscription */}
+          <p className="mt-6 text-center text-sm text-slate-500">
+            Vous n'avez pas encore de compte ?
           </p>
 
-        </div>
+          <Link
+            to="/register"
+            className="mt-2 block text-center text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+          >
+            Créer un compte
+          </Link>
 
+          {/* Retour annuaire */}
+         
+        </form>
+
+       
       </div>
-
     </div>
   );
 }

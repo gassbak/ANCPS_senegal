@@ -392,18 +392,7 @@ export const setRequestStatus = (id, status, commentaire) =>
 
 /* ============================== NOTIFICATIONS & AUDIT ============================== */
 
-export async function loadNotifications() {
-  const items = await request("/notifications");
-  return items.map((n) => ({
-    id: n._id,
-    title: n.type,
-    text: n.message,
-    read: !!n.lu,
-    date: day(n.createdAt),
-  }));
-}
 
-export const markNotificationRead = (id) => request(`/notifications/${id}/read`, { method: "PUT" });
 
 export async function loadAudit() {
   const response = await request("/audit");
