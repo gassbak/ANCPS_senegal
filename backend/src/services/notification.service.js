@@ -1,18 +1,18 @@
 
 const Notification = require("../models/Notification");
 
+// CRÉER UNE NOTIFICATION
 const createNotification = async ({
   utilisateur,
   type,
   message
 }) => {
   try {
-    const notification =
-      await Notification.create({
-        utilisateur,
-        type,
-        message
-      });
+    const notification = await Notification.create({
+      utilisateur,
+      type,
+      message
+    });
 
     return notification;
   } catch (error) {
@@ -25,9 +25,8 @@ const createNotification = async ({
   }
 };
 
-const getUserNotifications = async (
-  utilisateur
-) => {
+// RÉCUPÉRER LES NOTIFICATIONS D'UN UTILISATEUR
+const getNotifications = async (utilisateur) => {
   try {
     return await Notification.find({
       utilisateur
@@ -46,7 +45,8 @@ const getUserNotifications = async (
   }
 };
 
-const markNotificationAsRead = async (
+// MARQUER UNE NOTIFICATION COMME LUE
+const markAsRead = async (
   notificationId,
   utilisateur
 ) => {
@@ -75,6 +75,6 @@ const markNotificationAsRead = async (
 
 module.exports = {
   createNotification,
-  getUserNotifications,
-  markNotificationAsRead
+  getNotifications,
+  markAsRead
 };
