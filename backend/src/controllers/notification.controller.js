@@ -1,12 +1,20 @@
+
 const {
   getNotifications,
   markAsRead
 } = require("../services/notification.service");
 
-
+// ==========================================
 // RÉCUPÉRER LES NOTIFICATIONS
+// ==========================================
 const getAll = async (req, res) => {
   try {
+    if (!req.userId) {
+      return res.status(401).json({
+        message: "Utilisateur non identifié"
+      });
+    }
+
     const notifications =
       await getNotifications(
         req.userId
@@ -26,10 +34,17 @@ const getAll = async (req, res) => {
   }
 };
 
-
+// ==========================================
 // MARQUER UNE NOTIFICATION COMME LUE
+// ==========================================
 const read = async (req, res) => {
   try {
+    if (!req.userId) {
+      return res.status(401).json({
+        message: "Utilisateur non identifié"
+      });
+    }
+
     const notification =
       await markAsRead(
         req.params.id,
@@ -55,7 +70,6 @@ const read = async (req, res) => {
     });
   }
 };
-
 
 module.exports = {
   getAll,

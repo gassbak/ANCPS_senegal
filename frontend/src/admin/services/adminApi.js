@@ -454,10 +454,10 @@ export async function saveUser(form) {
 }
 
 
-/* ============================== NOTIFICATIONS & AUDIT ============================== */
-
 export async function getNotifications() {
-  const response = await request("/notifications");
+  const response = await request(
+    "/notifications"
+  );
 
   const notifications = Array.isArray(response)
     ? response
@@ -465,30 +465,39 @@ export async function getNotifications() {
       ? response.data
       : [];
 
-  return notifications.map((notification) => ({
-    id: notification._id || notification.id,
+  return notifications.map(
+    (notification) => ({
+      id:
+        notification._id ||
+        notification.id,
 
-    title:
-      notification.title ||
-      (
-        notification.type
-          ? notification.type.charAt(0).toUpperCase() +
-            notification.type.slice(1)
-          : "Notification"
-      ),
+      title:
+        notification.title ||
+        (
+          notification.type
+            ? notification.type
+                .charAt(0)
+                .toUpperCase() +
+              notification.type.slice(1)
+            : "Notification"
+        ),
 
-    text: notification.message || "",
+      text:
+        notification.message || "",
 
-    read:
-      notification.lu === true ||
-      notification.read === true,
+      read:
+        notification.lu === true ||
+        notification.read === true,
 
-    date: notification.createdAt
-      ? new Date(notification.createdAt).toLocaleString("fr-FR")
-      : ""
-  }));
+      date:
+        notification.createdAt
+          ? new Date(
+              notification.createdAt
+            ).toLocaleString("fr-FR")
+          : ""
+    })
+  );
 }
-
 
 export async function markNotificationRead(id) {
   return request(
@@ -499,9 +508,6 @@ export async function markNotificationRead(id) {
   );
 }
 
-
-
-getNotifications().catch(() => [])
 /* ============================== TABLEAU DE BORD ============================== */
 
 export async function loadRemoteStore() {

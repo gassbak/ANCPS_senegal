@@ -1,7 +1,10 @@
 
 const Notification = require("../models/Notification");
+const User = require("../models/User");
 
+// ==========================================
 // CRÉER UNE NOTIFICATION
+// ==========================================
 const createNotification = async ({
   utilisateur,
   type,
@@ -25,8 +28,86 @@ const createNotification = async ({
   }
 };
 
-// RÉCUPÉRER LES NOTIFICATIONS D'UN UTILISATEUR
-const getNotifications = async (utilisateur) => {
+// ==========================================
+// NOTIFIER PLUSIEURS UTILISATEURS
+// ==========================================
+const createNotificationForUsers = async ({
+  utilisateurs,
+  type,
+  message
+}) => {
+  try {
+    if (!utilisateurs || utilisateurs.length === 0) {
+      return [];
+    }
+
+    const notifications = utilisateurs.map(
+      (utilisateur) => ({
+        utilisateur,
+        type,
+        message
+      })
+    );
+
+    return await Notification.insertMany(
+      notifications
+    );
+  } catch (error) {
+    console.error(
+      "Erreur création notifications utilisateurs :",
+      error
+    );
+
+    throw error;
+  }
+};
+
+// ==========================================
+// NOTIFIER TOUS LES UTILISATEURS
+// ==========================================
+const notifyAllUsers = async ({
+  type,
+  message,
+  excludeUserId = null
+}) => {
+  try {
+    const filter = {};
+
+    if (excludeUserId) {
+      filter._id = {
+        $ne: excludeUserId
+      };
+    }
+
+    const users = await User.find(filter)
+      .select("_id")
+      .lean();
+
+    const userIds = users.map(
+      (user) => user._id
+    );
+
+    return await createNotificationForUsers({
+      utilisateurs: userIds,
+      type,
+      message
+    });
+  } catch (error) {
+    console.error(
+      "Erreur notification tous les utilisateurs :",
+      error
+    );
+
+    throw error;
+  }
+};
+
+// ==========================================
+// RÉCUPÉRER LES NOTIFICATIONS
+// ==========================================
+const getNotifications = async (
+  utilisateur
+) => {
   try {
     return await Notification.find({
       utilisateur
@@ -45,7 +126,9 @@ const getNotifications = async (utilisateur) => {
   }
 };
 
-// MARQUER UNE NOTIFICATION COMME LUE
+// ==========================================
+// MARQUER COMME LUE
+// ==========================================
 const markAsRead = async (
   notificationId,
   utilisateur
@@ -75,6 +158,8 @@ const markAsRead = async (
 
 module.exports = {
   createNotification,
+  createNotificationForUsers,
+  notifyAllUsers,
   getNotifications,
   markAsRead
 };
