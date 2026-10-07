@@ -453,8 +453,11 @@ export async function saveUser(form) {
       });
 }
 
-export async function loadNotifications() {
-  const response = await request("/notifications");
+
+export async function getNotifications() {
+  const response = await request(
+    "/notifications"
+  );
 
   const notifications = Array.isArray(response)
     ? response
@@ -462,26 +465,39 @@ export async function loadNotifications() {
       ? response.data
       : [];
 
-  return notifications.map((notification) => ({
-    id: notification._id || notification.id,
+  return notifications.map(
+    (notification) => ({
+      id:
+        notification._id ||
+        notification.id,
 
-    title: notification.type
-      ? notification.type.charAt(0).toUpperCase() +
-        notification.type.slice(1)
-      : "Notification",
+      title:
+        notification.title ||
+        (
+          notification.type
+            ? notification.type
+                .charAt(0)
+                .toUpperCase() +
+              notification.type.slice(1)
+            : "Notification"
+        ),
 
-    text: notification.message || "",
+      text:
+        notification.message || "",
 
-    read: notification.lu === true,
+      read:
+        notification.lu === true ||
+        notification.read === true,
 
-    date: notification.createdAt
-      ? new Date(
-          notification.createdAt
-        ).toLocaleString("fr-FR")
-      : ""
-  }));
+      date:
+        notification.createdAt
+          ? new Date(
+              notification.createdAt
+            ).toLocaleString("fr-FR")
+          : ""
+    })
+  );
 }
-
 
 export async function markNotificationRead(id) {
   return request(
@@ -491,6 +507,70 @@ export async function markNotificationRead(id) {
     }
   );
 }
+
+// =========================
+// ANALYTICS
+// =========================
+
+export async function loadAnalytics() {
+  const response = await request("/analytics");
+
+  return {
+    searches: Number(response?.searches || 0),
+    visits: Number(response?.visits || 0),
+    views: Number(response?.views || 0),
+    noResults: Number(response?.noResults || 0),
+  };
+}
+
+export async function trackAnalytics(type, data = {}) {
+  if (!type) {
+    throw new Error("Le type Analytics est obligatoire");
+  }
+
+  return request("/analytics", {
+    method: "POST",
+    body: JSON.stringify({
+      type,
+      ...data,
+    }),
+  });
+}
+
+// RÉCUPÉRER LES STATISTIQUES
+export async function loadAnalytics() {
+  const response = await request(
+    "/analytics"
+  );
+
+  return {
+    searches: response?.searches || 0,
+    visits: response?.visits || 0,
+    views: response?.views || 0,
+    noResults:
+      response?.noResults || 0
+  };
+}
+
+
+// ENREGISTRER UNE ACTION
+export async function trackAnalytics(
+  type,
+  data = {}
+) {
+  return request(
+    "/analytics",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        type,
+        ...data
+      })
+    }
+  );
+}
+
+
 /* ============================== TABLEAU DE BORD ============================== */
 
 export async function loadRemoteStore() {

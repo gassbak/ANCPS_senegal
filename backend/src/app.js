@@ -60,6 +60,8 @@ const historiqueRoutes =
   require("./routes/user.routes");
 const statutRoutes =
   require("./routes/statutVerification.routes");
+  const analyticsRoutes =
+  require("./routes/analytics.routes");
 const app = express();
 app.use(
   cors({
@@ -170,6 +172,10 @@ app.use(
 app.use(
   "/api/users",
   userRoutes
+);
+app.use(
+  "/api/analytics",
+  analyticsRoutes
 );
 app.get("/", (req, res) => {
   res.json({

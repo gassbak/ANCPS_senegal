@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const User = require("../models/User");
 const generateToken = require("../utils/generateToken");
-const transporter = require("../config/mailer");
+const { sendMail } = require("../config/mailer");
 
 // REGISTER
 const register = async (req, res) => {
@@ -12,7 +12,7 @@ const register = async (req, res) => {
 
     if (!name || !email || !password) {
       return res.status(400).json({
-        message: "Tous les champs sont obligatoires"
+        message: "Tous les champs sont obligatoires",
       });
     }
 
@@ -20,7 +20,7 @@ const register = async (req, res) => {
 
     if (userExists) {
       return res.status(400).json({
-        message: "Cet email existe déjà"
+        message: "Cet email existe déjà",
       });
     }
 
@@ -29,7 +29,7 @@ const register = async (req, res) => {
     const user = await User.create({
       name,
       email,
-      password: hashedPassword
+      password: hashedPassword,
     });
 
     res.status(201).json({
@@ -38,19 +38,17 @@ const register = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
-      }
+        role: user.role,
+      },
     });
-
   } catch (error) {
     console.error(error);
 
     res.status(500).json({
-      message: "Erreur serveur"
+      message: "Erreur serveur",
     });
   }
 };
-
 
 // LOGIN
 const login = async (req, res) => {
@@ -61,18 +59,15 @@ const login = async (req, res) => {
 
     if (!user) {
       return res.status(401).json({
-        message: "Email ou mot de passe incorrect"
+        message: "Email ou mot de passe incorrect",
       });
     }
 
-    const passwordMatch = await bcrypt.compare(
-      password,
-      user.password
-    );
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
       return res.status(401).json({
-        message: "Email ou mot de passe incorrect"
+        message: "Email ou mot de passe incorrect",
       });
     }
 
@@ -81,24 +76,22 @@ const login = async (req, res) => {
     res.json({
       message: "Connexion réussie",
       token,
-     user: {
-  id: user._id,
-  name: user.name,
-  email: user.email,
-  role: user.role,
-  permissions: user.permissions
-}
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        permissions: user.permissions,
+      },
     });
-
   } catch (error) {
     console.error(error);
 
     res.status(500).json({
-      message: "Erreur serveur"
+      message: "Erreur serveur",
     });
   }
 };
-
 
 // PROFILE
 const getProfile = async (req, res) => {
@@ -110,41 +103,39 @@ const getProfile = async (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      permissions: user.permissions
+      permissions: user.permissions,
     });
-
   } catch (error) {
     console.error(error);
 
     res.status(500).json({
-      message: "Erreur serveur"
+      message: "Erreur serveur",
     });
   }
 };
 
+// FORGOT PASSWORD
 const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
 
     if (!email) {
       return res.status(400).json({
-        message: "L'adresse email est obligatoire"
+        message: "L'adresse email est obligatoire",
       });
     }
 
     const normalizedEmail = email.toLowerCase().trim();
 
     const user = await User.findOne({
-      email: normalizedEmail
+      email: normalizedEmail,
     });
 
-    /*
-     * Ne jamais révéler si l'adresse existe.
-     */
+    // Ne jamais révéler si l'adresse existe.
     if (!user) {
       return res.json({
         message:
-          "Si cette adresse correspond à un compte, un lien de réinitialisation a été envoyé."
+          "Si cette adresse correspond à un compte, un lien de réinitialisation a été envoyé.",
       });
     }
 
@@ -159,22 +150,21 @@ const forgotPassword = async (req, res) => {
 
     // Expiration : 15 minutes
     user.resetPasswordToken = hashedToken;
-
-    user.resetPasswordExpires =
-      new Date(Date.now() + 15 * 60 * 1000);
+    user.resetPasswordExpires = new Date(Date.now() + 15 * 60 * 1000);
 
     await user.save();
 
-const resetUrl =
-  `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
-try {
-  await transporter.sendMail({
-    from: process.env.EMAIL_FROM,
-    to: user.email,
-    subject: "Réinitialisation de votre mot de passe - ANCPS",
+    try {
+      console.log("Envoi du mail de récupération vers :", user.email);
 
-    text: `
+      await sendMail({
+        from: process.env.EMAIL_FROM,
+        to: user.email,
+        subject: "Réinitialisation de votre mot de passe - ANCPS",
+
+        text: `
 Bonjour,
 
 Vous avez demandé la réinitialisation de votre mot de passe ANCPS.
@@ -188,95 +178,93 @@ Ce lien expire dans 15 minutes et ne peut être utilisé qu'une seule fois.
 Si vous n'êtes pas à l'origine de cette demande, vous pouvez ignorer cet email.
 
 L'équipe ANCPS
-    `,
+        `,
 
-    html: `
-      <div style="font-family: Arial, sans-serif; line-height: 1.6;">
-        <h2>Réinitialisation de votre mot de passe</h2>
+        html: `
+          <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+            <h2>Réinitialisation de votre mot de passe</h2>
 
-        <p>Bonjour,</p>
+            <p>Bonjour,</p>
 
-        <p>
-          Vous avez demandé la réinitialisation de votre mot de passe ANCPS.
-        </p>
+            <p>
+              Vous avez demandé la réinitialisation de votre mot de passe ANCPS.
+            </p>
 
-        <p>
-          Cliquez sur le bouton ci-dessous pour définir un nouveau mot de passe :
-        </p>
+            <p>
+              Cliquez sur le bouton ci-dessous pour définir un nouveau mot de passe :
+            </p>
 
-        <p>
-          <a
-            href="${resetUrl}"
-            style="
-              display: inline-block;
-              padding: 12px 20px;
-              background: #2563eb;
-              color: white;
-              text-decoration: none;
-              border-radius: 6px;
-            "
-          >
-            Réinitialiser mon mot de passe
-          </a>
-        </p>
+            <p>
+              <a
+                href="${resetUrl}"
+                style="
+                  display: inline-block;
+                  padding: 12px 20px;
+                  background: #2563eb;
+                  color: white;
+                  text-decoration: none;
+                  border-radius: 6px;
+                "
+              >
+                Réinitialiser mon mot de passe
+              </a>
+            </p>
 
-        <p>
-          Ce lien expire dans <strong>15 minutes</strong> et ne peut être
-          utilisé qu'une seule fois.
-        </p>
+            <p>
+              Ce lien expire dans <strong>15 minutes</strong> et ne peut être
+              utilisé qu'une seule fois.
+            </p>
 
-        <p>
-          Si vous n'êtes pas à l'origine de cette demande, vous pouvez
-          ignorer cet email.
-        </p>
+            <p>
+              Si vous n'êtes pas à l'origine de cette demande, vous pouvez
+              ignorer cet email.
+            </p>
 
-        <p>L'équipe ANCPS</p>
-      </div>
-    `
-  });
+            <p>L'équipe ANCPS</p>
+          </div>
+        `,
+      });
+    } catch (emailError) {
+      console.error("Password reset email error:", emailError);
 
-} catch (emailError) {
-  console.error("Password reset email error:", emailError);
+      // Le lien ne doit pas rester actif si l'email n'a pas été envoyé
+      user.resetPasswordToken = null;
+      user.resetPasswordExpires = null;
 
-  // Le lien ne doit pas rester actif si l'email n'a pas été envoyé
-  user.resetPasswordToken = null;
-  user.resetPasswordExpires = null;
+      await user.save();
 
-  await user.save();
+      return res.status(500).json({
+        message: "Impossible d'envoyer l'email de réinitialisation",
+      });
+    }
 
-  return res.status(500).json({
-    message: "Impossible d'envoyer l'email de réinitialisation"
-  });
-}
-
-return res.json({
-  message:
-    "Si cette adresse correspond à un compte, un lien de réinitialisation a été envoyé."
-});
-
+    return res.json({
+      message:
+        "Si cette adresse correspond à un compte, un lien de réinitialisation a été envoyé.",
+    });
   } catch (error) {
     console.error("Forgot password error:", error);
 
     return res.status(500).json({
-      message: "Erreur serveur"
+      message: "Erreur serveur",
     });
   }
 };
 
+// RESET PASSWORD
 const resetPassword = async (req, res) => {
   try {
     const { token, password } = req.body;
 
     if (!token || !password) {
       return res.status(400).json({
-        message: "Le token et le nouveau mot de passe sont obligatoires"
+        message: "Le token et le nouveau mot de passe sont obligatoires",
       });
     }
 
     if (password.length < 8) {
       return res.status(400).json({
-        message:
-          "Le mot de passe doit contenir au moins 8 caractères"
+        message: "Le mot de passe doit contenir au moins 8 caractères",
       });
     }
 
@@ -286,18 +274,17 @@ const resetPassword = async (req, res) => {
       .update(token)
       .digest("hex");
 
-
     // Recherche du compte + vérification expiration
     const user = await User.findOne({
       resetPasswordToken: hashedToken,
       resetPasswordExpires: {
-        $gt: new Date()
-      }
+        $gt: new Date(),
+      },
     });
 
     if (!user) {
       return res.status(400).json({
-        message: "Le lien est invalide ou a expiré"
+        message: "Le lien est invalide ou a expiré",
       });
     }
 
@@ -313,24 +300,22 @@ const resetPassword = async (req, res) => {
     await user.save();
 
     return res.json({
-      message: "Mot de passe réinitialisé avec succès"
+      message: "Mot de passe réinitialisé avec succès",
     });
-
   } catch (error) {
     console.error("Reset password error:", error);
 
     return res.status(500).json({
-      message: "Erreur serveur"
+      message: "Erreur serveur",
     });
   }
 };
-
 
 module.exports = {
   register,
   login,
   getProfile,
   forgotPassword,
-  resetPassword
+  resetPassword,
 };
 

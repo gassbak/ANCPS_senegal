@@ -257,7 +257,7 @@ export default function Home() {
             </div>
 
             <Link
-              to="/"
+              to="/annuaire"
               className="hidden items-center gap-1 text-[15px] font-semibold text-emerald-700 md:flex"
             >
               Voir tout l'annuaire

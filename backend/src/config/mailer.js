@@ -1,26 +1,67 @@
-const nodemailer = require("nodemailer");
-console.log("EMAIL_HOST :", process.env.EMAIL_HOST);
-console.log("EMAIL_PORT :", process.env.EMAIL_PORT);
-console.log("EMAIL_USER :", process.env.EMAIL_USER);
-console.log(
-  "EMAIL_PASSWORD présente :",
-  !!process.env.EMAIL_PASSWORD
-);
-console.log(
-  "EMAIL_FROM :",
-  process.env.EMAIL_FROM
-);
-const transporter = nodemailer.createTransport({
-  
-  host: process.env.EMAIL_HOST,
-  port: Number(process.env.EMAIL_PORT || 587),
-  secure: Number(process.env.EMAIL_PORT) === 465,
 
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASSWORD
+const axios = require("axios");
+
+const sendMail = async ({
+  to,
+  subject,
+  text,
+  html
+}) => {
+  try {
+    if (!process.env.BREVO_API_KEY) {
+      throw new Error("BREVO_API_KEY est absente");
+    }
+
+    if (!process.env.EMAIL_FROM) {
+      throw new Error("EMAIL_FROM est absente");
+    }
+
+    const response = await axios.post(
+      "https://api.brevo.com/v3/smtp/email",
+      {
+        sender: {
+          email: process.env.EMAIL_FROM,
+          name: "ANCPS"
+        },
+
+        to: [
+          {
+            email: to
+          }
+        ],
+
+        subject,
+
+        textContent: text,
+
+        htmlContent: html
+      },
+      {
+        headers: {
+          "api-key": process.env.BREVO_API_KEY,
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        }
+      }
+    );
+
+    console.log(
+      "Email Brevo envoyé avec succès :",
+      response.data
+    );
+
+    return response.data;
+
+  } catch (error) {
+    console.error(
+      "Erreur API Brevo :",
+      error.response?.data || error.message
+    );
+
+    throw error;
   }
-  
-});
+};
 
-module.exports = transporter;
+module.exports = {
+  sendMail
+};

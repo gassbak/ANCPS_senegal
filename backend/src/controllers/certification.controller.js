@@ -1,3 +1,4 @@
+
 const Certification = require("../models/Certification");
 
 const {
@@ -9,34 +10,54 @@ const {
 } = require("../services/notification.service");
 
 
+// ==========================================
 // CRÉER
+// ==========================================
+
 const createCertification = async (req, res) => {
   try {
+
+    // Vérifier l'utilisateur connecté
+    if (!req.user) {
+      return res.status(401).json({
+        message: "Utilisateur non identifié"
+      });
+    }
+
     const certification =
       await Certification.create(req.body);
 
 
+    // ==========================================
     // AUDIT
+    // ==========================================
+
     await createAuditLog({
       utilisateur: req.user._id,
       action: "CREATION",
       entite: "Certification",
       entiteId: certification._id,
-      details: "Création d'une certification"
+      details: "Création d'une certification",
+      ip: req.ip
     });
 
 
+    // ==========================================
     // NOTIFICATION
-    await createNotification(
-      req.user._id,
-      "certification",
-      `La certification "${certification.title}" a été créée.`
-    );
+    // ==========================================
+
+    await createNotification({
+      utilisateur: req.user._id,
+      type: "certification",
+      message:
+        `La certification "${certification.title}" a été créée.`
+    });
 
 
     res.status(201).json(certification);
 
   } catch (error) {
+
     console.error(
       "Erreur création certification :",
       error
@@ -49,17 +70,24 @@ const createCertification = async (req, res) => {
 };
 
 
+// ==========================================
 // LISTE
+// ==========================================
+
 const getCertifications = async (req, res) => {
   try {
+
     const filter = {};
 
 
     // ==========================================
     // ANNUAIRE PUBLIC
     // ==========================================
+
     if (req.query.published === "true") {
+
       filter.published = true;
+
       filter.archived = {
         $ne: true
       };
@@ -100,6 +128,7 @@ const getCertifications = async (req, res) => {
     // ADMIN
     // Toutes les certifications
     // ==========================================
+
     const certifications =
       await Certification.find({})
         .populate("niveauEntree")
@@ -130,6 +159,7 @@ const getCertifications = async (req, res) => {
     });
 
   } catch (error) {
+
     console.error(
       "Erreur liste certifications :",
       error
@@ -142,9 +172,13 @@ const getCertifications = async (req, res) => {
 };
 
 
+// ==========================================
 // DÉTAIL
+// ==========================================
+
 const getCertification = async (req, res) => {
   try {
+
     const certification =
       await Certification.findById(
         req.params.id
@@ -163,6 +197,7 @@ const getCertification = async (req, res) => {
 
 
     if (!certification) {
+
       return res.status(404).json({
         message: "Certification introuvable"
       });
@@ -172,6 +207,7 @@ const getCertification = async (req, res) => {
     res.json(certification);
 
   } catch (error) {
+
     console.error(
       "Erreur détail certification :",
       error
@@ -184,11 +220,25 @@ const getCertification = async (req, res) => {
 };
 
 
+// ==========================================
 // MODIFIER
+// ==========================================
+
 const updateCertification = async (req, res) => {
   try {
 
-    // Ancienne certification
+    // Vérifier l'utilisateur connecté
+    if (!req.user) {
+      return res.status(401).json({
+        message: "Utilisateur non identifié"
+      });
+    }
+
+
+    // ==========================================
+    // ANCIENNE CERTIFICATION
+    // ==========================================
+
     const ancienneCertification =
       await Certification.findById(
         req.params.id
@@ -196,13 +246,17 @@ const updateCertification = async (req, res) => {
 
 
     if (!ancienneCertification) {
+
       return res.status(404).json({
         message: "Certification introuvable"
       });
     }
 
 
-    // Mise à jour
+    // ==========================================
+    // MISE À JOUR
+    // ==========================================
+
     const certification =
       await Certification.findByIdAndUpdate(
         req.params.id,
@@ -214,7 +268,10 @@ const updateCertification = async (req, res) => {
       );
 
 
-    // Action par défaut
+    // ==========================================
+    // ACTION PAR DÉFAUT
+    // ==========================================
+
     let action = "MODIFICATION";
 
     let details =
@@ -224,10 +281,12 @@ const updateCertification = async (req, res) => {
     // ==========================================
     // PUBLICATION
     // ==========================================
+
     if (
       ancienneCertification.published === false &&
       certification.published === true
     ) {
+
       action = "PUBLICATION";
 
       details =
@@ -238,10 +297,12 @@ const updateCertification = async (req, res) => {
     // ==========================================
     // DÉPUBLICATION
     // ==========================================
+
     else if (
       ancienneCertification.published === true &&
       certification.published === false
     ) {
+
       action = "DEPUBLICATION";
 
       details =
@@ -252,10 +313,12 @@ const updateCertification = async (req, res) => {
     // ==========================================
     // ARCHIVAGE
     // ==========================================
+
     else if (
       ancienneCertification.archived === false &&
       certification.archived === true
     ) {
+
       action = "ARCHIVAGE";
 
       details =
@@ -266,10 +329,12 @@ const updateCertification = async (req, res) => {
     // ==========================================
     // DÉSARCHIVAGE
     // ==========================================
+
     else if (
       ancienneCertification.archived === true &&
       certification.archived === false
     ) {
+
       action = "DESARCHIVAGE";
 
       details =
@@ -280,6 +345,7 @@ const updateCertification = async (req, res) => {
     // ==========================================
     // VÉRIFICATION
     // ==========================================
+
     else if (
       String(
         ancienneCertification.statutVerification
@@ -288,6 +354,7 @@ const updateCertification = async (req, res) => {
         certification.statutVerification
       )
     ) {
+
       action = "VERIFICATION";
 
       details =
@@ -298,6 +365,7 @@ const updateCertification = async (req, res) => {
     // ==========================================
     // AUDIT
     // ==========================================
+
     await createAuditLog({
       utilisateur: req.user._id,
       action,
@@ -318,16 +386,19 @@ const updateCertification = async (req, res) => {
     // ==========================================
     // NOTIFICATION
     // ==========================================
-    await createNotification(
-      req.user._id,
-      action.toLowerCase(),
-      `${details} : "${certification.title}".`
-    );
+
+    await createNotification({
+      utilisateur: req.user._id,
+      type: action.toLowerCase(),
+      message:
+        `${details} : "${certification.title}".`
+    });
 
 
     res.json(certification);
 
   } catch (error) {
+
     console.error(
       "Erreur modification certification :",
       error
@@ -340,9 +411,20 @@ const updateCertification = async (req, res) => {
 };
 
 
+// ==========================================
 // SUPPRIMER
+// ==========================================
+
 const deleteCertification = async (req, res) => {
   try {
+
+    // Vérifier l'utilisateur connecté
+    if (!req.user) {
+      return res.status(401).json({
+        message: "Utilisateur non identifié"
+      });
+    }
+
 
     const certification =
       await Certification.findByIdAndDelete(
@@ -351,28 +433,37 @@ const deleteCertification = async (req, res) => {
 
 
     if (!certification) {
+
       return res.status(404).json({
         message: "Certification introuvable"
       });
     }
 
 
+    // ==========================================
     // AUDIT
+    // ==========================================
+
     await createAuditLog({
       utilisateur: req.user._id,
       action: "SUPPRESSION",
       entite: "Certification",
       entiteId: certification._id,
-      details: "Suppression d'une certification"
+      details: "Suppression d'une certification",
+      ip: req.ip
     });
 
 
+    // ==========================================
     // NOTIFICATION
-    await createNotification(
-      req.user._id,
-      "suppression",
-      `La certification "${certification.title}" a été supprimée.`
-    );
+    // ==========================================
+
+    await createNotification({
+      utilisateur: req.user._id,
+      type: "suppression",
+      message:
+        `La certification "${certification.title}" a été supprimée.`
+    });
 
 
     res.json({
@@ -380,6 +471,7 @@ const deleteCertification = async (req, res) => {
     });
 
   } catch (error) {
+
     console.error(
       "Erreur suppression certification :",
       error
