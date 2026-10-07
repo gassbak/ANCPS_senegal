@@ -453,7 +453,10 @@ export async function saveUser(form) {
       });
 }
 
-export async function loadNotifications() {
+
+/* ============================== NOTIFICATIONS & AUDIT ============================== */
+
+export async function getNotifications() {
   const response = await request("/notifications");
 
   const notifications = Array.isArray(response)
@@ -465,19 +468,23 @@ export async function loadNotifications() {
   return notifications.map((notification) => ({
     id: notification._id || notification.id,
 
-    title: notification.type
-      ? notification.type.charAt(0).toUpperCase() +
-        notification.type.slice(1)
-      : "Notification",
+    title:
+      notification.title ||
+      (
+        notification.type
+          ? notification.type.charAt(0).toUpperCase() +
+            notification.type.slice(1)
+          : "Notification"
+      ),
 
     text: notification.message || "",
 
-    read: notification.lu === true,
+    read:
+      notification.lu === true ||
+      notification.read === true,
 
     date: notification.createdAt
-      ? new Date(
-          notification.createdAt
-        ).toLocaleString("fr-FR")
+      ? new Date(notification.createdAt).toLocaleString("fr-FR")
       : ""
   }));
 }
@@ -491,6 +498,10 @@ export async function markNotificationRead(id) {
     }
   );
 }
+
+
+
+getNotifications().catch(() => [])
 /* ============================== TABLEAU DE BORD ============================== */
 
 export async function loadRemoteStore() {
