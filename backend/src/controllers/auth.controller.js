@@ -164,14 +164,11 @@ const forgotPassword = async (req, res) => {
       new Date(Date.now() + 15 * 60 * 1000);
 
     await user.save();
-    console.log("RESET TOKEN HASH ENREGISTRÉ :", user.resetPasswordToken);
-console.log("RESET TOKEN EXPIRE :", user.resetPasswordExpires);
 
 const resetUrl =
   `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
 try {
-  console.log("Envoi du mail de récupération vers :", user.email);
   await transporter.sendMail({
     from: process.env.EMAIL_FROM,
     to: user.email,
@@ -237,7 +234,6 @@ L'équipe ANCPS
       </div>
     `
   });
-  console.log("Email de récupération envoyé avec succès à :", user.email);
 
 } catch (emailError) {
   console.error("Password reset email error:", emailError);
@@ -290,8 +286,6 @@ const resetPassword = async (req, res) => {
       .update(token)
       .digest("hex");
 
-      console.log("RESET TOKEN HASH REÇU :", hashedToken);
-      console.log("RESET TOKEN REÇU - longueur :", token.length);
 
     // Recherche du compte + vérification expiration
     const user = await User.findOne({
