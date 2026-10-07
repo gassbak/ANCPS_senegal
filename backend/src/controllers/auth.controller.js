@@ -3,7 +3,7 @@ const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const User = require("../models/User");
 const generateToken = require("../utils/generateToken");
-const transporter = require("../config/mailer");
+const { sendMail } = require("../config/mailer");
 
 // REGISTER
 const register = async (req, res) => {
@@ -172,7 +172,7 @@ const resetUrl =
 
 try {
   console.log("Envoi du mail de récupération vers :", user.email);
-  await transporter.sendMail({
+await sendMail ({
     from: process.env.EMAIL_FROM,
     to: user.email,
     subject: "Réinitialisation de votre mot de passe - ANCPS",
