@@ -172,7 +172,7 @@ const resetUrl =
 
 try {
   console.log("Envoi du mail de récupération vers :", user.email);
-await sendMail ({
+await sendMail({
     from: process.env.EMAIL_FROM,
     to: user.email,
     subject: "Réinitialisation de votre mot de passe - ANCPS",
