@@ -508,6 +508,44 @@ export async function markNotificationRead(id) {
   );
 }
 
+// ==============================
+// ANALYTICS
+// ==============================
+
+// RÉCUPÉRER LES STATISTIQUES
+export async function loadAnalytics() {
+  const response = await request(
+    "/analytics"
+  );
+
+  return {
+    searches: response?.searches || 0,
+    visits: response?.visits || 0,
+    views: response?.views || 0,
+    noResults:
+      response?.noResults || 0
+  };
+}
+
+
+// ENREGISTRER UNE ACTION
+export async function trackAnalytics(
+  type,
+  data = {}
+) {
+  return request(
+    "/analytics",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        type,
+        ...data
+      })
+    }
+  );
+}
+
+
 /* ============================== TABLEAU DE BORD ============================== */
 
 export async function loadRemoteStore() {

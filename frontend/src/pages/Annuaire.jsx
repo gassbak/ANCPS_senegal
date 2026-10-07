@@ -1,1210 +1,735 @@
+
 import { useState } from "react";
 import {
-    Link,
-    useSearchParams,
+  Link,
+  useSearchParams
 } from "react-router-dom";
+
+import {
+  Search,
+  SlidersHorizontal,
+  X,
+  ChevronDown
+} from "lucide-react";
 
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import Badge from "../components/ui/Badge";
+
 import useCertifications from "../hooks/useCertifications";
 
-
-function SearchIcon() {
-    return (
-        <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-        >
-            <circle
-                cx="11"
-                cy="11"
-                r="7"
-                stroke="currentColor"
-                strokeWidth="2"
-            />
-
-            <path
-                d="M16 16L21 21"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-            />
-        </svg>
-    );
-}
-
-
-function BuildingIcon() {
-    return (
-        <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-        >
-            <path
-                d="M5 21V4C5 3.45 5.45 3 6 3H18C18.55 3 19 3.45 19 4V21"
-                stroke="currentColor"
-                strokeWidth="1.6"
-            />
-
-            <path
-                d="M8 7H10M14 7H16M8 11H10M14 11H16M8 15H10M14 15H16"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-            />
-
-            <path
-                d="M3 21H21"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-            />
-        </svg>
-    );
-}
-
-
-function ArrowRight() {
-    return (
-        <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-        >
-            <path
-                d="M5 12H19"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-            />
-
-            <path
-                d="M13 6L19 12L13 18"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-            />
-        </svg>
-    );
-}
-
+import {
+  trackAnalytics
+} from "../admin/services/adminApi";
 
 export default function Annuaire() {
+  const [search, setSearch] = useState("");
 
-    const [search, setSearch] = useState("");
+  const [selectedDomains, setSelectedDomains] =
+    useState([]);
 
-    const [selectedDomains, setSelectedDomains] = useState([]);
+  const [selectedLevels, setSelectedLevels] =
+    useState([]);
 
-    const [selectedLevels, setSelectedLevels] = useState([]);
+  const [mobileFiltersOpen, setMobileFiltersOpen] =
+    useState(false);
 
-    const [searchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
+  const domaineFromUrl =
+    searchParams.get("domaine");
 
-    const domaineFromUrl =
-        searchParams.get("domaine");
+  const {
+    certifications,
+    loading
+  } = useCertifications(search);
 
+  /*
+   * ==============================
+   * DOMAINES
+   * ==============================
+   */
 
-    const {
-        certifications,
-        loading,
-    } = useCertifications(search);
+  const domains = [
+    ...new Set(
+      certifications
+        .map(
+          (certification) =>
+            certification.sector
+        )
+        .filter(Boolean)
+    )
+  ];
 
+  /*
+   * ==============================
+   * NIVEAUX
+   * ==============================
+   */
 
-    /*
-     * DOMAINES
-     */
+  const levels = [
+    ...new Set(
+      certifications
+        .map(
+          (certification) =>
+            certification.niveau
+        )
+        .filter(Boolean)
+    )
+  ];
 
-    const domains = [
-        ...new Set(
-            certifications
-                .map(
-                    (certification) =>
-                        certification.sector
-                )
-                .filter(Boolean)
-        ),
-    ];
+  /*
+   * ==============================
+   * FILTRAGE
+   * ==============================
+   */
 
+  const filteredCertifications =
+    certifications.filter(
+      (certification) => {
+        const domainOk =
+          domaineFromUrl
+            ? certification.sector ===
+              domaineFromUrl
+            : selectedDomains.length === 0 ||
+              selectedDomains.includes(
+                certification.sector
+              );
 
-    /*
-     * NIVEAUX
-     */
+        const levelOk =
+          selectedLevels.length === 0 ||
+          selectedLevels.includes(
+            certification.niveau
+          );
 
-    const levels = [
-        ...new Set(
-            certifications
-                .map(
-                    (certification) =>
-                        certification.niveau
-                )
-                .filter(Boolean)
-        ),
-    ];
-
-
-    /*
-     * FILTRE DOMAINE
-     */
-
-    const toggleDomain = (domain) => {
-
-        setSelectedDomains((current) => {
-
-            if (current.includes(domain)) {
-
-                return current.filter(
-                    (item) => item !== domain
-                );
-
-            }
-
-            return [
-                ...current,
-                domain,
-            ];
-
-        });
-
-    };
-
-
-    /*
-     * FILTRE NIVEAU
-     */
-
-    const toggleLevel = (level) => {
-
-        setSelectedLevels((current) => {
-
-            if (current.includes(level)) {
-
-                return current.filter(
-                    (item) => item !== level
-                );
-
-            }
-
-            return [
-                ...current,
-                level,
-            ];
-
-        });
-
-    };
-
-
-    /*
-     * FILTRAGE
-     */
-
-    const filteredCertifications =
-        certifications.filter(
-            (certification) => {
-
-                const domainOk =
-                    domaineFromUrl
-                        ? certification.sector ===
-                          domaineFromUrl
-                        : selectedDomains.length === 0 ||
-                          selectedDomains.includes(
-                              certification.sector
-                          );
-
-
-                const levelOk =
-                    selectedLevels.length === 0 ||
-                    selectedLevels.includes(
-                        certification.niveau
-                    );
-
-
-                return (
-                    domainOk &&
-                    levelOk
-                );
-
-            }
+        return (
+          domainOk &&
+          levelOk
         );
+      }
+    );
 
+  /*
+   * ==============================
+   * RECHERCHE
+   * ==============================
+   */
 
-    return (
+  const handleSearch = async (event) => {
+    event.preventDefault();
 
-        <div
-            className="
-                min-h-screen
-                bg-[#F8FAFC]
-                text-[#0F172A]
-            "
+    const query = search.trim();
+
+    if (!query) {
+      return;
+    }
+
+    try {
+      await trackAnalytics(
+        "search",
+        {
+          query
+        }
+      );
+
+      if (
+        filteredCertifications.length === 0
+      ) {
+        await trackAnalytics(
+          "no_result",
+          {
+            query
+          }
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Erreur Analytics recherche :",
+        error
+      );
+    }
+  };
+
+  /*
+   * ==============================
+   * FILTRE DOMAINE
+   * ==============================
+   */
+
+  const toggleDomain = (domain) => {
+    setSelectedDomains(
+      (current) =>
+        current.includes(domain)
+          ? current.filter(
+              (item) =>
+                item !== domain
+            )
+          : [
+              ...current,
+              domain
+            ]
+    );
+  };
+
+  /*
+   * ==============================
+   * FILTRE NIVEAU
+   * ==============================
+   */
+
+  const toggleLevel = (level) => {
+    setSelectedLevels(
+      (current) =>
+        current.includes(level)
+          ? current.filter(
+              (item) =>
+                item !== level
+            )
+          : [
+              ...current,
+              level
+            ]
+    );
+  };
+
+  /*
+   * ==============================
+   * RESET FILTRES
+   * ==============================
+   */
+
+  const resetFilters = () => {
+    setSelectedDomains([]);
+    setSelectedLevels([]);
+  };
+
+  /*
+   * ==============================
+   * COMPTEUR FILTRES
+   * ==============================
+   */
+
+  const filtersCount =
+    selectedDomains.length +
+    selectedLevels.length;
+
+  return (
+    <div className="min-h-screen bg-slate-50">
+      <Navbar />
+
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+
+        {/* =========================
+            EN-TÊTE
+        ========================== */}
+
+        <div className="mb-8">
+          <div className="max-w-3xl">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-emerald-700">
+              ANCPS
+            </p>
+
+            <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+              Annuaire des certifications
+            </h1>
+
+            <p className="mt-3 text-sm leading-6 text-slate-600 sm:text-base">
+              Recherchez et consultez les
+              certifications professionnelles
+              disponibles au Sénégal.
+            </p>
+          </div>
+        </div>
+
+        {/* =========================
+            BARRE DE RECHERCHE
+        ========================== */}
+
+        <form
+          onSubmit={handleSearch}
+          className="mb-6 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm"
         >
+          <div className="flex flex-col gap-3 sm:flex-row">
 
-            <Navbar />
+            <div className="relative flex-1">
+              <Search
+                size={20}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              />
 
+              <input
+                type="text"
+                value={search}
+                onChange={(event) =>
+                  setSearch(
+                    event.target.value
+                  )
+                }
+                placeholder="Rechercher une certification, un métier, une compétence..."
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-12 pr-4 text-sm outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-100"
+              />
+            </div>
 
-            {/* =========================================
-                CONTENU PRINCIPAL
-            ========================================= */}
+            <button
+              type="submit"
+              className="rounded-xl bg-emerald-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-emerald-700"
+            >
+              Rechercher
+            </button>
 
-            <main className="pt-[74px]">
+            <button
+              type="button"
+              onClick={() =>
+                setMobileFiltersOpen(
+                  !mobileFiltersOpen
+                )
+              }
+              className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 sm:hidden"
+            >
+              <SlidersHorizontal
+                size={18}
+              />
 
+              Filtres
 
-                {/* =========================================
-                    TITRE
-                ========================================= */}
+              {filtersCount > 0 && (
+                <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-emerald-600 px-1.5 text-xs text-white">
+                  {filtersCount}
+                </span>
+              )}
+            </button>
 
-                <section
-                    className="
-                        px-4
-                        py-10
-                        sm:px-6
-                        sm:py-12
-                    "
+          </div>
+        </form>
+
+        {/* =========================
+            CONTENU
+        ========================== */}
+
+        <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
+
+          {/* =========================
+              SIDEBAR DESKTOP
+          ========================== */}
+
+          <aside className="hidden lg:block">
+            <div className="sticky top-24 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <SlidersHorizontal
+                    size={18}
+                    className="text-emerald-600"
+                  />
+
+                  <h2 className="font-bold text-slate-900">
+                    Filtres
+                  </h2>
+                </div>
+
+                {filtersCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="text-xs font-semibold text-emerald-700 hover:text-emerald-800"
+                  >
+                    Réinitialiser
+                  </button>
+                )}
+              </div>
+
+              {/* DOMAINES */}
+
+              <div className="mt-6">
+                <h3 className="mb-3 text-sm font-semibold text-slate-900">
+                  Domaine
+                </h3>
+
+                <div className="space-y-2">
+                  {domains.map(
+                    (domain) => (
+                      <label
+                        key={domain}
+                        className="flex cursor-pointer items-center gap-3 rounded-lg p-2 text-sm text-slate-600 transition hover:bg-slate-50"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedDomains.includes(
+                            domain
+                          )}
+                          onChange={() =>
+                            toggleDomain(
+                              domain
+                            )
+                          }
+                          className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                        />
+
+                        <span>
+                          {domain}
+                        </span>
+                      </label>
+                    )
+                  )}
+                </div>
+              </div>
+
+              {/* NIVEAUX */}
+
+              <div className="mt-7 border-t border-slate-100 pt-6">
+                <h3 className="mb-3 text-sm font-semibold text-slate-900">
+                  Niveau
+                </h3>
+
+                <div className="space-y-2">
+                  {levels.map(
+                    (level) => (
+                      <label
+                        key={level}
+                        className="flex cursor-pointer items-center gap-3 rounded-lg p-2 text-sm text-slate-600 transition hover:bg-slate-50"
+                      >
+                        <input
+                          type="checkbox"
+                          checked={selectedLevels.includes(
+                            level
+                          )}
+                          onChange={() =>
+                            toggleLevel(
+                              level
+                            )
+                          }
+                          className="h-4 w-4 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
+                        />
+
+                        <span>
+                          {level}
+                        </span>
+                      </label>
+                    )
+                  )}
+                </div>
+              </div>
+
+            </div>
+          </aside>
+
+          {/* =========================
+              FILTRES MOBILE
+          ========================== */}
+
+          {mobileFiltersOpen && (
+            <div className="lg:hidden">
+              <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+
+                <div className="flex items-center justify-between">
+                  <h2 className="font-bold text-slate-900">
+                    Filtres
+                  </h2>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setMobileFiltersOpen(
+                        false
+                      )
+                    }
+                    className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
+                  >
+                    <X size={20} />
+                  </button>
+                </div>
+
+                {/* DOMAINES */}
+
+                <div className="mt-5">
+                  <h3 className="mb-3 text-sm font-semibold">
+                    Domaine
+                  </h3>
+
+                  <div className="space-y-2">
+                    {domains.map(
+                      (domain) => (
+                        <label
+                          key={domain}
+                          className="flex items-center gap-3 rounded-lg p-2 text-sm"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selectedDomains.includes(
+                              domain
+                            )}
+                            onChange={() =>
+                              toggleDomain(
+                                domain
+                              )
+                            }
+                            className="h-4 w-4 rounded border-slate-300 text-emerald-600"
+                          />
+
+                          {domain}
+                        </label>
+                      )
+                    )}
+                  </div>
+                </div>
+
+                {/* NIVEAUX */}
+
+                <div className="mt-6 border-t border-slate-100 pt-5">
+                  <h3 className="mb-3 text-sm font-semibold">
+                    Niveau
+                  </h3>
+
+                  <div className="space-y-2">
+                    {levels.map(
+                      (level) => (
+                        <label
+                          key={level}
+                          className="flex items-center gap-3 rounded-lg p-2 text-sm"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={selectedLevels.includes(
+                              level
+                            )}
+                            onChange={() =>
+                              toggleLevel(
+                                level
+                              )
+                            }
+                            className="h-4 w-4 rounded border-slate-300 text-emerald-600"
+                          />
+
+                          {level}
+                        </label>
+                      )
+                    )}
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="mt-6 w-full rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700"
                 >
+                  Réinitialiser les filtres
+                </button>
 
+              </div>
+            </div>
+          )}
+
+          {/* =========================
+              RÉSULTATS
+          ========================== */}
+
+          <section>
+
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+
+              <div>
+                <p className="text-sm text-slate-500">
+                  {loading
+                    ? "Chargement..."
+                    : `${filteredCertifications.length} certification${
+                        filteredCertifications.length >
+                        1
+                          ? "s"
+                          : ""
+                      } trouvée${
+                        filteredCertifications.length >
+                        1
+                          ? "s"
+                          : ""
+                      }`}
+                </p>
+
+                {domaineFromUrl && (
+                  <p className="mt-1 text-xs text-emerald-700">
+                    Domaine :
+                    {" "}
+                    <strong>
+                      {domaineFromUrl}
+                    </strong>
+                  </p>
+                )}
+              </div>
+
+              {filtersCount > 0 && (
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="flex items-center gap-1 text-xs font-semibold text-emerald-700"
+                >
+                  Effacer les filtres
+                  <X size={14} />
+                </button>
+              )}
+
+            </div>
+
+            {/* CHARGEMENT */}
+
+            {loading && (
+              <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+                {[1, 2, 3, 4, 5, 6].map(
+                  (item) => (
                     <div
-                        className="
-                            mx-auto
-                            max-w-[1220px]
-                        "
-                    >
+                      key={item}
+                      className="h-64 animate-pulse rounded-2xl border border-slate-200 bg-white"
+                    />
+                  )
+                )}
+              </div>
+            )}
 
-                        <div className="max-w-[700px]">
+            {/* AUCUN RÉSULTAT */}
 
-                            <p
-                                className="
-                                    mb-3
-                                    text-sm
-                                    font-semibold
-                                    uppercase
-                                    tracking-[0.12em]
-                                    text-emerald-600
-                                "
-                            >
-                                Annuaire ANCPS
-                            </p>
+            {!loading &&
+              filteredCertifications.length ===
+                0 && (
+                <div className="rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-14 text-center">
+                  <Search
+                    size={36}
+                    className="mx-auto text-slate-300"
+                  />
 
+                  <h2 className="mt-4 text-lg font-bold text-slate-900">
+                    Aucune certification trouvée
+                  </h2>
 
-                            <h1
-                                className="
-                                    text-[32px]
-                                    font-bold
-                                    leading-tight
-                                    tracking-[-0.8px]
-                                    text-slate-900
-                                    sm:text-[38px]
-                                "
-                            >
-                                Annuaire des
-                                Certifications
-                            </h1>
+                  <p className="mx-auto mt-2 max-w-md text-sm text-slate-500">
+                    Essayez avec un autre mot-clé
+                    ou modifiez vos filtres.
+                  </p>
 
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSearch("");
+                      resetFilters();
+                    }}
+                    className="mt-5 rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700"
+                  >
+                    Réinitialiser
+                  </button>
+                </div>
+              )}
 
-                            <p
-                                className="
-                                    mt-3
-                                    text-[16px]
-                                    leading-7
-                                    text-slate-500
-                                    sm:text-[17px]
-                                "
-                            >
-                                Explorez les formations,
-                                certifications et
-                                qualifications
-                                disponibles au Sénégal.
-                            </p>
+            {/* CARTES */}
+
+            {!loading &&
+              filteredCertifications.length >
+                0 && (
+                <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+
+                  {filteredCertifications.map(
+                    (certification) => (
+                      <Link
+                        key={
+                          certification.id
+                        }
+                        to={`/certification/${certification.id}`}
+                        className="group flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-emerald-200 hover:shadow-lg"
+                      >
+
+                        {/* BADGES */}
+
+                        <div className="flex flex-wrap gap-2">
+                          {certification.niveau && (
+                            <Badge>
+                              {
+                                certification.niveau
+                              }
+                            </Badge>
+                          )}
+
+                          {certification.type && (
+                            <Badge>
+                              {
+                                certification.type
+                              }
+                            </Badge>
+                          )}
+                        </div>
+
+                        {/* TITRE */}
+
+                        <h2 className="mt-4 line-clamp-2 text-lg font-bold text-slate-900 transition group-hover:text-emerald-700">
+                          {
+                            certification.title
+                          }
+                        </h2>
+
+                        {/* SIGLE */}
+
+                        {certification.sigle && (
+                          <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-emerald-600">
+                            {
+                              certification.sigle
+                            }
+                          </p>
+                        )}
+
+                        {/* DESCRIPTION */}
+
+                        <p className="mt-3 line-clamp-3 text-sm leading-6 text-slate-600">
+                          {
+                            certification.description ||
+                            "Aucune description disponible."
+                          }
+                        </p>
+
+                        {/* INFORMATIONS */}
+
+                        <div className="mt-auto pt-5">
+
+                          {certification.sector && (
+                            <div className="border-t border-slate-100 pt-4">
+                              <p className="text-xs text-slate-400">
+                                Domaine
+                              </p>
+
+                              <p className="mt-1 text-sm font-semibold text-slate-700">
+                                {
+                                  certification.sector
+                                }
+                              </p>
+                            </div>
+                          )}
+
+                          {certification.modalite && (
+                            <div className="mt-3">
+                              <p className="text-xs text-slate-400">
+                                Modalité
+                              </p>
+
+                              <p className="mt-1 text-sm font-medium text-slate-700">
+                                {
+                                  certification.modalite
+                                }
+                              </p>
+                            </div>
+                          )}
+
+                          <div className="mt-4 text-sm font-semibold text-emerald-700">
+                            Voir la certification →
+                          </div>
 
                         </div>
 
-                    </div>
+                      </Link>
+                    )
+                  )}
 
-                </section>
+                </div>
+              )}
 
-
-                {/* =========================================
-                    ANNuaire
-                ========================================= */}
-
-                <section
-                    className="
-                        px-4
-                        pb-16
-                        sm:px-6
-                        sm:pb-[70px]
-                    "
-                >
-
-                    <div
-                        className="
-                            mx-auto
-                            grid
-                            max-w-[1220px]
-                            gap-6
-                            lg:grid-cols-[260px_1fr]
-                            xl:grid-cols-[270px_1fr]
-                        "
-                    >
-
-
-                        {/* =================================
-                            FILTRES
-                        ================================= */}
-
-                        <aside
-                            className="
-                                h-fit
-                                rounded-2xl
-                                border
-                                border-slate-200
-                                bg-white
-                                p-5
-                                shadow-[0_2px_10px_rgba(15,23,42,0.04)]
-                            "
-                        >
-
-                            <div
-                                className="
-                                    flex
-                                    items-center
-                                    justify-between
-                                "
-                            >
-
-                                <h2
-                                    className="
-                                        text-[18px]
-                                        font-bold
-                                        text-slate-900
-                                    "
-                                >
-                                    Filtres
-                                </h2>
-
-
-                                {(selectedDomains.length >
-                                    0 ||
-                                    selectedLevels.length >
-                                        0) && (
-
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setSelectedDomains(
-                                                []
-                                            );
-
-                                            setSelectedLevels(
-                                                []
-                                            );
-                                        }}
-                                        className="
-                                            text-xs
-                                            font-medium
-                                            text-emerald-600
-                                            hover:text-emerald-700
-                                        "
-                                    >
-                                        Réinitialiser
-                                    </button>
-
-                                )}
-
-                            </div>
-
-
-                            <div
-                                className="
-                                    my-5
-                                    border-t
-                                    border-slate-100
-                                "
-                            />
-
-
-                            {/* DOMAINES */}
-
-                            <h3
-                                className="
-                                    text-[14px]
-                                    font-bold
-                                    text-slate-800
-                                "
-                            >
-                                Domaines
-                            </h3>
-
-
-                            <div className="mt-4 space-y-3">
-
-                                {domains.length === 0 && (
-
-                                    <p
-                                        className="
-                                            text-sm
-                                            text-slate-400
-                                        "
-                                    >
-                                        Aucun domaine
-                                        disponible.
-                                    </p>
-
-                                )}
-
-
-                                {domains.map(
-                                    (domain) => (
-
-                                        <label
-                                            key={domain}
-                                            className="
-                                                flex
-                                                cursor-pointer
-                                                items-start
-                                                gap-3
-                                                text-[14px]
-                                                text-slate-600
-                                            "
-                                        >
-
-                                            <input
-                                                type="checkbox"
-                                                checked={
-                                                    selectedDomains.includes(
-                                                        domain
-                                                    )
-                                                }
-                                                onChange={() =>
-                                                    toggleDomain(
-                                                        domain
-                                                    )
-                                                }
-                                                className="
-                                                    mt-0.5
-                                                    h-4
-                                                    w-4
-                                                    accent-emerald-600
-                                                "
-                                            />
-
-                                            <span
-                                                className="
-                                                    leading-5
-                                                "
-                                            >
-                                                {domain}
-                                            </span>
-
-                                        </label>
-
-                                    )
-                                )}
-
-                            </div>
-
-
-                            <div
-                                className="
-                                    my-6
-                                    border-t
-                                    border-slate-100
-                                "
-                            />
-
-
-                            {/* NIVEAUX */}
-
-                            <h3
-                                className="
-                                    text-[14px]
-                                    font-bold
-                                    text-slate-800
-                                "
-                            >
-                                Niveau
-                            </h3>
-
-
-                            <div className="mt-4 space-y-3">
-
-                                {levels.length === 0 && (
-
-                                    <p
-                                        className="
-                                            text-sm
-                                            text-slate-400
-                                        "
-                                    >
-                                        Aucun niveau
-                                        disponible.
-                                    </p>
-
-                                )}
-
-
-                                {levels.map(
-                                    (level) => (
-
-                                        <label
-                                            key={level}
-                                            className="
-                                                flex
-                                                cursor-pointer
-                                                items-start
-                                                gap-3
-                                                text-[14px]
-                                                text-slate-600
-                                            "
-                                        >
-
-                                            <input
-                                                type="checkbox"
-                                                checked={
-                                                    selectedLevels.includes(
-                                                        level
-                                                    )
-                                                }
-                                                onChange={() =>
-                                                    toggleLevel(
-                                                        level
-                                                    )
-                                                }
-                                                className="
-                                                    mt-0.5
-                                                    h-4
-                                                    w-4
-                                                    accent-emerald-600
-                                                "
-                                            />
-
-                                            <span
-                                                className="
-                                                    leading-5
-                                                "
-                                            >
-                                                {level}
-                                            </span>
-
-                                        </label>
-
-                                    )
-                                )}
-
-                            </div>
-
-                        </aside>
-
-
-                        {/* =================================
-                            RÉSULTATS
-                        ================================= */}
-
-                        <section>
-
-
-                            {/* =================================
-                                RECHERCHE
-                            ================================= */}
-
-                            <div
-                                className="
-                                    flex
-                                    w-full
-                                    items-center
-                                    rounded-xl
-                                    border
-                                    border-slate-200
-                                    bg-white
-                                    px-2
-                                    shadow-[0_2px_10px_rgba(15,23,42,0.04)]
-                                    transition
-                                    focus-within:border-emerald-500
-                                    focus-within:ring-4
-                                    focus-within:ring-emerald-500/10
-                                "
-                            >
-
-                                <div
-                                    className="
-                                        flex
-                                        h-11
-                                        w-11
-                                        shrink-0
-                                        items-center
-                                        justify-center
-                                        rounded-lg
-                                        text-slate-400
-                                    "
-                                >
-                                    <SearchIcon />
-                                </div>
-
-
-                                <input
-                                    value={search}
-                                    onChange={(event) =>
-                                        setSearch(
-                                            event.target.value
-                                        )
-                                    }
-                                    placeholder="
-                                        Rechercher une certification,
-                                        un métier, une compétence...
-                                    "
-                                    className="
-                                        min-w-0
-                                        flex-1
-                                        bg-transparent
-                                        px-3
-                                        py-4
-                                        text-[15px]
-                                        text-slate-800
-                                        outline-none
-                                        placeholder:text-slate-400
-                                    "
-                                />
-
-
-                                {search && (
-
-                                    <button
-                                        type="button"
-                                        onClick={() =>
-                                            setSearch("")
-                                        }
-                                        className="
-                                            mr-2
-                                            shrink-0
-                                            rounded-lg
-                                            px-3
-                                            py-2
-                                            text-xs
-                                            font-medium
-                                            text-slate-500
-                                            transition
-                                            hover:bg-slate-100
-                                            hover:text-slate-700
-                                        "
-                                    >
-                                        Effacer
-                                    </button>
-
-                                )}
-
-                            </div>
-
-
-                            {/* =================================
-                                NOMBRE
-                            ================================= */}
-
-                            <div
-                                className="
-                                    mb-5
-                                    mt-6
-                                    flex
-                                    items-center
-                                    justify-between
-                                "
-                            >
-
-                                <p
-                                    className="
-                                        text-sm
-                                        text-slate-500
-                                    "
-                                >
-
-                                    <span
-                                        className="
-                                            font-semibold
-                                            text-slate-900
-                                        "
-                                    >
-                                        {
-                                            filteredCertifications.length
-                                        }
-                                    </span>
-
-                                    {" "}
-
-                                    certification
-                                    {filteredCertifications.length >
-                                    1
-                                        ? "s"
-                                        : ""}
-
-                                </p>
-
-
-                                <span
-                                    className="
-                                        hidden
-                                        text-xs
-                                        text-slate-400
-                                        sm:block
-                                    "
-                                >
-                                    Résultats de l'annuaire
-                                </span>
-
-                            </div>
-
-
-                            {/* =================================
-                                CHARGEMENT
-                            ================================= */}
-
-                            {loading && (
-
-                                <div
-                                    className="
-                                        rounded-2xl
-                                        border
-                                        border-slate-200
-                                        bg-white
-                                        p-10
-                                        text-center
-                                        text-slate-500
-                                        shadow-sm
-                                    "
-                                >
-                                    Chargement des
-                                    certifications...
-                                </div>
-
-                            )}
-
-
-                            {/* =================================
-                                CARTES
-                            ================================= */}
-
-                            {!loading && (
-
-                                <div
-                                    className="
-                                        grid
-                                        grid-cols-1
-                                        gap-5
-                                        sm:grid-cols-2
-                                        xl:grid-cols-3
-                                    "
-                                >
-
-                                    {filteredCertifications.map(
-                                        (certification) => (
-
-                                            <CertificationCard
-                                                key={
-                                                    certification.id
-                                                }
-                                                certification={
-                                                    certification
-                                                }
-                                            />
-
-                                        )
-                                    )}
-
-                                </div>
-
-                            )}
-
-
-                            {/* =================================
-                                AUCUN RÉSULTAT
-                            ================================= */}
-
-                            {!loading &&
-                                filteredCertifications.length ===
-                                    0 && (
-
-                                    <div
-                                        className="
-                                            rounded-2xl
-                                            border
-                                            border-slate-200
-                                            bg-white
-                                            p-10
-                                            text-center
-                                            shadow-sm
-                                        "
-                                    >
-
-                                        <div
-                                            className="
-                                                mx-auto
-                                                flex
-                                                h-12
-                                                w-12
-                                                items-center
-                                                justify-center
-                                                rounded-full
-                                                bg-slate-100
-                                                text-slate-400
-                                            "
-                                        >
-                                            <SearchIcon />
-                                        </div>
-
-
-                                        <p
-                                            className="
-                                                mt-4
-                                                font-semibold
-                                                text-slate-900
-                                            "
-                                        >
-                                            Aucune certification
-                                            trouvée.
-                                        </p>
-
-
-                                        <p
-                                            className="
-                                                mt-2
-                                                text-sm
-                                                text-slate-500
-                                            "
-                                        >
-                                            Essayez une autre
-                                            recherche ou un autre
-                                            filtre.
-                                        </p>
-
-
-                                        {search && (
-
-                                            <button
-                                                type="button"
-                                                onClick={() =>
-                                                    setSearch("")
-                                                }
-                                                className="
-                                                    mt-5
-                                                    rounded-lg
-                                                    bg-emerald-600
-                                                    px-4
-                                                    py-2
-                                                    text-sm
-                                                    font-semibold
-                                                    text-white
-                                                    transition
-                                                    hover:bg-emerald-700
-                                                "
-                                            >
-                                                Effacer la recherche
-                                            </button>
-
-                                        )}
-
-                                    </div>
-
-                                )}
-
-                        </section>
-
-                    </div>
-
-                </section>
-
-            </main>
-
-
-            <Footer />
-
+          </section>
         </div>
-    );
-}
+      </main>
 
-
-/* =====================================================
-   CARTE CERTIFICATION
-===================================================== */
-
-function CertificationCard({
-    certification,
-}) {
-
-    return (
-
-        <article
-            className="
-                group
-                flex
-                h-full
-                min-h-[310px]
-                flex-col
-                overflow-hidden
-                rounded-2xl
-                border
-                border-slate-200
-                bg-white
-                shadow-[0_2px_8px_rgba(15,23,42,0.05)]
-                transition-all
-                duration-200
-                hover:-translate-y-1
-                hover:border-emerald-200
-                hover:shadow-[0_12px_30px_rgba(15,23,42,0.10)]
-            "
-        >
-
-
-            {/* =========================================
-                CONTENU
-            ========================================= */}
-
-            <div
-                className="
-                    flex
-                    flex-1
-                    flex-col
-                    p-6
-                "
-            >
-
-
-                {/* BADGES */}
-
-                <div
-                    className="
-                        flex
-                        items-center
-                        justify-between
-                        gap-3
-                    "
-                >
-
-                    <Badge
-                        variant={
-                            certification.type ===
-                            "Licence"
-                                ? "green"
-                                : "blue"
-                        }
-                    >
-                        {certification.type ||
-                            "Certification"}
-                    </Badge>
-
-
-                    {certification.mode && (
-
-                        <span
-                            className="
-                                rounded-full
-                                bg-slate-100
-                                px-3
-                                py-1
-                                text-xs
-                                font-medium
-                                text-slate-600
-                            "
-                        >
-                            {certification.mode}
-                        </span>
-
-                    )}
-
-                </div>
-
-
-                {/* TITRE */}
-
-                <h2
-                    className="
-                        mt-5
-                        line-clamp-2
-                        min-h-[52px]
-                        text-[19px]
-                        font-bold
-                        leading-[26px]
-                        tracking-[-0.2px]
-                        text-slate-900
-                        transition-colors
-                        group-hover:text-emerald-700
-                    "
-                >
-                    {certification.title}
-                </h2>
-
-
-                {/* ORGANISME */}
-
-                <div
-                    className="
-                        mt-4
-                        flex
-                        items-start
-                        gap-2
-                        text-[13px]
-                        text-slate-500
-                    "
-                >
-
-                    <div
-                        className="
-                            mt-0.5
-                            flex
-                            h-7
-                            w-7
-                            shrink-0
-                            items-center
-                            justify-center
-                            rounded-lg
-                            bg-emerald-50
-                            text-emerald-600
-                        "
-                    >
-                        <BuildingIcon />
-                    </div>
-
-
-                    <div className="min-w-0">
-
-                        <p
-                            className="
-                                text-[11px]
-                                font-medium
-                                uppercase
-                                tracking-wide
-                                text-slate-400
-                            "
-                        >
-                            Organisme certificateur
-                        </p>
-
-
-                        <p
-                            className="
-                                mt-0.5
-                                line-clamp-1
-                                font-medium
-                                text-slate-700
-                            "
-                        >
-                            {certification.organization ||
-                                "Organisme non renseigné"}
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                {/* DESCRIPTION */}
-
-                <p
-                    className="
-                        mt-5
-                        line-clamp-3
-                        text-[14px]
-                        leading-[22px]
-                        text-slate-500
-                    "
-                >
-                    {certification.description ||
-                        "Aucune description disponible pour cette certification."}
-                </p>
-
-
-                {/* ESPACE */}
-
-                <div className="flex-1" />
-
-            </div>
-
-
-            {/* =========================================
-                FOOTER DE LA CARTE
-            ========================================= */}
-
-            <div
-                className="
-                    flex
-                    min-h-[65px]
-                    items-center
-                    justify-between
-                    gap-3
-                    border-t
-                    border-slate-100
-                    bg-slate-50/80
-                    px-6
-                "
-            >
-
-
-                {/* DOMAINE */}
-
-                <span
-                    className="
-                        max-w-[55%]
-                        truncate
-                        rounded-full
-                        bg-white
-                        px-3
-                        py-1.5
-                        text-xs
-                        font-medium
-                        text-slate-600
-                        ring-1
-                        ring-slate-200
-                    "
-                    title={
-                        certification.sector
-                    }
-                >
-                    {certification.sector ||
-                        "Domaine non renseigné"}
-                </span>
-
-
-                {/* DETAILS */}
-
-                <Link
-                    to={
-                        `/certification/${certification.id}`
-                    }
-                    className="
-                        flex
-                        shrink-0
-                        items-center
-                        gap-1.5
-                        rounded-lg
-                        px-3
-                        py-2
-                        text-[13px]
-                        font-semibold
-                        text-emerald-700
-                        transition
-                        hover:bg-emerald-50
-                    "
-                >
-
-                    Voir les détails
-
-                    <span
-                        className="
-                            transition-transform
-                            duration-200
-                            group-hover:translate-x-1
-                        "
-                    >
-                        <ArrowRight />
-                    </span>
-
-                </Link>
-
-            </div>
-
-        </article>
-
-    );
+      <Footer />
+    </div>
+  );
 }
