@@ -9,16 +9,16 @@ const {
 // ==========================================
 const getAll = async (req, res) => {
   try {
-    if (!req.userId) {
+    if (!req.user) {
       return res.status(401).json({
         message: "Utilisateur non identifié"
       });
     }
 
+    const utilisateur = req.user._id;
+
     const notifications =
-      await getNotifications(
-        req.userId
-      );
+      await getNotifications(utilisateur);
 
     res.json(notifications);
 
@@ -39,16 +39,18 @@ const getAll = async (req, res) => {
 // ==========================================
 const read = async (req, res) => {
   try {
-    if (!req.userId) {
+    if (!req.user) {
       return res.status(401).json({
         message: "Utilisateur non identifié"
       });
     }
 
+    const utilisateur = req.user._id;
+
     const notification =
       await markAsRead(
         req.params.id,
-        req.userId
+        utilisateur
       );
 
     if (!notification) {
