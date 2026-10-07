@@ -2,22 +2,41 @@
 const Notification = require("../models/Notification");
 const User = require("../models/User");
 
-// ==========================================
 // CRÉER UNE NOTIFICATION
-// ==========================================
 const createNotification = async ({
   utilisateur,
   type,
   message
 }) => {
   try {
-    const notification = await Notification.create({
-      utilisateur,
-      type,
-      message
-    });
+    // Vérification avant MongoDB
+    if (!utilisateur) {
+      throw new Error(
+        "Utilisateur manquant pour la notification"
+      );
+    }
+
+    if (!type) {
+      throw new Error(
+        "Type manquant pour la notification"
+      );
+    }
+
+    if (!message) {
+      throw new Error(
+        "Message manquant pour la notification"
+      );
+    }
+
+    const notification =
+      await Notification.create({
+        utilisateur,
+        type,
+        message
+      });
 
     return notification;
+
   } catch (error) {
     console.error(
       "Erreur création notification :",
@@ -28,30 +47,31 @@ const createNotification = async ({
   }
 };
 
-// ==========================================
 // NOTIFIER PLUSIEURS UTILISATEURS
-// ==========================================
 const createNotificationForUsers = async ({
   utilisateurs,
   type,
   message
 }) => {
   try {
-    if (!utilisateurs || utilisateurs.length === 0) {
+    if (
+      !utilisateurs ||
+      utilisateurs.length === 0
+    ) {
       return [];
     }
 
-    const notifications = utilisateurs.map(
-      (utilisateur) => ({
+    const notifications =
+      utilisateurs.map((utilisateur) => ({
         utilisateur,
         type,
         message
-      })
-    );
+      }));
 
     return await Notification.insertMany(
       notifications
     );
+
   } catch (error) {
     console.error(
       "Erreur création notifications utilisateurs :",
@@ -62,9 +82,7 @@ const createNotificationForUsers = async ({
   }
 };
 
-// ==========================================
 // NOTIFIER TOUS LES UTILISATEURS
-// ==========================================
 const notifyAllUsers = async ({
   type,
   message,
@@ -92,6 +110,7 @@ const notifyAllUsers = async ({
       type,
       message
     });
+
   } catch (error) {
     console.error(
       "Erreur notification tous les utilisateurs :",
@@ -102,9 +121,7 @@ const notifyAllUsers = async ({
   }
 };
 
-// ==========================================
 // RÉCUPÉRER LES NOTIFICATIONS
-// ==========================================
 const getNotifications = async (
   utilisateur
 ) => {
@@ -116,6 +133,7 @@ const getNotifications = async (
         createdAt: -1
       })
       .lean();
+
   } catch (error) {
     console.error(
       "Erreur récupération notifications :",
@@ -126,9 +144,7 @@ const getNotifications = async (
   }
 };
 
-// ==========================================
 // MARQUER COMME LUE
-// ==========================================
 const markAsRead = async (
   notificationId,
   utilisateur
@@ -146,6 +162,7 @@ const markAsRead = async (
         new: true
       }
     );
+
   } catch (error) {
     console.error(
       "Erreur lecture notification :",
