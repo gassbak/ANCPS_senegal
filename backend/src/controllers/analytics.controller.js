@@ -1,4 +1,3 @@
-
 const Analytics = require("../models/Analytics");
 
 // ENREGISTRER UNE ACTION
@@ -10,37 +9,49 @@ const createAnalytics = async (req, res) => {
       certification
     } = req.body;
 
+    // Vérifier le type
     if (!type) {
       return res.status(400).json({
         message: "Le type est obligatoire"
       });
     }
 
-    const analytics =
-      await Analytics.create({
-        type,
-        query: query || "",
-        certification:
-          certification || null
-      });
+    // Types autorisés
+    const allowedTypes = [
+      "search",
+      "visit",
+      "view",
+      "no_result"
+    ];
 
-    res.status(201).json({
+    if (!allowedTypes.includes(type)) {
+      return res.status(400).json({
+        message: "Type Analytics invalide"
+      });
+    }
+
+    // Créer l'événement Analytics
+    const analytics = await Analytics.create({
+      type,
+      query: query || "",
+      certification: certification || null
+    });
+
+    return res.status(201).json({
       message: "Analytics enregistré",
       analytics
     });
-
   } catch (error) {
     console.error(
       "Erreur création analytics :",
       error
     );
 
-    res.status(400).json({
+    return res.status(500).json({
       message: error.message
     });
   }
 };
-
 
 // RÉCUPÉRER LES STATISTIQUES
 const getAnalytics = async (req, res) => {
@@ -68,20 +79,19 @@ const getAnalytics = async (req, res) => {
       })
     ]);
 
-    res.json({
+    return res.json({
       searches,
       visits,
       views,
       noResults
     });
-
   } catch (error) {
     console.error(
       "Erreur récupération analytics :",
       error
     );
 
-    res.status(500).json({
+    return res.status(500).json({
       message: error.message
     });
   }
