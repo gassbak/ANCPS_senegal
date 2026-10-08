@@ -311,10 +311,10 @@ export default function Annuaire() {
                     EN-TÊTE
                 ========================== */}
 
-                <div className="mb-8">
+                <div className="mt-8">
                     <div className="max-w-3xl">
 
-                        <p className="mb-2 text-sm font-semibold uppercase tracking-wide text-emerald-700">
+                        <p className="mt-5 text-sm font-semibold uppercase tracking-wide text-emerald-700">
                             ANCPS
                         </p>
 
