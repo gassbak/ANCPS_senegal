@@ -1,4 +1,3 @@
-
 import {
   Award,
   School,
@@ -13,7 +12,7 @@ import {
 import { useEffect, useState } from "react";
 
 import {
-  loadRemoteStore
+  loadRemoteStore,
 } from "../services/adminApi";
 
 import { request } from "../services/api";
@@ -22,10 +21,11 @@ import {
   StatCard,
   Badge,
   PageHeader,
-  Table
+  Table,
 } from "../components/ui";
 
-// Échéance de reconnaissance : couleur et libellé selon le nombre de jours restants.
+// Échéance de reconnaissance : couleur et libellé
+// selon le nombre de jours restants.
 function alertTone(days) {
   if (days < 0 || days <= 30) {
     return "red";
@@ -61,7 +61,7 @@ function getUpcomingDeadlines(certifications) {
   return certifications
     .map((c) => ({
       ...c,
-      _latest: (c.decisions || [])[0]
+      _latest: (c.decisions || [])[0],
     }))
     .filter(
       (c) =>
@@ -81,7 +81,7 @@ function getUpcomingDeadlines(certifications) {
       return {
         ...c,
         days,
-        validTo: c._latest.validTo
+        validTo: c._latest.validTo,
       };
     })
     .filter((c) => c.days <= 180)
@@ -101,7 +101,7 @@ function getCompleteness(
     "level",
     "verificationStatus",
     "decisions",
-    "documents"
+    "documents",
   ];
 
   const present = fields.filter((key) => {
@@ -131,44 +131,105 @@ function getCompleteness(
 }
 
 export default function DashboardPage() {
+  // =========================
+  // ÉTAT DU DASHBOARD
+  // =========================
+
   const [s, setS] = useState({});
+
+  // =========================
+  // ÉTAT ANALYTICS
+  // =========================
 
   const [analytics, setAnalytics] =
     useState({
       searches: 0,
       visits: 0,
       views: 0,
-      noResults: 0
+      noResults: 0,
     });
 
-useEffect(() => {
-  const testAnalytics = async () => {
-    console.log("=== TEST ANALYTICS ===");
+  // =========================
+  // CHARGEMENT DES DONNÉES
+  // =========================
 
-    try {
-      const response = await request("/analytics");
+  useEffect(() => {
+    // -------------------------
+    // Dashboard général
+    // -------------------------
 
-      console.log("1. Réponse API :", response);
-      console.log("2. searches :", response?.searches);
+    const loadDashboardData = async () => {
+      try {
+        const remoteStore =
+          await loadRemoteStore();
 
-      setAnalytics({
-        searches: response?.searches ?? 0,
-        visits: response?.visits ?? 0,
-        views: response?.views ?? 0,
-        noResults: response?.noResults ?? 0,
-      });
+        setS(remoteStore || {});
+      } catch (error) {
+        console.error(
+          "Erreur chargement Dashboard :",
+          error
+        );
+      }
+    };
 
-      console.log("3. setAnalytics effectué");
-    } catch (error) {
-      console.error(
-        "ERREUR TEST ANALYTICS :",
-        error
-      );
-    }
-  };
+    // -------------------------
+    // Analytics
+    // -------------------------
 
-  testAnalytics();
-}, []);
+    const loadDashboardAnalytics =
+      async () => {
+        try {
+          console.log(
+            "🔥 Début chargement Analytics"
+          );
+
+          const response =
+            await request("/analytics");
+
+          console.log(
+            "🔥 Réponse Analytics :",
+            response
+          );
+
+          setAnalytics({
+            searches: Number(
+              response?.searches ?? 0
+            ),
+
+            visits: Number(
+              response?.visits ?? 0
+            ),
+
+            views: Number(
+              response?.views ?? 0
+            ),
+
+            noResults: Number(
+              response?.noResults ?? 0
+            ),
+          });
+
+          console.log(
+            "🔥 Analytics affiché"
+          );
+        } catch (error) {
+          console.error(
+            "❌ Erreur Analytics Dashboard :",
+            error
+          );
+        }
+      };
+
+    // Les deux chargements sont
+    // indépendants.
+    loadDashboardData();
+
+    loadDashboardAnalytics();
+  }, []);
+
+  // =========================
+  // DONNÉES
+  // =========================
 
   const cert =
     Array.isArray(s.certifications)
@@ -200,6 +261,10 @@ useEffect(() => {
       ? s.audit
       : [];
 
+  // =========================
+  // STATISTIQUES
+  // =========================
+
   const published = cert.filter(
     (x) =>
       x.published &&
@@ -227,6 +292,10 @@ useEffect(() => {
 
   const upcoming =
     getUpcomingDeadlines(cert);
+
+  // =========================
+  // AFFICHAGE
+  // =========================
 
   return (
     <div>
@@ -304,7 +373,7 @@ useEffect(() => {
               "Action",
               "Entité",
               "Utilisateur",
-              "Date"
+              "Date",
             ]}
           >
             {audit
@@ -378,7 +447,7 @@ useEffect(() => {
                       className="h-2 rounded-full bg-emerald-600"
                       style={{
                         width:
-                          `${completeness}%`
+                          `${completeness}%`,
                       }}
                     />
                   </div>
@@ -466,6 +535,8 @@ useEffect(() => {
       ========================== */}
 
       <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
+
+        {/* À VÉRIFIER */}
 
         <div className="rounded-2xl border bg-white p-6 shadow-sm">
 
