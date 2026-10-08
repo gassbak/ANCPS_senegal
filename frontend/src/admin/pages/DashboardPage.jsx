@@ -15,7 +15,7 @@ import {
   loadRemoteStore,
 } from "../services/adminApi";
 
-import { request } from "../services/api";
+import { request } from "../../services/api";
 
 import {
   StatCard,
