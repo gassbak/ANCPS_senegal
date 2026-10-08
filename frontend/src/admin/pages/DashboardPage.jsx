@@ -13,9 +13,10 @@ import {
 import { useEffect, useState } from "react";
 
 import {
-  loadRemoteStore,
-  loadAnalytics
+  loadRemoteStore
 } from "../services/adminApi";
+
+import { request } from "../services/api";
 
 import {
   StatCard,
@@ -142,6 +143,7 @@ export default function DashboardPage() {
 
 useEffect(() => {
     const loadDashboard = async () => {
+
         // =========================
         // DONNÉES DU DASHBOARD
         // =========================
@@ -153,7 +155,7 @@ useEffect(() => {
             setS(remoteStore || {});
         } catch (error) {
             console.error(
-                "Erreur chargement données Dashboard :",
+                "Erreur Dashboard :",
                 error
             );
         }
@@ -163,30 +165,36 @@ useEffect(() => {
         // =========================
 
         try {
-            const data =
-                await loadAnalytics();
+            console.log(
+                "Chargement Analytics..."
+            );
+
+            const response =
+                await request("/analytics");
 
             console.log(
-                "Analytics Dashboard :",
-                data
+                "Réponse Analytics :",
+                response
             );
 
             setAnalytics({
                 searches:
-                    Number(data.searches || 0),
+                    Number(response?.searches || 0),
 
                 visits:
-                    Number(data.visits || 0),
+                    Number(response?.visits || 0),
 
                 views:
-                    Number(data.views || 0),
+                    Number(response?.views || 0),
 
                 noResults:
-                    Number(data.noResults || 0),
+                    Number(response?.noResults || 0),
             });
+
         } catch (error) {
+
             console.error(
-                "Erreur chargement Analytics :",
+                "ERREUR ANALYTICS DASHBOARD :",
                 error
             );
         }
@@ -194,7 +202,6 @@ useEffect(() => {
 
     loadDashboard();
 }, []);
-
 
   const cert =
     Array.isArray(s.certifications)
