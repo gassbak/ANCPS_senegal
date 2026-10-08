@@ -142,65 +142,32 @@ export default function DashboardPage() {
     });
 
 useEffect(() => {
-    const loadDashboard = async () => {
+  const testAnalytics = async () => {
+    console.log("=== TEST ANALYTICS ===");
 
-        // =========================
-        // DONNÉES DU DASHBOARD
-        // =========================
+    try {
+      const response = await request("/analytics");
 
-        try {
-            const remoteStore =
-                await loadRemoteStore();
+      console.log("1. Réponse API :", response);
+      console.log("2. searches :", response?.searches);
 
-            setS(remoteStore || {});
-        } catch (error) {
-            console.error(
-                "Erreur Dashboard :",
-                error
-            );
-        }
+      setAnalytics({
+        searches: response?.searches ?? 0,
+        visits: response?.visits ?? 0,
+        views: response?.views ?? 0,
+        noResults: response?.noResults ?? 0,
+      });
 
-        // =========================
-        // ANALYTICS
-        // =========================
+      console.log("3. setAnalytics effectué");
+    } catch (error) {
+      console.error(
+        "ERREUR TEST ANALYTICS :",
+        error
+      );
+    }
+  };
 
-        try {
-            console.log(
-                "Chargement Analytics..."
-            );
-
-            const response =
-                await request("/analytics");
-
-            console.log(
-                "Réponse Analytics :",
-                response
-            );
-
-            setAnalytics({
-                searches:
-                    Number(response?.searches || 0),
-
-                visits:
-                    Number(response?.visits || 0),
-
-                views:
-                    Number(response?.views || 0),
-
-                noResults:
-                    Number(response?.noResults || 0),
-            });
-
-        } catch (error) {
-
-            console.error(
-                "ERREUR ANALYTICS DASHBOARD :",
-                error
-            );
-        }
-    };
-
-    loadDashboard();
+  testAnalytics();
 }, []);
 
   const cert =
