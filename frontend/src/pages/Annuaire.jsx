@@ -318,7 +318,7 @@ export default function Annuaire() {
                             ANCPS
                         </p>
 
-                        <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl mt-4">
+                        <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl mt-3">
                             Annuaire des certifications
                         </h1>
 
