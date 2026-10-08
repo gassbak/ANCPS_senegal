@@ -141,36 +141,58 @@ export default function DashboardPage() {
     });
 
 useEffect(() => {
-  const loadDashboard = async () => {
-    try {
-      const remoteStore = await loadRemoteStore();
+    const loadDashboard = async () => {
+        // =========================
+        // DONNÉES DU DASHBOARD
+        // =========================
 
-      setS(remoteStore || {});
-    } catch (error) {
-      console.error(
-        "Erreur chargement données Dashboard :",
-        error
-      );
-    }
+        try {
+            const remoteStore =
+                await loadRemoteStore();
 
-    try {
-      const analyticsData = await loadAnalytics();
+            setS(remoteStore || {});
+        } catch (error) {
+            console.error(
+                "Erreur chargement données Dashboard :",
+                error
+            );
+        }
 
-      setAnalytics({
-        searches: Number(analyticsData?.searches || 0),
-        visits: Number(analyticsData?.visits || 0),
-        views: Number(analyticsData?.views || 0),
-        noResults: Number(analyticsData?.noResults || 0),
-      });
-    } catch (error) {
-      console.error(
-        "Erreur chargement Analytics :",
-        error
-      );
-    }
-  };
+        // =========================
+        // ANALYTICS
+        // =========================
 
-  loadDashboard();
+        try {
+            const data =
+                await loadAnalytics();
+
+            console.log(
+                "Analytics Dashboard :",
+                data
+            );
+
+            setAnalytics({
+                searches:
+                    Number(data.searches || 0),
+
+                visits:
+                    Number(data.visits || 0),
+
+                views:
+                    Number(data.views || 0),
+
+                noResults:
+                    Number(data.noResults || 0),
+            });
+        } catch (error) {
+            console.error(
+                "Erreur chargement Analytics :",
+                error
+            );
+        }
+    };
+
+    loadDashboard();
 }, []);
 
 

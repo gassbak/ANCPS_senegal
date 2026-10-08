@@ -1193,39 +1193,51 @@ export async function markNotificationRead(
  * }
  */
 
+/* ==============================
+   ANALYTICS
+============================== */
+
 export async function loadAnalytics() {
-  const response =
-    await request("/analytics");
+    try {
+        const response =
+            await request("/analytics");
 
-  const data =
-    response?.data &&
-    typeof response.data === "object"
-      ? response.data
-      : response || {};
+        console.log(
+            "Analytics reçues :",
+            response
+        );
 
-  return {
-    searches:
-      Number(
-        data.searches || 0
-      ),
+        return {
+            searches: Number(
+                response?.searches || 0
+            ),
 
-    visits:
-      Number(
-        data.visits || 0
-      ),
+            visits: Number(
+                response?.visits || 0
+            ),
 
-    views:
-      Number(
-        data.views || 0
-      ),
+            views: Number(
+                response?.views || 0
+            ),
 
-    noResults:
-      Number(
-        data.noResults || 0
-      ),
-  };
+            noResults: Number(
+                response?.noResults || 0
+            ),
+        };
+    } catch (error) {
+        console.error(
+            "Erreur API Analytics :",
+            error
+        );
+
+        return {
+            searches: 0,
+            visits: 0,
+            views: 0,
+            noResults: 0,
+        };
+    }
 }
-
 
 /*
  * Enregistre une action Analytics.
@@ -1238,28 +1250,28 @@ export async function loadAnalytics() {
  * trackAnalytics("noResults")
  */
 
-export async function trackAnalytics(
-  type,
-  data = {}
-) {
-  if (!type) {
-    throw new Error(
-      "Le type Analytics est obligatoire"
-    );
-  }
+// export async function trackAnalytics(
+//   type,
+//   data = {}
+// ) {
+//   if (!type) {
+//     throw new Error(
+//       "Le type Analytics est obligatoire"
+//     );
+//   }
 
-  return request(
-    "/analytics",
-    {
-      method: "POST",
+//   return request(
+//     "/analytics",
+//     {
+//       method: "POST",
 
-      body: json({
-        type,
-        ...data,
-      }),
-    }
-  );
-}
+//       body: json({
+//         type,
+//         ...data,
+//       }),
+//     }
+//   );
+// }
 
 
 /* ==============================
