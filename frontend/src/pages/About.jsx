@@ -12,7 +12,7 @@ export default function About() {
         <div className="mx-auto max-w-[900px] px-6 py-[58px]">
           
           <section>
-            <h1 className="text-[32px] font-bold leading-[1.2] tracking-[-0.5px] text-[#0F172A]">
+            <h1 className="text-[32px] font-bold leading-[1.2] tracking-[-0.5px] text-[#0F172A] mt-4">
               À propos du projet
             </h1>
 
