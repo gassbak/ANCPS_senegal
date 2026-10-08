@@ -1,279 +1,350 @@
-
 import { useState } from "react";
 import { FileText } from "lucide-react";
 
 import { loadStore, saveStore } from "../../services/adminStore";
-import { makeAuditEntry, withAuditEntry } from "../../utils/audit";
+import {
+makeAuditEntry,
+withAuditEntry,
+} from "../../utils/audit";
 
 import {
-  PageHeader,
-  Button,
-  SearchBar,
-  Table,
-  Badge,
-  Modal,
-  Input,
-  Select,
-  statusTone,
-  EmptyState,
+PageHeader,
+Button,
+SearchBar,
+Table,
+Badge,
+Modal,
+Input,
+Select,
+statusTone,
+EmptyState,
 } from "../ui";
 
-// Page générique utilisée pour les référentiels
-// Sources et Documents.
-//
-// Elle permet :
-// - d'afficher les données
-// - de rechercher
-// - d'ajouter
-// - de modifier
-// - de lier un élément à une certification
-// - d'enregistrer une trace dans l'audit
-
 export default function SimpleQualityTable({
-  title = "Référentiel",
-  description = "",
-  storeKey = "",
-  columns = [],
-  session = {},
-  itemType = "élément",
+title = "Référentiel",
+description = "",
+storeKey = "",
+columns = [],
+session = {},
+itemType = "élément",
 }) {
-  // --------------------------------------------------
-  // ÉTAT DU STORE
-  // --------------------------------------------------
+// --------------------------------------------------
+// ÉTAT DU STORE
+// --------------------------------------------------
 
-  const [store, setStore] = useState(() => {
-    const savedStore = loadStore();
+const [store, setStore] = useState(() => {
+try {
+const savedStore = loadStore();
 
-    // On garantit toujours un objet
-    if (!savedStore || typeof savedStore !== "object") {
-      return {};
-    }
 
-    return savedStore;
-  });
+  if (
+    !savedStore ||
+    typeof savedStore !== "object" ||
+    Array.isArray(savedStore)
+  ) {
+    return {};
+  }
 
-  // --------------------------------------------------
-  // ÉTATS DE LA PAGE
-  // --------------------------------------------------
+  return savedStore;
+} catch (error) {
+  console.error(
+    "Erreur lors du chargement du store :",
+    error
+  );
 
-  const [query, setQuery] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
-  const [form, setForm] = useState({});
+  return {};
+}
 
-  // --------------------------------------------------
-  // DONNÉES
-  // --------------------------------------------------
 
-  // On vérifie que store[storeKey] est bien un tableau
-  const data = Array.isArray(store?.[storeKey])
-    ? store[storeKey]
-    : [];
+});
 
-  // Même protection pour les certifications
-  const certifications = Array.isArray(store?.certifications)
-    ? store.certifications
-    : [];
+// --------------------------------------------------
+// ÉTATS
+// --------------------------------------------------
 
-  // --------------------------------------------------
-  // RECHERCHE
-  // --------------------------------------------------
+const [query, setQuery] = useState("");
+const [modalOpen, setModalOpen] = useState(false);
+const [form, setForm] = useState({});
 
-  const searchText = String(query || "")
-    .trim()
-    .toLowerCase();
+// --------------------------------------------------
+// DONNÉES
+// --------------------------------------------------
 
-  const list = data.filter((item) => {
-    if (!item || typeof item !== "object") {
-      return false;
-    }
+const safeColumns = Array.isArray(columns)
+? columns.filter(Boolean)
+: [];
 
-    if (!searchText) {
-      return true;
-    }
+const data = Array.isArray(store?.[storeKey])
+? store[storeKey].filter(
+(item) =>
+item &&
+typeof item === "object"
+)
+: [];
 
-    return Object.values(item)
-      .map((value) => {
-        if (value === null || value === undefined) {
+const certifications = Array.isArray(
+store?.certifications
+)
+? store.certifications.filter(
+(item) =>
+item &&
+typeof item === "object"
+)
+: [];
+
+// --------------------------------------------------
+// RECHERCHE
+// --------------------------------------------------
+
+const searchText = String(query || "")
+.trim()
+.toLowerCase();
+
+const list = data.filter((item) => {
+if (!searchText) {
+return true;
+}
+
+try {
+  return Object.values(item)
+    .map((value) => {
+      if (
+        value === null ||
+        value === undefined
+      ) {
+        return "";
+      }
+
+      if (typeof value === "object") {
+        try {
+          return JSON.stringify(value);
+        } catch {
           return "";
         }
-
-        if (typeof value === "object") {
-          try {
-            return JSON.stringify(value);
-          } catch {
-            return "";
-          }
-        }
-
-        return String(value);
-      })
-      .join(" ")
-      .toLowerCase()
-      .includes(searchText);
-  });
-
-  // --------------------------------------------------
-  // OUVRIR LE FORMULAIRE
-  // --------------------------------------------------
-
-  const openForm = (item = null) => {
-    if (item && typeof item === "object") {
-      setForm({
-        ...item,
-      });
-    } else {
-      setForm({});
-    }
-
-    setModalOpen(true);
-  };
-
-  // --------------------------------------------------
-  // CHANGER UNE VALEUR DU FORMULAIRE
-  // --------------------------------------------------
-
-  const updateField = (field, value) => {
-    setForm((previous) => ({
-      ...previous,
-      [field]: value,
-    }));
-  };
-
-  // --------------------------------------------------
-  // NOM DE L'ÉLÉMENT
-  // --------------------------------------------------
-
-  const getItemName = (item) => {
-    if (!item || typeof item !== "object") {
-      return "Élément sans nom";
-    }
-
-    return (
-      item.name ||
-      item.nom ||
-      item.title ||
-      item.titre ||
-      `${itemType} sans nom`
-    );
-  };
-
-  // --------------------------------------------------
-  // NOM D'UNE COLONNE
-  // --------------------------------------------------
-
-  const getColumnLabel = (column) => {
-    if (!column) {
-      return "";
-    }
-
-    const text = String(column);
-
-    return text
-      .replace(/([A-Z])/g, " $1")
-      .replace(/^./, (letter) => letter.toUpperCase())
-      .trim();
-  };
-
-  // --------------------------------------------------
-  // FORMATAGE D'UNE VALEUR
-  // --------------------------------------------------
-
-  const getDisplayValue = (value) => {
-    if (value === null || value === undefined || value === "") {
-      return "—";
-    }
-
-    if (typeof value === "object") {
-      if (value.name) {
-        return value.name;
       }
 
-      if (value.nom) {
-        return value.nom;
-      }
+      return String(value);
+    })
+    .join(" ")
+    .toLowerCase()
+    .includes(searchText);
+} catch (error) {
+  console.error(
+    "Erreur lors de la recherche :",
+    error
+  );
 
-      if (value.title) {
-        return value.title;
-      }
+  return false;
+}
 
+
+});
+
+// --------------------------------------------------
+// OUVRIR LE FORMULAIRE
+// --------------------------------------------------
+
+const openForm = (item = null) => {
+if (
+item &&
+typeof item === "object"
+) {
+setForm({
+...item,
+});
+} else {
+setForm({});
+}
+
+setModalOpen(true);
+
+
+};
+
+// --------------------------------------------------
+// MODIFIER UN CHAMP
+// --------------------------------------------------
+
+const updateField = (field, value) => {
+if (!field) {
+return;
+}
+
+
+setForm((previous) => ({
+  ...(previous || {}),
+  [field]: value,
+}));
+
+
+};
+
+// --------------------------------------------------
+// NOM DE L'ÉLÉMENT
+// --------------------------------------------------
+
+const getItemName = (item) => {
+if (
+!item ||
+typeof item !== "object"
+) {
+return `${itemType} sans nom`;
+}
+
+
+return (
+  item?.name ||
+  item?.nom ||
+  item?.title ||
+  item?.titre ||
+  `${itemType} sans nom`
+);
+
+
+};
+
+// --------------------------------------------------
+// LABEL D'UNE COLONNE
+// --------------------------------------------------
+
+const getColumnLabel = (column) => {
+if (!column) {
+return "";
+}
+
+
+return String(column)
+  .replace(/([A-Z])/g, " $1")
+  .replace(/^./, (letter) =>
+    letter.toUpperCase()
+  )
+  .trim();
+
+
+};
+
+// --------------------------------------------------
+// AFFICHAGE D'UNE VALEUR
+// --------------------------------------------------
+
+const getDisplayValue = (value) => {
+if (
+value === null ||
+value === undefined ||
+value === ""
+) {
+return "—";
+}
+
+
+if (
+  typeof value === "object"
+) {
+  return (
+    value?.name ||
+    value?.nom ||
+    value?.title ||
+    value?.titre ||
+    (() => {
       try {
         return JSON.stringify(value);
       } catch {
         return "—";
       }
-    }
+    })()
+  );
+}
 
-    return String(value);
+return String(value);
+
+
+};
+
+// --------------------------------------------------
+// CERTIFICATION
+// --------------------------------------------------
+
+const getCertificationTitle = (
+certificationId
+) => {
+if (!certificationId) {
+return "—";
+}
+
+
+const certification =
+  certifications.find(
+    (item) =>
+      item?.id === certificationId ||
+      item?._id === certificationId
+  );
+
+if (!certification) {
+  return "—";
+}
+
+return (
+  certification?.title ||
+  certification?.titre ||
+  certification?.name ||
+  certification?.nom ||
+  "Certification sans nom"
+);
+
+
+};
+
+// --------------------------------------------------
+// ENREGISTRER
+// --------------------------------------------------
+
+const save = () => {
+try {
+const safeForm =
+form &&
+typeof form === "object"
+? form
+: {};
+
+
+  const itemId =
+    safeForm?.id ||
+    safeForm?._id ||
+    `${itemType}_${Date.now()}`;
+
+  const item = {
+    ...safeForm,
+    id: itemId,
   };
 
-  // --------------------------------------------------
-  // TROUVER UNE CERTIFICATION
-  // --------------------------------------------------
+  const isEditing = Boolean(
+    safeForm?.id ||
+    safeForm?._id
+  );
 
-  const getCertificationTitle = (certificationId) => {
-    if (!certificationId) {
-      return "—";
-    }
+  let updatedData;
 
-    const certification = certifications.find((certification) => {
-      if (!certification) {
-        return false;
-      }
+  if (isEditing) {
+    const currentId =
+      safeForm?.id ||
+      safeForm?._id;
 
-      return (
-        certification.id === certificationId ||
-        certification._id === certificationId
-      );
-    });
-
-    if (!certification) {
-      return "—";
-    }
-
-    return (
-      certification.title ||
-      certification.titre ||
-      certification.name ||
-      certification.nom ||
-      "Certification sans nom"
-    );
-  };
-
-  // --------------------------------------------------
-  // ENREGISTRER
-  // --------------------------------------------------
-
-  const save = () => {
-    // On récupère l'identifiant existant
-    // ou on en crée un nouveau.
-    const itemId =
-      form?.id ||
-      form?._id ||
-      `${itemType}_${Date.now()}`;
-
-    const item = {
-      ...form,
-      id: itemId,
-    };
-
-    // Vérifie si on est en modification
-    const isEditing = Boolean(form?.id || form?._id);
-
-    let updatedData;
-
-    if (isEditing) {
-      updatedData = data.map((existingItem) => {
-        if (!existingItem) {
+    updatedData = data.map(
+      (existingItem) => {
+        if (
+          !existingItem ||
+          typeof existingItem !== "object"
+        ) {
           return existingItem;
         }
 
         const existingId =
-          existingItem.id || existingItem._id;
+          existingItem?.id ||
+          existingItem?._id;
 
-        const currentId =
-          form.id || form._id;
-
-        if (existingId === currentId) {
+        if (
+          existingId === currentId
+        ) {
           return {
             ...existingItem,
             ...item,
@@ -281,292 +352,305 @@ export default function SimpleQualityTable({
         }
 
         return existingItem;
-      });
-    } else {
-      updatedData = [item, ...data];
-    }
+      }
+    );
+  } else {
+    updatedData = [
+      item,
+      ...data,
+    ];
+  }
 
-    // --------------------------------------------------
-    // AUDIT
-    // --------------------------------------------------
+  // ------------------------------------------------
+  // UTILISATEUR POUR L'AUDIT
+  // ------------------------------------------------
 
-    const currentAudit = Array.isArray(store?.audit)
+  const userName =
+    session?.name ||
+    session?.nom ||
+    session?.username ||
+    session?.email ||
+    "Utilisateur";
+
+  // ------------------------------------------------
+  // AUDIT
+  // ------------------------------------------------
+
+  const currentAudit =
+    Array.isArray(store?.audit)
       ? store.audit
       : [];
 
-    // Protection contre session undefined
-    const userName =
-      session?.name ||
-      session?.nom ||
-      session?.username ||
-      session?.email ||
-      "Utilisateur";
-
-    const auditEntry = makeAuditEntry({
-      user: userName,
-      action: isEditing ? "Modification" : "Ajout",
+  const auditEntry =
+    makeAuditEntry({
+      user: String(userName),
+      action: isEditing
+        ? "Modification"
+        : "Ajout",
       entity: getItemName(item),
       newValue: "Enregistré",
     });
 
-    const next = {
-      ...store,
-
-      [storeKey]: updatedData,
-
-      audit: withAuditEntry(
-        currentAudit,
-        auditEntry
-      ),
-    };
-
-    // Sauvegarde locale
-    saveStore(next);
-
-    // Mise à jour de l'état React
-    setStore(next);
-
-    // Ferme la fenêtre
-    setModalOpen(false);
-
-    // Réinitialise le formulaire
-    setForm({});
+  const next = {
+    ...store,
+    [storeKey]: updatedData,
+    audit: withAuditEntry(
+      currentAudit,
+      auditEntry
+    ),
   };
 
-  // --------------------------------------------------
-  // ANNULER
-  // --------------------------------------------------
+  // ------------------------------------------------
+  // SAUVEGARDE
+  // ------------------------------------------------
 
-  const closeModal = () => {
-    setModalOpen(false);
-    setForm({});
-  };
+  const saved = saveStore(next);
 
-  // --------------------------------------------------
-  // RENDU
-  // --------------------------------------------------
+  if (!saved) {
+    console.error(
+      "Impossible de sauvegarder les données."
+    );
+    return;
+  }
 
-  return (
-    <div className="space-y-6">
-      {/* --------------------------------------------- */}
-      {/* EN-TÊTE */}
-      {/* --------------------------------------------- */}
+  setStore(next);
+  setModalOpen(false);
+  setForm({});
+} catch (error) {
+  console.error(
+    "Erreur lors de l'enregistrement :",
+    error
+  );
+}
 
-      <PageHeader
-        title={title}
-        description={description}
-        action={
-          <Button
-            icon={FileText}
-            onClick={() => openForm(null)}
-          >
-            Ajouter
-          </Button>
-        }
-      />
 
-      {/* --------------------------------------------- */}
-      {/* RECHERCHE */}
-      {/* --------------------------------------------- */}
+};
 
-      <div className="mb-5">
-        <SearchBar
-          value={query}
-          onChange={setQuery}
-          placeholder={`Rechercher dans ${
-            String(title || "").toLowerCase()
-          }...`}
-        />
-      </div>
+// --------------------------------------------------
+// FERMER LA MODALE
+// --------------------------------------------------
 
-      {/* --------------------------------------------- */}
-      {/* LISTE */}
-      {/* --------------------------------------------- */}
+const closeModal = () => {
+setModalOpen(false);
+setForm({});
+};
 
-      {list.length === 0 ? (
-        <EmptyState />
-      ) : (
-        <div className="overflow-x-auto">
-          <Table
-            headers={[
-              ...columns.map(getColumnLabel),
-              "Certification liée",
-              "Actions",
-            ]}
-          >
-            {list.map((item, index) => {
-              if (!item) {
-                return null;
-              }
+// --------------------------------------------------
+// OPTIONS DES CERTIFICATIONS
+// --------------------------------------------------
 
-              const itemId =
-                item.id ||
-                item._id ||
-                `${storeKey}_${index}`;
+const certificationOptions = [
+{
+value: "",
+label: "— Aucune —",
+},
 
-              return (
-                <tr
-                  key={itemId}
-                  className="border-b last:border-b-0 hover:bg-gray-50"
-                >
-                  {/* -------------------------------- */}
-                  {/* COLONNES */}
-                  {/* -------------------------------- */}
 
-                  {columns.map((column) => {
-                    const value = item?.[column];
+...certifications
+  .filter(
+    (certification) =>
+      certification?.id ||
+      certification?._id
+  )
+  .map((certification) => ({
+    value:
+      certification?.id ||
+      certification?._id,
+
+    label:
+      certification?.title ||
+      certification?.titre ||
+      certification?.name ||
+      certification?.nom ||
+      "Certification sans nom",
+  })),
+
+];
+
+// --------------------------------------------------
+// RENDU
+// --------------------------------------------------
+
+return ( <div className="space-y-6">
+<PageHeader
+title={title}
+description={description}
+action={
+<Button
+icon={FileText}
+onClick={() => openForm(null)}
+>
+Ajouter </Button>
+}
+/>
+
+
+  <div className="mb-5">
+    <SearchBar
+      value={query}
+      onChange={setQuery}
+      placeholder={`Rechercher dans ${String(
+        title || ""
+      ).toLowerCase()}...`}
+    />
+  </div>
+
+  {list.length === 0 ? (
+    <EmptyState />
+  ) : (
+    <div className="overflow-x-auto">
+      <Table
+        headers={[
+          ...safeColumns.map(
+            getColumnLabel
+          ),
+          "Certification liée",
+          "Actions",
+        ]}
+      >
+        {list.map(
+          (item, index) => {
+            if (!item) {
+              return null;
+            }
+
+            const itemId =
+              item?.id ||
+              item?._id ||
+              `${storeKey}_${index}`;
+
+            return (
+              <tr
+                key={itemId}
+                className="border-b last:border-b-0 hover:bg-gray-50"
+              >
+                {safeColumns.map(
+                  (column) => {
+                    const value =
+                      item?.[column];
 
                     return (
                       <td
                         key={column}
                         className="px-5 py-4 text-gray-600"
                       >
-                        {column === "status" ? (
+                        {column ===
+                        "status" ? (
                           <Badge
                             tone={statusTone(
                               value || ""
                             )}
                           >
-                            {getDisplayValue(value)}
+                            {getDisplayValue(
+                              value
+                            )}
                           </Badge>
                         ) : (
-                          getDisplayValue(value)
+                          getDisplayValue(
+                            value
+                          )
                         )}
                       </td>
                     );
-                  })}
+                  }
+                )}
 
-                  {/* -------------------------------- */}
-                  {/* CERTIFICATION */}
-                  {/* -------------------------------- */}
+                <td className="px-5 py-4 text-gray-500">
+                  {getCertificationTitle(
+                    item?.certificationId
+                  )}
+                </td>
 
-                  <td className="px-5 py-4 text-gray-500">
-                    {getCertificationTitle(
-                      item?.certificationId
-                    )}
-                  </td>
+                <td className="px-5 py-4 text-right">
+                  <Button
+                    variant="ghost"
+                    onClick={() =>
+                      openForm(item)
+                    }
+                  >
+                    Modifier
+                  </Button>
+                </td>
+              </tr>
+            );
+          }
+        )}
+      </Table>
+    </div>
+  )}
 
-                  {/* -------------------------------- */}
-                  {/* ACTIONS */}
-                  {/* -------------------------------- */}
+  <Modal
+    open={modalOpen}
+    onClose={closeModal}
+    title={
+      form?.id ||
+      form?._id
+        ? `Modifier ${itemType}`
+        : `Ajouter ${itemType}`
+    }
+  >
+    <div className="space-y-4">
+      {safeColumns.map(
+        (column) => {
+          const value =
+            form?.[column];
 
-                  <td className="px-5 py-4 text-right">
-                    <Button
-                      variant="ghost"
-                      onClick={() => openForm(item)}
-                    >
-                      Modifier
-                    </Button>
-                  </td>
-                </tr>
-              );
-            })}
-          </Table>
-        </div>
+          return (
+            <Input
+              key={column}
+              label={getColumnLabel(
+                column
+              )}
+              value={
+                value === null ||
+                value === undefined
+                  ? ""
+                  : String(value)
+              }
+              onChange={(event) =>
+                updateField(
+                  column,
+                  event.target.value
+                )
+              }
+            />
+          );
+        }
       )}
 
-      {/* --------------------------------------------- */}
-      {/* MODALE */}
-      {/* --------------------------------------------- */}
-
-      <Modal
-        open={modalOpen}
-        onClose={closeModal}
-        title={
-          form?.id || form?._id
-            ? `Modifier ${itemType}`
-            : `Ajouter ${itemType}`
+      <Select
+        label="Certification liée"
+        value={
+          form?.certificationId ||
+          ""
         }
-      >
-        <div className="space-y-4">
-          {/* ----------------------------------------- */}
-          {/* CHAMPS */}
-          {/* ----------------------------------------- */}
+        onChange={(event) =>
+          updateField(
+            "certificationId",
+            event.target.value
+          )
+        }
+        options={
+          certificationOptions
+        }
+      />
 
-          {columns.map((column) => {
-            const value = form?.[column];
+      <div className="flex justify-end gap-2 pt-2">
+        <Button
+          variant="secondary"
+          onClick={closeModal}
+        >
+          Annuler
+        </Button>
 
-            return (
-              <Input
-                key={column}
-                label={getColumnLabel(column)}
-                value={
-                  value === null ||
-                  value === undefined
-                    ? ""
-                    : String(value)
-                }
-                onChange={(e) =>
-                  updateField(
-                    column,
-                    e.target.value
-                  )
-                }
-              />
-            );
-          })}
-
-          {/* ----------------------------------------- */}
-          {/* CERTIFICATION */}
-          {/* ----------------------------------------- */}
-
-          <Select
-            label="Certification liée"
-            value={form?.certificationId || ""}
-            onChange={(e) =>
-              updateField(
-                "certificationId",
-                e.target.value
-              )
-            }
-            options={[
-              {
-                value: "",
-                label: "— Aucune —",
-              },
-
-              ...certifications
-                .filter(
-                  (certification) =>
-                    certification &&
-                    (
-                      certification.id ||
-                      certification._id
-                    )
-                )
-                .map((certification) => ({
-                  value:
-                    certification.id ||
-                    certification._id,
-
-                  label:
-                    certification.title ||
-                    certification.titre ||
-                    certification.name ||
-                    certification.nom ||
-                    "Certification sans nom",
-                })),
-            ]}
-          />
-
-          {/* ----------------------------------------- */}
-          {/* BOUTONS */}
-          {/* ----------------------------------------- */}
-
-          <div className="flex justify-end gap-2 pt-2">
-            <Button
-              variant="secondary"
-              onClick={closeModal}
-            >
-              Annuler
-            </Button>
-
-            <Button onClick={save}>
-              Enregistrer
-            </Button>
-          </div>
-        </div>
-      </Modal>
+        <Button onClick={save}>
+          Enregistrer
+        </Button>
+      </div>
     </div>
-  );
+  </Modal>
+</div>
+
+
+);
 }
