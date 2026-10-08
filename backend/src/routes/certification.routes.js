@@ -20,14 +20,14 @@ router.get("/:id", getCertification);
 router.post(
   "/",
   protect,
-  authorize("admin", "editor"),
+  authorize("admin", "editor","etablissement"),
   createCertification
 );
 
 router.put(
   "/:id",
   protect,
-  authorize("admin", "editor"),
+  authorize("admin", "editor","etablissement"),
   updateCertification
 );
 

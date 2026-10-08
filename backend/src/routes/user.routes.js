@@ -4,6 +4,8 @@ const {
   getUsers,
   getUser,
   createUser,
+  updateUser,
+  deleteUser,
   updateRole,
   updatePermissions
 } = require("../controllers/user.controller");
@@ -14,7 +16,9 @@ const requirePermission = require("../middlewares/permission.middleware");
 const router = express.Router();
 
 
-// Voir tous les utilisateurs
+// ===============================
+// VOIR TOUS LES UTILISATEURS
+// ===============================
 router.get(
   "/",
   protect,
@@ -23,7 +27,9 @@ router.get(
 );
 
 
-// Ajouter un utilisateur
+// ===============================
+// AJOUTER UN UTILISATEUR
+// ===============================
 router.post(
   "/",
   protect,
@@ -32,7 +38,9 @@ router.post(
 );
 
 
-// Voir un utilisateur
+// ===============================
+// VOIR UN UTILISATEUR
+// ===============================
 router.get(
   "/:id",
   protect,
@@ -41,7 +49,31 @@ router.get(
 );
 
 
-// Modifier le rôle
+// ===============================
+// MODIFIER UN UTILISATEUR
+// ===============================
+router.put(
+  "/:id",
+  protect,
+  requirePermission("users.edit"),
+  updateUser
+);
+
+
+// ===============================
+// SUPPRIMER UN UTILISATEUR
+// ===============================
+router.delete(
+  "/:id",
+  protect,
+  requirePermission("users.delete"),
+  deleteUser
+);
+
+
+// ===============================
+// MODIFIER LE RÔLE
+// ===============================
 router.put(
   "/:id/role",
   protect,
@@ -50,7 +82,9 @@ router.put(
 );
 
 
-// Modifier les permissions
+// ===============================
+// MODIFIER LES PERMISSIONS
+// ===============================
 router.put(
   "/:id/permissions",
   protect,

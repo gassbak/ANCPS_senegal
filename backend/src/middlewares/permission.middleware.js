@@ -1,24 +1,32 @@
+
 const requirePermission = (...permissions) => {
   return (req, res, next) => {
-    console.log("Utilisateur :", req.user.email);
-console.log("Rôle :", req.user.role);
-console.log("Permissions :", req.user.permissions);
-
+    // 1. Vérifier la connexion
     if (!req.user) {
       return res.status(401).json({
         message: "Authentification requise"
       });
     }
 
-    // Superadmin = accès complet
-    if (req.user.role === "superadmin") {
+    // 2. Super administrateur : accès complet
+    if (
+      req.user.role === "superadmin" ||
+      req.user.role === "admin"
+    ) {
       return next();
     }
 
-    const userPermissions = req.user.permissions || [];
+    // 3. Récupérer les permissions de l'utilisateur
+    const userPermissions = Array.isArray(
+      req.user.permissions
+    )
+      ? req.user.permissions
+      : [];
 
+    // 4. Vérifier les droits nécessaires
     const hasPermission = permissions.some(
-      permission => userPermissions.includes(permission)
+      (permission) =>
+        userPermissions.includes(permission)
     );
 
     if (!hasPermission) {
