@@ -5,11 +5,29 @@ export async function trackAnalytics(type, data = {}) {
         throw new Error("Le type Analytics est obligatoire");
     }
 
-    return request("/analytics", {
-        method: "POST",
-        body: JSON.stringify({
+    try {
+        const response = await request("/analytics", {
+            method: "POST",
+            body: JSON.stringify({
+                type,
+                ...data,
+            }),
+        });
+
+        console.log("Analytics enregistré :", {
             type,
-            ...data,
-        }),
-    });
+            data,
+            response,
+        });
+
+        return response;
+    } catch (error) {
+        console.error(
+            "Erreur Analytics :",
+            type,
+            error
+        );
+
+        throw error;
+    }
 }
