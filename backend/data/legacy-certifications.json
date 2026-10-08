@@ -1,0 +1,1165 @@
+[
+  {
+    "id": "cert_101",
+    "title": "Développeur Web & Mobile",
+    "level": "Certification Professionnelle",
+    "domain": "Informatique & Numérique",
+    "organizationId": "org_1",
+    "organizationName": "Bakeli",
+    "description": "Apprenez à concevoir et développer des applications web et mobiles complètes.",
+    "objectives": [
+      "Maîtriser HTML/CSS/JS",
+      "Développer avec React et Node.js",
+      "Déployer sur AWS"
+    ],
+    "skills": [
+      "Fullstack JS",
+      "Git",
+      "Agile",
+      "API Rest"
+    ],
+    "duration": "9 mois",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-01-10"
+  },
+  {
+    "id": "cert_102",
+    "title": "Développeur Backend (Python / Node.js)",
+    "level": "Licence",
+    "domain": "Informatique & Numérique",
+    "organizationId": "org_5",
+    "organizationName": "ESMT Dakar",
+    "description": "Spécialisation dans la logique serveur, les bases de données et les API.",
+    "objectives": [
+      "Architecture Microservices",
+      "Sécurité des API",
+      "Optimisation BDD"
+    ],
+    "skills": [
+      "Python",
+      "Django",
+      "Node.js",
+      "Docker"
+    ],
+    "duration": "12 mois",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-02-15"
+  },
+  {
+    "id": "cert_103",
+    "title": "Développeur Frontend (React / Vue)",
+    "level": "Certification Professionnelle",
+    "domain": "Informatique & Numérique",
+    "organizationId": "org_6",
+    "organizationName": "Simplon Sénégal",
+    "description": "Devenez expert en interfaces utilisateurs modernes et réactives.",
+    "objectives": [
+      "Intégration responsive",
+      "SPA Frameworks",
+      "Accessibilité web"
+    ],
+    "skills": [
+      "React.js",
+      "Vue.js",
+      "Tailwind CSS",
+      "Figma"
+    ],
+    "duration": "6 mois",
+    "format": "Hybride",
+    "isPublished": true,
+    "createdAt": "2023-03-01"
+  },
+  {
+    "id": "cert_104",
+    "title": "Technicien Réseaux & Systèmes",
+    "level": "BTS",
+    "domain": "Informatique & Numérique",
+    "organizationId": "org_7",
+    "organizationName": "IPM Rufisque",
+    "description": "Formation pratique pour l'installation et la maintenance des infrastructures réseaux.",
+    "objectives": [
+      "Câblage structuré",
+      "Configuration Switch/Routeur",
+      "Administration Windows Server"
+    ],
+    "skills": [
+      "Cisco CCNA",
+      "Linux",
+      "Virtualisation"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-01-20"
+  },
+  {
+    "id": "cert_105",
+    "title": "Administrateur Cloud & DevOps",
+    "level": "Certification Professionnelle",
+    "domain": "Informatique & Numérique",
+    "organizationId": "org_8",
+    "organizationName": "Orange Digital Center",
+    "description": "Maîtrisez le déploiement continu et l'infrastructure as code.",
+    "objectives": [
+      "CI/CD Pipelines",
+      "Conteneurisation",
+      "Orchestration Kubernetes"
+    ],
+    "skills": [
+      "AWS",
+      "Docker",
+      "Jenkins",
+      "Terraform"
+    ],
+    "duration": "6 mois",
+    "format": "En ligne",
+    "isPublished": true,
+    "createdAt": "2023-04-10"
+  },
+  {
+    "id": "cert_106",
+    "title": "Data Analyst",
+    "level": "Licence",
+    "domain": "Informatique & Numérique",
+    "organizationId": "org_9",
+    "organizationName": "UVS",
+    "description": "Analysez les données pour aider à la prise de décision stratégique.",
+    "objectives": [
+      "Nettoyage de données",
+      "Visualisation (PowerBI/Tableau)",
+      "Statistiques descriptives"
+    ],
+    "skills": [
+      "SQL",
+      "Excel Avancé",
+      "Python",
+      "PowerBI"
+    ],
+    "duration": "3 ans",
+    "format": "En ligne",
+    "isPublished": true,
+    "createdAt": "2022-10-01"
+  },
+  {
+    "id": "cert_107",
+    "title": "Data Scientist Junior",
+    "level": "Master",
+    "domain": "Informatique & Numérique",
+    "organizationId": "org_10",
+    "organizationName": "DIT",
+    "description": "Formation avancée en intelligence artificielle et machine learning.",
+    "objectives": [
+      "Modélisation prédictive",
+      "Deep Learning",
+      "Traitement du langage naturel"
+    ],
+    "skills": [
+      "TensorFlow",
+      "Pandas",
+      "Mathématiques",
+      "Big Data"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-05-05"
+  },
+  {
+    "id": "cert_108",
+    "title": "Technicien en Cybersécurité",
+    "level": "BTS",
+    "domain": "Informatique & Numérique",
+    "organizationId": "org_5",
+    "organizationName": "ESMT Dakar",
+    "description": "Protégez les systèmes d'information contre les menaces numériques.",
+    "objectives": [
+      "Audit de sécurité",
+      "Gestion des incidents",
+      "Sécurité réseaux"
+    ],
+    "skills": [
+      "Ethical Hacking",
+      "Firewalling",
+      "Cryptographie",
+      "Conformité"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-02-01"
+  },
+  {
+    "id": "cert_109",
+    "title": "Designer UI/UX",
+    "level": "Certification Professionnelle",
+    "domain": "Informatique & Numérique",
+    "organizationId": "org_11",
+    "organizationName": "ISI",
+    "description": "Concevez des expériences utilisateurs intuitives et esthétiques.",
+    "objectives": [
+      "Wireframing",
+      "Prototypage",
+      "Recherche utilisateur"
+    ],
+    "skills": [
+      "Adobe XD",
+      "Figma",
+      "Design Thinking",
+      "Ergonomie"
+    ],
+    "duration": "6 mois",
+    "format": "Hybride",
+    "isPublished": true,
+    "createdAt": "2023-06-15"
+  },
+  {
+    "id": "cert_110",
+    "title": "Community Manager & Social Media Specialist",
+    "level": "Licence",
+    "domain": "Informatique & Numérique",
+    "organizationId": "org_4",
+    "organizationName": "ISM",
+    "description": "Gérez l'image de marque et l'engagement sur les réseaux sociaux.",
+    "objectives": [
+      "Stratégie de contenu",
+      "Gestion de crise",
+      "Publicité sociale"
+    ],
+    "skills": [
+      "Copywriting",
+      "Facebook Ads",
+      "Canva",
+      "Analytics"
+    ],
+    "duration": "1 an",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-03-20"
+  },
+  {
+    "id": "cert_111",
+    "title": "Technicien Maintenance Informatique",
+    "level": "CAP",
+    "domain": "Informatique & Numérique",
+    "organizationId": "org_12",
+    "organizationName": "CFPT Sénégal-Japon",
+    "description": "Maintenance préventive et curative des parcs informatiques.",
+    "objectives": [
+      "Diagnostic de pannes",
+      "Assemblage PC",
+      "Installation OS"
+    ],
+    "skills": [
+      "Hardware",
+      "Dépannage",
+      "Support utilisateur"
+    ],
+    "duration": "1 an",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2022-11-10"
+  },
+  {
+    "id": "cert_112",
+    "title": "Ingénieur Logiciel (Titre Professionnel)",
+    "level": "Master",
+    "domain": "Informatique & Numérique",
+    "organizationId": "org_13",
+    "organizationName": "Sup'Info Sénégal",
+    "description": "Formation d'ingénieurs capables de piloter de grands projets logiciels.",
+    "objectives": [
+      "Architecture logicielle complexe",
+      "Management d'équipe technique",
+      "Qualité logicielle"
+    ],
+    "skills": [
+      "UML",
+      "Java EE",
+      "Microservices",
+      "Scrum Master"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-01-05"
+  },
+  {
+    "id": "cert_113",
+    "title": "Responsable Marketing Digital",
+    "level": "Master",
+    "domain": "Commerce & Marketing",
+    "organizationId": "org_14",
+    "organizationName": "Supdeco Dakar",
+    "description": "Pilotez la stratégie numérique d'une entreprise.",
+    "objectives": [
+      "Stratégie omnicanale",
+      "Budget marketing",
+      "Management d'équipe"
+    ],
+    "skills": [
+      "SEO/SEA",
+      "Inbound Marketing",
+      "CRM",
+      "ROI Analysis"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-02-10"
+  },
+  {
+    "id": "cert_114",
+    "title": "Spécialiste SEO/SEA",
+    "level": "Certification Professionnelle",
+    "domain": "Commerce & Marketing",
+    "organizationId": "org_15",
+    "organizationName": "ECD",
+    "description": "Expertise en référencement naturel et payant pour la visibilité web.",
+    "objectives": [
+      "Audit technique SEO",
+      "Gestion campagnes Google Ads",
+      "Rédaction web"
+    ],
+    "skills": [
+      "Google Analytics",
+      "Semrush",
+      "WordPress",
+      "Copywriting"
+    ],
+    "duration": "4 mois",
+    "format": "En ligne",
+    "isPublished": true,
+    "createdAt": "2023-05-20"
+  },
+  {
+    "id": "cert_115",
+    "title": "Chargé de Prospection & Télévente",
+    "level": "Certification Professionnelle",
+    "domain": "Commerce & Marketing",
+    "organizationId": "org_16",
+    "organizationName": "ADF Formation",
+    "description": "Techniques de vente à distance et négociation commerciale.",
+    "objectives": [
+      "Phoning",
+      "Closing de vente",
+      "Gestion de la relation client"
+    ],
+    "skills": [
+      "Négociation",
+      "Communication orale",
+      "CRM"
+    ],
+    "duration": "3 mois",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-07-01"
+  },
+  {
+    "id": "cert_116",
+    "title": "Agent de Relation Client & Support",
+    "level": "BEP",
+    "domain": "Commerce & Marketing",
+    "organizationId": "org_17",
+    "organizationName": "ESEA Dakar",
+    "description": "Assurez un service client de qualité et fidélisez la clientèle.",
+    "objectives": [
+      "Accueil client",
+      "Gestion des réclamations",
+      "Support niveau 1"
+    ],
+    "skills": [
+      "Écoute active",
+      "Résolution de conflits",
+      "Outils de ticketing"
+    ],
+    "duration": "6 mois",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-01-15"
+  },
+  {
+    "id": "cert_117",
+    "title": "Technico-Commercial B2B",
+    "level": "Licence",
+    "domain": "Commerce & Marketing",
+    "organizationId": "org_18",
+    "organizationName": "Dakar Business School",
+    "description": "Vente de solutions complexes aux entreprises.",
+    "objectives": [
+      "Prospection B2B",
+      "Réponse aux appels d'offres",
+      "Négociation grands comptes"
+    ],
+    "skills": [
+      "Vente complexe",
+      "Business Development",
+      "Réseautage"
+    ],
+    "duration": "1 an",
+    "format": "Hybride",
+    "isPublished": true,
+    "createdAt": "2023-03-10"
+  },
+  {
+    "id": "cert_118",
+    "title": "Merchandiser & Animateur Commercial",
+    "level": "BTS",
+    "domain": "Commerce & Marketing",
+    "organizationId": "org_4",
+    "organizationName": "ISM",
+    "description": "Optimisez la présentation des produits et boostez les ventes en magasin.",
+    "objectives": [
+      "Implantation rayon",
+      "PLV",
+      "Animation point de vente"
+    ],
+    "skills": [
+      "Marketing opérationnel",
+      "Créativité",
+      "Analyse des ventes"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-04-05"
+  },
+  {
+    "id": "cert_119",
+    "title": "Gestionnaire de Point de Vente",
+    "level": "BTS",
+    "domain": "Commerce & Marketing",
+    "organizationId": "org_19",
+    "organizationName": "CFPC",
+    "description": "Gérez une boutique ou une unité commerciale de A à Z.",
+    "objectives": [
+      "Gestion des stocks",
+      "Management équipe de vente",
+      "Tenue de caisse"
+    ],
+    "skills": [
+      "Management",
+      "Comptabilité de base",
+      "Logistique"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2022-09-15"
+  },
+  {
+    "id": "cert_120",
+    "title": "Assistant Commercial",
+    "level": "BTS",
+    "domain": "Commerce & Marketing",
+    "organizationId": "org_20",
+    "organizationName": "EPT (Section Pro)",
+    "description": "Support administratif et opérationnel à l'équipe commerciale.",
+    "objectives": [
+      "Suivi des commandes",
+      "Facturation",
+      "Mise à jour CRM"
+    ],
+    "skills": [
+      "Administration des ventes",
+      "Excel",
+      "Organisation"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-02-28"
+  },
+  {
+    "id": "cert_121",
+    "title": "Assistant Administratif & Bureautique",
+    "level": "CAP",
+    "domain": "Gestion & Management",
+    "organizationId": "org_21",
+    "organizationName": "Office du Bac Formation",
+    "description": "Maîtrise des outils de bureau et du secrétariat classique.",
+    "objectives": [
+      "Traitement de texte",
+      "Classement et archivage",
+      "Accueil physique et téléphonique"
+    ],
+    "skills": [
+      "Pack Office",
+      "Rédaction administrative",
+      "Organisation"
+    ],
+    "duration": "1 an",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-01-10"
+  },
+  {
+    "id": "cert_122",
+    "title": "Gestionnaire Comptable",
+    "level": "Licence",
+    "domain": "Gestion & Management",
+    "organizationId": "org_22",
+    "organizationName": "CESAG",
+    "description": "Formation de référence en techniques comptables et financières.",
+    "objectives": [
+      "Tenue de la comptabilité générale",
+      "Déclarations fiscales",
+      "Bilan comptable"
+    ],
+    "skills": [
+      "Sage Saari",
+      "Fiscalité",
+      "Audit",
+      "Contrôle de gestion"
+    ],
+    "duration": "3 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2022-10-05"
+  },
+  {
+    "id": "cert_123",
+    "title": "Assistant Ressources Humaines",
+    "level": "Licence",
+    "domain": "Gestion & Management",
+    "organizationId": "org_23",
+    "organizationName": "IAM",
+    "description": "Support à la gestion du personnel et au recrutement.",
+    "objectives": [
+      "Gestion administrative RH",
+      "Participation au recrutement",
+      "Suivi des congés"
+    ],
+    "skills": [
+      "Droit du travail",
+      "Communication interne",
+      "GPEC"
+    ],
+    "duration": "3 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-03-01"
+  },
+  {
+    "id": "cert_124",
+    "title": "Analyste Financier Junior",
+    "level": "Master",
+    "domain": "Gestion & Management",
+    "organizationId": "org_24",
+    "organizationName": "BEM Dakar",
+    "description": "Analyse de la performance financière des entreprises et des marchés.",
+    "objectives": [
+      "Diagnostic financier",
+      "Évaluation d'entreprise",
+      "Modélisation financière"
+    ],
+    "skills": [
+      "Finance d'entreprise",
+      "Excel Expert",
+      "Analyse boursière"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-04-15"
+  },
+  {
+    "id": "cert_125",
+    "title": "Contrôleur de Gestion",
+    "level": "Certification Professionnelle",
+    "domain": "Gestion & Management",
+    "organizationId": "org_25",
+    "organizationName": "Finance Train Academy",
+    "description": "Pilotage de la performance et optimisation des coûts.",
+    "objectives": [
+      "Élaboration des budgets",
+      "Tableaux de bord",
+      "Calcul des coûts"
+    ],
+    "skills": [
+      "Comptabilité analytique",
+      "Reporting",
+      "PowerBI"
+    ],
+    "duration": "9 mois",
+    "format": "Hybride",
+    "isPublished": true,
+    "createdAt": "2023-06-01"
+  },
+  {
+    "id": "cert_126",
+    "title": "Gestionnaire de Paie & Administration du Personnel",
+    "level": "BTS",
+    "domain": "Gestion & Management",
+    "organizationId": "org_26",
+    "organizationName": "ISF",
+    "description": "Expertise technique sur le traitement des salaires et les déclarations sociales.",
+    "objectives": [
+      "Établissement des bulletins de paie",
+      "Déclarations sociales (IPRES, CSS)",
+      "Contrats de travail"
+    ],
+    "skills": [
+      "Logiciels de paie",
+      "Législation sociale",
+      "Rigueur"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-02-20"
+  },
+  {
+    "id": "cert_127",
+    "title": "Secrétaire de Direction",
+    "level": "BTS",
+    "domain": "Gestion & Management",
+    "organizationId": "org_12",
+    "organizationName": "CFPT Sénégal-Japon",
+    "description": "Assistance de haut niveau pour les cadres dirigeants.",
+    "objectives": [
+      "Gestion d'agenda complexe",
+      "Organisation de réunions",
+      "Communication bilingue"
+    ],
+    "skills": [
+      "Anglais professionnel",
+      "Organisation événementielle",
+      "Prise de notes"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2022-11-01"
+  },
+  {
+    "id": "cert_128",
+    "title": "Aide-Soignant(e)",
+    "level": "CAP",
+    "domain": "Santé & Social",
+    "organizationId": "org_27",
+    "organizationName": "ENDSS",
+    "description": "Soins d'hygiène et de confort auprès des patients.",
+    "objectives": [
+      "Accompagnement des patients",
+      "Hygiène hospitalière",
+      "Surveillance de l'état de santé"
+    ],
+    "skills": [
+      "Soins infirmiers de base",
+      "Empathie",
+      "Travail d'équipe"
+    ],
+    "duration": "1 an",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-01-05"
+  },
+  {
+    "id": "cert_129",
+    "title": "Assistant(e) en Gériatrie",
+    "level": "Certification Professionnelle",
+    "domain": "Santé & Social",
+    "organizationId": "org_28",
+    "organizationName": "IFSI Dakar",
+    "description": "Accompagnement spécifique des personnes âgées.",
+    "objectives": [
+      "Soins liés au vieillissement",
+      "Animation sociale",
+      "Prévention des chutes"
+    ],
+    "skills": [
+      "Psychologie de l'adulte âgé",
+      "Premiers secours",
+      "Patience"
+    ],
+    "duration": "6 mois",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-03-15"
+  },
+  {
+    "id": "cert_130",
+    "title": "Technicien Laboratoire Biomédical",
+    "level": "Licence",
+    "domain": "Santé & Social",
+    "organizationId": "org_29",
+    "organizationName": "UCAD Médecine",
+    "description": "Analyses biologiques pour le diagnostic médical.",
+    "objectives": [
+      "Prélèvements sanguins",
+      "Analyses microbiologiques",
+      "Maintenance des automates"
+    ],
+    "skills": [
+      "Biologie",
+      "Chimie",
+      "Rigueur scientifique"
+    ],
+    "duration": "3 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2022-10-10"
+  },
+  {
+    "id": "cert_131",
+    "title": "Assistant en Nutrition & Diététique",
+    "level": "Licence",
+    "domain": "Santé & Social",
+    "organizationId": "org_30",
+    "organizationName": "UGB",
+    "description": "Conseil en alimentation et élaboration de régimes adaptés.",
+    "objectives": [
+      "Bilan nutritionnel",
+      "Éducation alimentaire",
+      "Suivi diététique"
+    ],
+    "skills": [
+      "Biochimie alimentaire",
+      "Physiologie",
+      "Pédagogie"
+    ],
+    "duration": "3 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-02-01"
+  },
+  {
+    "id": "cert_132",
+    "title": "Auxiliaire en Pharmacie",
+    "level": "BEP",
+    "domain": "Santé & Social",
+    "organizationId": "org_31",
+    "organizationName": "EAM",
+    "description": "Accueil et vente en officine sous la responsabilité du pharmacien.",
+    "objectives": [
+      "Gestion des stocks médicaments",
+      "Conseil parapharmacie",
+      "Déchiffrage ordonnance"
+    ],
+    "skills": [
+      "Pharmacologie de base",
+      "Gestion stock",
+      "Relation patient"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-01-20"
+  },
+  {
+    "id": "cert_133",
+    "title": "Agent d’Accompagnement Social",
+    "level": "BTS",
+    "domain": "Santé & Social",
+    "organizationId": "org_32",
+    "organizationName": "ENEA Dakar",
+    "description": "Intervention auprès des publics fragiles pour favoriser l'insertion.",
+    "objectives": [
+      "Médiation sociale",
+      "Montage de projets sociaux",
+      "Accompagnement administratif"
+    ],
+    "skills": [
+      "Sociologie",
+      "Droit social",
+      "Écoute"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2022-12-01"
+  },
+  {
+    "id": "cert_134",
+    "title": "Assistant Hôtelier",
+    "level": "BTS",
+    "domain": "Gestion & Management",
+    "organizationId": "org_17",
+    "organizationName": "ESEA Dakar",
+    "description": "Polyvalence dans les services d'hébergement et de restauration.",
+    "objectives": [
+      "Gestion des réservations",
+      "Supervision étages",
+      "Service en salle"
+    ],
+    "skills": [
+      "Hôtellerie",
+      "Langues étrangères",
+      "Service client"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-01-10"
+  },
+  {
+    "id": "cert_135",
+    "title": "Réceptionniste & Concierge Professionnel",
+    "level": "CAP",
+    "domain": "Commerce & Marketing",
+    "organizationId": "org_33",
+    "organizationName": "École Hôtelière de Dakar",
+    "description": "L'image de l'hôtel : accueil, information et services aux clients.",
+    "objectives": [
+      "Check-in / Check-out",
+      "Standard téléphonique",
+      "Gestion des plaintes"
+    ],
+    "skills": [
+      "Présentation irréprochable",
+      "Anglais courant",
+      "Logiciels hôteliers"
+    ],
+    "duration": "1 an",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-04-01"
+  },
+  {
+    "id": "cert_136",
+    "title": "Technicien en Art Culinaire & Gastronomie",
+    "level": "BTS",
+    "domain": "Commerce & Marketing",
+    "organizationId": "org_34",
+    "organizationName": "Institut Vatel",
+    "description": "Formation d'excellence aux métiers de la cuisine.",
+    "objectives": [
+      "Techniques culinaires avancées",
+      "Hygiène HACCP",
+      "Création de menu"
+    ],
+    "skills": [
+      "Cuisine",
+      "Pâtisserie",
+      "Gestion des coûts"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2022-10-15"
+  },
+  {
+    "id": "cert_137",
+    "title": "Gestionnaire d’Établissement Touristique",
+    "level": "Licence",
+    "domain": "Gestion & Management",
+    "organizationId": "org_35",
+    "organizationName": "IST",
+    "description": "Management de structures touristiques (hôtels, camps, agences).",
+    "objectives": [
+      "Marketing touristique",
+      "Management d'équipe",
+      "Gestion financière"
+    ],
+    "skills": [
+      "Management",
+      "Tourisme durable",
+      "Stratégie"
+    ],
+    "duration": "3 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-01-05"
+  },
+  {
+    "id": "cert_138",
+    "title": "Barista & Mixologue Professionnel",
+    "level": "Certification Professionnelle",
+    "domain": "Commerce & Marketing",
+    "organizationId": "org_36",
+    "organizationName": "CFH Saly",
+    "description": "Expertise dans la préparation de cafés et cocktails.",
+    "objectives": [
+      "Connaissance des produits",
+      "Techniques de bar",
+      "Service client"
+    ],
+    "skills": [
+      "Mixologie",
+      "Latte Art",
+      "Gestion de bar"
+    ],
+    "duration": "3 mois",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-06-20"
+  },
+  {
+    "id": "cert_139",
+    "title": "Technicien Bâtiment – Gros Œuvre",
+    "level": "BTS",
+    "domain": "Industrie & BTP",
+    "organizationId": "org_20",
+    "organizationName": "EPT Thiès",
+    "description": "Conduite et suivi de chantiers de construction.",
+    "objectives": [
+      "Lecture de plans",
+      "Topographie de base",
+      "Suivi des travaux"
+    ],
+    "skills": [
+      "Génie civil",
+      "Béton armé",
+      "Sécurité chantier"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2022-11-20"
+  },
+  {
+    "id": "cert_140",
+    "title": "Technicien en Électricité Industrielle",
+    "level": "BTS",
+    "domain": "Industrie & BTP",
+    "organizationId": "org_12",
+    "organizationName": "CFPT Sénégal-Japon",
+    "description": "Installation et maintenance des équipements électriques industriels.",
+    "objectives": [
+      "Câblage armoires",
+      "Automates programmables",
+      "Maintenance HT/BT"
+    ],
+    "skills": [
+      "Électrotechnique",
+      "Schémas électriques",
+      "Dépannage"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-01-15"
+  },
+  {
+    "id": "cert_141",
+    "title": "Technicien Maintenance Industrielle",
+    "level": "BTS",
+    "domain": "Industrie & BTP",
+    "organizationId": "org_37",
+    "organizationName": "Lycée Delafosse",
+    "description": "Assurer la disponibilité des équipements de production.",
+    "objectives": [
+      "Mécanique industrielle",
+      "Hydraulique & Pneumatique",
+      "GMAO"
+    ],
+    "skills": [
+      "Maintenance préventive",
+      "Soudure",
+      "Diagnostic"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2022-10-01"
+  },
+  {
+    "id": "cert_142",
+    "title": "Technicien en Froid & Climatisation",
+    "level": "CAP",
+    "domain": "Industrie & BTP",
+    "organizationId": "org_12",
+    "organizationName": "CFPT Sénégal-Japon",
+    "description": "Installation et réparation de systèmes frigorifiques et climatisations.",
+    "objectives": [
+      "Fluides frigorigènes",
+      "Soudure cuivre",
+      "Installations split/centrales"
+    ],
+    "skills": [
+      "Thermodynamique",
+      "Électricité",
+      "Froid industriel"
+    ],
+    "duration": "18 mois",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-02-10"
+  },
+  {
+    "id": "cert_143",
+    "title": "Technicien Solaire & Énergies Renouvelables",
+    "level": "Certification Professionnelle",
+    "domain": "Industrie & BTP",
+    "organizationId": "org_38",
+    "organizationName": "CFSK Kaolack",
+    "description": "Installation de panneaux photovoltaïques et systèmes solaires.",
+    "objectives": [
+      "Dimensionnement solaire",
+      "Pose panneaux",
+      "Maintenance onduleurs"
+    ],
+    "skills": [
+      "Énergie solaire",
+      "Électricité bâtiment",
+      "Sécurité travail hauteur"
+    ],
+    "duration": "6 mois",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-05-15"
+  },
+  {
+    "id": "cert_144",
+    "title": "Topographe & Géomètre Junior",
+    "level": "BTS",
+    "domain": "Industrie & BTP",
+    "organizationId": "org_39",
+    "organizationName": "ENSA Thiès",
+    "description": "Mesures de terrain pour les projets d'aménagement et construction.",
+    "objectives": [
+      "Relevés topographiques",
+      "Utilisation station totale/GPS",
+      "DAO (AutoCAD)"
+    ],
+    "skills": [
+      "Topographie",
+      "Géométrie",
+      "Dessin technique"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2022-12-05"
+  },
+  {
+    "id": "cert_145",
+    "title": "Technicien en Sécurité Industrielle & HSE",
+    "level": "Licence",
+    "domain": "Industrie & BTP",
+    "organizationId": "org_40",
+    "organizationName": "ISP",
+    "description": "Prévention des risques professionnels et environnementaux.",
+    "objectives": [
+      "Évaluation des risques",
+      "Normes ISO",
+      "Formation sécurité"
+    ],
+    "skills": [
+      "QHSE",
+      "Réglementation",
+      "Audit"
+    ],
+    "duration": "3 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-03-01"
+  },
+  {
+    "id": "cert_146",
+    "title": "Technicien Agricole Polyvalent",
+    "level": "BTS",
+    "domain": "Agriculture & Environnement",
+    "organizationId": "org_39",
+    "organizationName": "ENSA Thiès",
+    "description": "Gestion des cultures et production végétale durable.",
+    "objectives": [
+      "Techniques culturales",
+      "Irrigation",
+      "Protection des plantes"
+    ],
+    "skills": [
+      "Agronomie",
+      "Machinisme agricole",
+      "Gestion exploitation"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2022-11-15"
+  },
+  {
+    "id": "cert_147",
+    "title": "Technicien en Agroalimentaire",
+    "level": "BTS",
+    "domain": "Agriculture & Environnement",
+    "organizationId": "org_41",
+    "organizationName": "ITA",
+    "description": "Transformation et conservation des produits alimentaires.",
+    "objectives": [
+      "Procédés de transformation",
+      "Qualité alimentaire",
+      "Conditionnement"
+    ],
+    "skills": [
+      "Biochimie",
+      "Microbiologie alimentaire",
+      "Process industriel"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-01-25"
+  },
+  {
+    "id": "cert_148",
+    "title": "Agent d’Élevage & Zootechnie",
+    "level": "BTS",
+    "domain": "Agriculture & Environnement",
+    "organizationId": "org_42",
+    "organizationName": "ISFAR Bambey",
+    "description": "Soins aux animaux et gestion de la production animale.",
+    "objectives": [
+      "Nutrition animale",
+      "Santé animale",
+      "Gestion cheptel"
+    ],
+    "skills": [
+      "Zootechnie",
+      "Biologie animale",
+      "Économie rurale"
+    ],
+    "duration": "2 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2022-10-20"
+  },
+  {
+    "id": "cert_149",
+    "title": "Spécialiste en Transformation des Produits Locaux",
+    "level": "Certification Professionnelle",
+    "domain": "Agriculture & Environnement",
+    "organizationId": "org_43",
+    "organizationName": "3FPT Agro",
+    "description": "Valorisation des céréales, fruits et légumes locaux.",
+    "objectives": [
+      "Séchage fruits/légumes",
+      "Fabrication jus/confitures",
+      "Normes hygiène"
+    ],
+    "skills": [
+      "Transformation artisanale",
+      "Packaging",
+      "Entreprenariat"
+    ],
+    "duration": "4 mois",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-06-10"
+  },
+  {
+    "id": "cert_150",
+    "title": "Technicien en Gestion des Ressources Naturelles",
+    "level": "Licence",
+    "domain": "Agriculture & Environnement",
+    "organizationId": "org_44",
+    "organizationName": "UASZ",
+    "description": "Protection et valorisation durable de l'environnement.",
+    "objectives": [
+      "Gestion des forêts",
+      "Biodiversité",
+      "Études d'impact"
+    ],
+    "skills": [
+      "Écologie",
+      "Cartographie SIG",
+      "Droit environnement"
+    ],
+    "duration": "3 ans",
+    "format": "Présentiel",
+    "isPublished": true,
+    "createdAt": "2023-02-05"
+  }
+]
