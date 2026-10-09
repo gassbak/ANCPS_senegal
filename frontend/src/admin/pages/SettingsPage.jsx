@@ -1,65 +1,140 @@
-import { useState } from "react";
-import { Save } from "lucide-react";
-import { loadStore, saveStore } from "../services/adminStore";
-import { PageHeader, Button, Textarea } from "../components/ui";
+import { useEffect, useState } from "react";
+import { getSettings, updateSettings } from "../services/settingsApi";
 
-// Les nomenclatures administrables (une par ligne). La clé correspond au
-// champ correspondant dans le store ; label/description sont affichés.
-const SETTINGS_FIELDS = [
-  ["domains", "Domaines", "Secteurs d'activité."],
-  ["subdomains", "Sous-domaines", "Nomenclature des domaines."],
-  ["certificationTypes", "Types de certification", "Types de certification."],
-  ["levels", "Niveaux", "Niveaux d'entrée / sortie."],
-  ["verificationStatuses", "Statuts", "Statuts de vérification."],
-  ["natures", "Natures", "Nature des certifications."],
-  ["modalities", "Modalités", "Présentiel, distance, hybride."],
-  ["regions", "Régions", "Référentiel territorial."],
-  ["recognitionTypes", "Types de reconnaissance", "Reconnaissance et accréditation."],
-  ["authorities", "Autorités", "Organismes de référence."],
-];
 
-export default function SettingsPage() {
-  const [store, setStore] = useState(loadStore() || {});
 
-  const [values, setValues] = useState(() =>
-    Object.fromEntries(SETTINGS_FIELDS.map(([key]) => [key, (store[key] || []).join("\n")]))
-  );
 
-  const save = () => {
-    const next = { ...store };
 
-    Object.entries(values).forEach(([key, value]) => {
-      next[key] = value.split("\n").map((x) => x.trim()).filter(Boolean);
-    });
+const DEFAULT_SETTINGS = {
+  general: {
+    platformName: "Plateforme de certification",
+    description: "",
+    email: "",
+    phone: "",
+    address: "",
+    website: "",
+  },
+  security: {
+    roles: [
+      "Administrateur éditorial",
+      "Vérificateur",
+      "Établissement",
+    ],
+    accessPolicy: "",
+  },
+  notifications: {
+    newRequest: true,
+    validation: true,
+    modification: true,
+    emailEnabled: true,
+    notificationEmail: "",
+  },
+  maintenance: {
+    backupFrequency: "weekly",
+    auditLog: true,
+    maintenanceNotes: "",
+  },
+};
 
-    saveStore(next);
-    setStore(next);
-    alert("Paramètres enregistrés");
+const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+const [loading, setLoading] = useState(true);
+const [saving, setSaving] = useState(false);
+const [error, setError] = useState("");
+
+useEffect(() => {
+  let cancelled = false;
+
+  async function loadSettings() {
+    try {
+      const data = await getSettings();
+
+      if (cancelled) return;
+
+      setSettings({
+        general: {
+          ...DEFAULT_SETTINGS.general,
+          ...data.general,
+        },
+        security: {
+          ...DEFAULT_SETTINGS.security,
+          ...data.security,
+        },
+        notifications: {
+          ...DEFAULT_SETTINGS.notifications,
+          ...data.notifications,
+        },
+        maintenance: {
+          ...DEFAULT_SETTINGS.maintenance,
+          ...data.maintenance,
+        },
+      });
+    } catch (err) {
+      if (!cancelled) {
+        setError(err.message);
+      }
+    } finally {
+      if (!cancelled) setLoading(false);
+    }
+  }
+
+  loadSettings();
+
+  return () => {
+    cancelled = true;
   };
+}, []);
 
-  return (
-    <div>
-      <PageHeader title="Paramétrage" description="Nomenclatures administrables sans intervention technique." />
 
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-        {SETTINGS_FIELDS.map(([key, title, description]) => (
-          <div key={key} className="rounded-2xl border bg-white p-5 shadow-sm">
-            <h2 className="font-bold">{title}</h2>
-            <p className="mt-1 text-xs text-gray-500">{description}</p>
 
-            <Textarea
-              className="mt-4"
-              rows={7}
-              value={values[key] || ""}
-              onChange={(e) => setValues({ ...values, [key]: e.target.value })}
-            />
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-6 flex justify-end">
-        <Button icon={Save} onClick={save}>Enregistrer les paramètres</Button>
-      </div>
-    </div>
-  );
+if (loading) {
+  return <p>Chargement des paramètres...</p>;
 }
+
+
+
+{error && (
+  <p className="mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-700">
+    {error}
+  </p>
+)}
+
+
+const save = async () => {
+  setSaving(true);
+  setError("");
+
+  try {
+    const payload = {
+      ...settings,
+      security: {
+        ...settings.security,
+        roles: Array.isArray(settings.security.roles)
+          ? settings.security.roles
+          : settings.security.roles
+              .split("\n")
+              .map((role) => role.trim())
+              .filter(Boolean),
+      },
+    };
+
+    const result = await updateSettings(payload);
+
+    setSettings((previous) => ({
+      ...previous,
+      ...result.settings,
+      security: {
+        ...previous.security,
+        ...result.settings.security,
+        roles: Array.isArray(result.settings.security?.roles)
+          ? result.settings.security.roles.join("\n")
+          : "",
+      },
+    }));
+
+    alert("Paramètres enregistrés dans MongoDB.");
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setSaving(false);
+  }
+};

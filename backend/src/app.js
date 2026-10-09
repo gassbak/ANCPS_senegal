@@ -62,6 +62,7 @@ const statutRoutes =
   require("./routes/statutVerification.routes");
   const analyticsRoutes =
   require("./routes/analytics.routes");
+  const settingsRoutes = require("./routes/settings.routes");
 const app = express();
 app.use(
   cors({
@@ -122,6 +123,7 @@ app.use(
   "/api/search",
   searchRoutes
 );
+app.use("/api/settings", settingsRoutes);
 app.use(
   "/api/contributions",
   contributionRoutes

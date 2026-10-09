@@ -34,6 +34,7 @@ router.post(
     "admin",
     "editor",
     "verifier"
+    
   ),
   createHistorique
 );
