@@ -21,14 +21,14 @@ router.get("/:id", getCompetence);
 router.post(
   "/",
   protect,
-  authorize("admin", "editor"),
+  authorize("admin", "editor","etablissement"),
   createCompetence
 );
 
 router.put(
   "/:id",
   protect,
-  authorize("admin", "editor"),
+  authorize("admin", "editor","etablissement"),
   updateCompetence
 );
 
