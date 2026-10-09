@@ -9,7 +9,7 @@ export default function About() {
       <Navbar />
 
       <main className="flex-1">
-        <div className="mx-auto max-w-[900px] px-6 py-[58px]">
+        <div className="mx-auto max-w-[900px] px-6 pt-24 pb-[58px]">
           
           <section>
             <h1 className="text-[32px] font-bold leading-[1.2] tracking-[-0.5px] text-[#0F172A] mt-4">
