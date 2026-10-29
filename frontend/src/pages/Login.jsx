@@ -1,18 +1,22 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import { Link, useNavigate } from "react-router-dom";
 
-function Login() {
+import { useAuth } from "../context/AuthContext";
+
+export default function Login() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     setError("");
 
     if (!email || !password) {
@@ -20,10 +24,20 @@ function Login() {
       return;
     }
 
-    const result = login(email, password);
+    setLoading(true);
+
+    const result = await login(
+      email.trim(),
+      password
+    );
+
+    setLoading(false);
 
     if (!result.success) {
-      setError(result.message);
+      setError(
+        result.message ||
+          "Email ou mot de passe incorrect."
+      );
       return;
     }
 
@@ -31,85 +45,116 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-12">
+      <div className="w-full max-w-md">
 
     
-      {/* FORMULAIRE */}
-      <main className="flex justify-center px-4 py-12">
 
-        <div className="w-full max-w-md bg-white rounded-xl shadow-sm border p-8">
+        {/* Formulaire */}
+        <form
+          onSubmit={handleSubmit}
+          className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+        >
+          <div className="mb-6">
+            <h2 className="text-xl font-bold text-slate-900">
+              Se connecter
+            </h2>
 
-          <h2 className="text-2xl font-bold text-gray-900 text-center">
-            Se connecter
-          </h2>
-
-          <p className="text-gray-500 text-center mt-2 mb-8">
-            Connectez-vous à votre compte
-          </p>
+            <p className="mt-1 text-sm text-slate-500">
+              Accédez à votre espace ANCPS.
+            </p>
+          </div>
 
           {error && (
-            <div className="mb-5 p-3 rounded-lg bg-red-50 text-red-600 text-sm">
+            <div className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Email */}
+          <div>
+            <label
+              htmlFor="email"
+              className="mb-2 block text-sm font-semibold text-slate-700"
+            >
+              Adresse email
+            </label>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Adresse email
-              </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) =>
+                setEmail(e.target.value)
+              }
+              placeholder="exemple@email.com"
+              autoComplete="email"
+              required
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+            />
+          </div>
 
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="votre@email.com"
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-green-600"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+          {/* Mot de passe */}
+          <div className="mt-5">
+            <div className="mb-2 flex items-center justify-between gap-3">
+              <label
+                htmlFor="password"
+                className="block text-sm font-semibold text-slate-700"
+              >
                 Mot de passe
               </label>
 
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Votre mot de passe"
-                className="w-full border border-gray-300 rounded-lg px-4 py-3 outline-none focus:ring-2 focus:ring-green-600"
-              />
+              <Link
+                to="/mot-de-passe-oublie"
+                className="text-sm font-medium text-emerald-700 hover:text-emerald-800"
+              >
+                Mot de passe oublié ?
+              </Link>
             </div>
 
-            <button
-              type="submit"
-              className="w-full bg-[#064E3B] text-white py-3 rounded-lg font-semibold hover:bg-[#053B2C] transition"
-            >
-              Se connecter
-            </button>
-
-          </form>
-
-          <div className="text-center mt-6 text-sm text-gray-600">
-            Vous n'avez pas encore de compte ?{" "}
-
-            <button
-              type="button"
-              onClick={() => navigate("/register")}
-              className="text-[#064E3B] font-semibold hover:underline"
-            >
-              Créer un compte
-            </button>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) =>
+                setPassword(e.target.value)
+              }
+              placeholder="••••••••"
+              autoComplete="current-password"
+              required
+              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+            />
           </div>
 
-        </div>
+          {/* Bouton */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="mt-6 w-full rounded-lg bg-emerald-700 px-5 py-3 font-bold text-white transition hover:bg-emerald-800 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {loading
+              ? "Connexion..."
+              : "Se connecter"}
+          </button>
 
-      </main>
+          {/* Inscription */}
+          <p className="mt-6 text-center text-sm text-slate-500">
+            Vous n'avez pas encore de compte ?
+          </p>
+
+          <Link
+            to="/register"
+            className="mt-2 block text-center text-sm font-semibold text-emerald-700 hover:text-emerald-800"
+          >
+            Créer un compte
+          </Link>
+
+          {/* Retour annuaire */}
+         
+        </form>
+
+       
+      </div>
     </div>
   );
 }
-
-export default Login;
-

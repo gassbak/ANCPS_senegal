@@ -14,17 +14,30 @@ const protect = async (req, res, next) => {
 
     const token = authHeader.split(" ")[1];
 
+    if (!token) {
+      return res.status(401).json({
+        message: "Token manquant"
+      });
+    }
+
     const decoded = jwt.verify(token, jwtSecret);
 
     const user = await User.findById(decoded.id);
 
-    req.userId = user._id;
-    req.userRole = user.role;
+    if (!user) {
+      return res.status(401).json({
+        message: "Utilisateur introuvable"
+      });
+    }
+
+    req.user = user;
 
     next();
 
   } catch (error) {
-    res.status(401).json({
+    console.error("Erreur auth :", error.message);
+
+    return res.status(401).json({
       message: "Token invalide"
     });
   }

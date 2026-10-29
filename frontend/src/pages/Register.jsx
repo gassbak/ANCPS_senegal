@@ -22,7 +22,7 @@ function Register() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
@@ -41,11 +41,16 @@ function Register() {
       return;
     }
 
-    register({
+    const result = await register({
       name: formData.name,
       email: formData.email,
       password: formData.password,
     });
+
+    if (!result.success) {
+      setError(result.message);
+      return;
+    }
 
     navigate("/home");
   };

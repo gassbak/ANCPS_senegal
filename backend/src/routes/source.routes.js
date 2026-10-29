@@ -23,7 +23,7 @@ router.get("/:id", getSource);
 router.post(
   "/",
   protect,
-  authorize("admin", "editor"),
+  authorize("admin", "editor","etablissement"),
   createSource
 );
 

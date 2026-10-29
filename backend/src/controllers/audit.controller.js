@@ -1,26 +1,83 @@
-const AuditLog =
-  require("../models/AuditLog");
+const AuditLog = require("../models/AuditLog");
 
+
+// LISTE DES AUDITS
 const getAuditLogs = async (req, res) => {
   try {
+    const {
+      action,
+      entite,
+      utilisateur,
+      page = 1,
+      limit = 10
+    } = req.query;
+
+    const filter = {};
+
+    // Filtre par action
+    if (action) {
+      filter.action = action;
+    }
+
+    // Filtre par entité
+    if (entite) {
+      filter.entite = entite;
+    }
+
+    // Filtre par utilisateur
+    if (utilisateur) {
+      filter.utilisateur = utilisateur;
+    }
+
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+
+    const skip =
+      (pageNumber - 1) * limitNumber;
+
     const logs =
-      await AuditLog.find()
+      await AuditLog.find(filter)
         .populate(
           "utilisateur",
-          "-password"
+          "name email role"
         )
         .sort({
           createdAt: -1
-        });
+        })
+        .skip(skip)
+        .limit(limitNumber);
 
-    res.json(logs);
+    const total =
+      await AuditLog.countDocuments(filter);
+
+    const totalPages =
+      Math.ceil(total / limitNumber);
+
+    res.json({
+      data: logs,
+
+      pagination: {
+        page: pageNumber,
+        limit: limitNumber,
+        total,
+        totalPages
+      }
+    });
+
   } catch (error) {
+    console.error(
+      "Erreur récupération audit :",
+      error
+    );
+
     res.status(500).json({
       message: error.message
     });
   }
 };
 
+
+// DÉTAIL D'UN AUDIT
 const getAuditLog = async (req, res) => {
   try {
     const log =
@@ -28,7 +85,7 @@ const getAuditLog = async (req, res) => {
         req.params.id
       ).populate(
         "utilisateur",
-        "-password"
+        "name email role"
       );
 
     if (!log) {
@@ -38,12 +95,19 @@ const getAuditLog = async (req, res) => {
     }
 
     res.json(log);
+
   } catch (error) {
+    console.error(
+      "Erreur détail audit :",
+      error
+    );
+
     res.status(500).json({
       message: error.message
     });
   }
 };
+
 
 module.exports = {
   getAuditLogs,

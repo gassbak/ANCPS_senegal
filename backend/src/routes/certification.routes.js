@@ -9,7 +9,6 @@ const {
 } = require("../controllers/certification.controller");
 
 const protect = require("../middlewares/auth.middleware");
-
 const authorize = require("../middlewares/role.middleware");
 
 const router = express.Router();
@@ -21,14 +20,14 @@ router.get("/:id", getCertification);
 router.post(
   "/",
   protect,
-  authorize("admin", "editor"),
+  authorize("admin", "editor","etablissement"),
   createCertification
 );
 
 router.put(
   "/:id",
   protect,
-  authorize("admin", "editor"),
+  authorize("admin", "editor","etablissement"),
   updateCertification
 );
 

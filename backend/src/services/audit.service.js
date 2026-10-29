@@ -1,8 +1,25 @@
-const AuditLog =
-  require("../models/AuditLog");
+ const AuditLog = require("../models/AuditLog");
 
-const createAuditLog = async (data) => {
-  return AuditLog.create(data);
+const createAuditLog = async ({
+  utilisateur,
+  action,
+  entite,
+  entiteId,
+  details,
+  ancienneValeur,
+  nouvelleValeur,
+  ip
+}) => {
+  return AuditLog.create({
+    utilisateur,
+    action,
+    entite,
+    entiteId,
+    details,
+    ancienneValeur,
+    nouvelleValeur,
+    ip
+  });
 };
 
 module.exports = {

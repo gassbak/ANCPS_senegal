@@ -25,6 +25,19 @@ const auditLogSchema = new mongoose.Schema(
     },
 
     details: {
+      type: String,
+      trim: true
+    },
+
+    ancienneValeur: {
+      type: mongoose.Schema.Types.Mixed
+    },
+
+    nouvelleValeur: {
+      type: mongoose.Schema.Types.Mixed
+    },
+
+    ip: {
       type: String
     }
   },
@@ -36,4 +49,4 @@ const auditLogSchema = new mongoose.Schema(
 module.exports = mongoose.model(
   "AuditLog",
   auditLogSchema
-);
+); 

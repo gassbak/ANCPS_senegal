@@ -10,13 +10,24 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
 import About from "./pages/About";
+import Annuaire from "./pages/Annuaire";
+import CertificationDetail from "./pages/CertificationDetail";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
+
+import AdminRoutes from "./admin/routes/AdminRoutes";
+
+import {
+  AuthProvider,
+  useAuth
+} from "./context/AuthContext";
 
 import AdminRoutes from "./admin/routes/AdminRoutes";
 
 import {
   AuthProvider,
   useAuth,
-} from "./context/AuthContext";
+>>>>>>> a6aea49e33c651f4964064f880a0dceb95f5d967
 
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuth();
@@ -28,9 +39,12 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
-function AppRoutes() {
+
+export default function App() {
   return (
-    <Routes>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
 
       {/* PREMIÈRE PAGE : CONNEXION */}
 
@@ -41,30 +55,20 @@ function AppRoutes() {
 
       {/* CONNEXION */}
 
-      {/* CONNEXION VISITEUR */}
-      <Route
-        path="/login"
-        element={<Login />}
-      />
+          <Route
+            path="/login"
+            element={<Login />}
+          />
 
-      {/* SITE VISITEUR APRÈS CONNEXION */}
-      <Route
-        path="/home"
-        element={
-          <ProtectedRoute>
-            <Home />
-          </ProtectedRoute>
-        }
-      />
+          <Route
+            path="/mot-de-passe-oublie"
+            element={<ForgotPassword />}
+          />
 
-      <Route
-        path="/about"
-        element={
-          <ProtectedRoute>
-            <About />
-          </ProtectedRoute>
-        }
-      />
+          <Route
+            path="/reset-password"
+            element={<ResetPassword />}
+          />
 
       {/* BACK-OFFICE */}
 
@@ -80,19 +84,50 @@ function AppRoutes() {
         element={<Navigate to="/login" replace />}
       />
 
-    </Routes>
+          <Route
+            path="/certification/:id"
+            element={<CertificationDetail />}
+          />
+
+          {/* Espace utilisateur */}
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/about"
+            element={
+              <ProtectedRoute>
+                <About />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Administration */}
+          <Route
+            path="/admin/*"
+            element={<AdminRoutes />}
+          />
+
+          {/* Route inconnue */}
+          <Route
+            path="*"
+            element={
+              <Navigate
+                to="/register"
+                replace
+              />
+            }
+          />
+
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
-
-function App() {
-  return (
-    <AuthProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </AuthProvider>
-  );
-}
-
-export default App;
 

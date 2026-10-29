@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -8,7 +9,9 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    lowercase: true,
+    trim: true
   },
 
   password: {
@@ -16,15 +19,34 @@ const userSchema = new mongoose.Schema({
     required: true
   },
 
+  // Réinitialisation du mot de passe
+  resetPasswordToken: {
+    type: String,
+    default: null
+  },
+
+  resetPasswordExpires: {
+    type: Date,
+    default: null
+  },
+
   role: {
     type: String,
     enum: [
+      "superadmin",
       "admin",
       "editor",
       "verifier",
-      "etablissement"
+      "etablissement",
+      "visiteur"
     ],
-    default: "etablissement"
+    default: "visiteur"
+  },
+
+  permissions: {
+    type: [String],
+    default: []
   }
 });
+
 module.exports = mongoose.model("User", userSchema);

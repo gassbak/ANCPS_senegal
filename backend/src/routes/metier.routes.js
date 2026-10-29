@@ -21,14 +21,14 @@ router.get("/:id", getMetier);
 router.post(
   "/",
   protect,
-  authorize("admin", "editor"),
+  authorize("admin", "editor","etablissement"),
   createMetier
 );
 
 router.put(
   "/:id",
   protect,
-  authorize("admin", "editor"),
+  authorize("admin", "editor","etablissement"),
   updateMetier
 );
 

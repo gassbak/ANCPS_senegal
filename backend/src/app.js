@@ -1,5 +1,8 @@
 const express = require("express");
-
+const cors = require("cors");
+const {
+  clientUrl
+} = require("./config/env");
 const authRoutes =
   require("./routes/auth.routes");
 
@@ -45,10 +48,29 @@ const typeRoutes =
 
 const natureRoutes =
   require("./routes/natureCertification.routes");
-
+const historiqueRoutes =
+  require(
+    "./routes/historiqueCertification.routes"
+  );
+  const completudeRoutes =
+  require(
+    "./routes/completude.routes"
+  );
+  const userRoutes =
+  require("./routes/user.routes");
 const statutRoutes =
   require("./routes/statutVerification.routes");
+  const analyticsRoutes =
+  require("./routes/analytics.routes");
+  const settingsRoutes = require("./routes/settings.routes");
 const app = express();
+app.use(
+  cors({
+    origin:
+      clientUrl ||
+      "ancps-senegal.vercel.app"
+  })
+);
 
 app.use(express.json());
 
@@ -101,6 +123,7 @@ app.use(
   "/api/search",
   searchRoutes
 );
+app.use("/api/settings", settingsRoutes);
 app.use(
   "/api/contributions",
   contributionRoutes
@@ -139,6 +162,22 @@ app.use(
 app.use(
   "/api/statuts-verification",
   statutRoutes
+);
+app.use(
+  "/api/historique",
+  historiqueRoutes
+);
+app.use(
+  "/api/completude",
+  completudeRoutes
+);
+app.use(
+  "/api/users",
+  userRoutes
+);
+app.use(
+  "/api/analytics",
+  analyticsRoutes
 );
 app.get("/", (req, res) => {
   res.json({
