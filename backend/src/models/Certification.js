@@ -23,6 +23,23 @@ const certificationSchema =
         type: String
       },
 
+      sourceUrl: {
+        type: String,
+        trim: true,
+        unique: true,
+        sparse: true
+      },
+
+      sourceLastVerifiedAt: {
+        type: String,
+        trim: true
+      },
+
+      lieu: {
+        type: String,
+        trim: true
+      },
+
       objectifs: {
         type: String
       },

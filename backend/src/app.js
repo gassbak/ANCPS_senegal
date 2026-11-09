@@ -1,8 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const {
-  clientUrl
-} = require("./config/env");
 const authRoutes =
   require("./routes/auth.routes");
 
@@ -64,13 +61,13 @@ const statutRoutes =
   require("./routes/analytics.routes");
   const settingsRoutes = require("./routes/settings.routes");
 const app = express();
-app.use(
-  cors({
-    origin:
-      clientUrl ||
-      "ancps-senegal.vercel.app"
-  })
-);
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://ancps-senegal.vercel.app"
+  ],
+}));
 
 app.use(express.json());
 

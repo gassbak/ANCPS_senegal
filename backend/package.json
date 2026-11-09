@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/server.js",
-    "dev": "nodemon  src/server.js"
+    "dev": "nodemon  src/server.js",
+    "scrape": "node src/scraper.js && node src/importScraped.js",
+    "import:scraped": "node src/importScraped.js"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +17,7 @@
     "axios": "^1.20.0",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
+    "cheerio": "^1.2.0",
     "cors": "^2.8.6",
     "csv-parser": "^3.2.1",
     "dotenv": "^17.4.2",
