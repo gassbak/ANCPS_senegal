@@ -60,14 +60,41 @@ const statutRoutes =
   const analyticsRoutes =
   require("./routes/analytics.routes");
   const settingsRoutes = require("./routes/settings.routes");
-const app = express();
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://ancps-senegal.vercel.app"
-  ],
-}));
+const configuredClientOrigin = clientUrl
+  ? new URL(
+      clientUrl.includes("://")
+        ? clientUrl
+        : `https://${clientUrl}`
+    ).origin
+  : null;
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "http://127.0.0.1:5173",
+  "http://localhost:3000",
+  "https://ancps-senegal.vercel.app",
+  configuredClientOrigin
+].filter(Boolean);
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      // Autoriser les requêtes sans origine (Postman, etc.)
+      if (!origin) {
+        return callback(null, true);
+      }
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, origin);
+      }
+
+      return callback(new Error("Origine non autorisée par CORS : " + origin));
+    },
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
+  })
+);
 
 app.use(express.json());
 
