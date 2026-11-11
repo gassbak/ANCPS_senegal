@@ -55,6 +55,7 @@ const allowedOrigins = [
   "http://127.0.0.1:5173",
   "http://localhost:3000",
   "https://ancps-senegal.vercel.app",
+ " https://ancps-x-radar.vercel.app/",
   configuredClientOrigin
 ].filter(Boolean);
 
