@@ -1,7 +1,7 @@
 [
   {
     "title": "UDB-Licence en Sciences de gestion",
-    "description": "UDB-Licence en Sciences de gestion",
+    "description": "UDB-Licence en Sciences de gestion Auteur/autrice de la publication :Monsieur Keita Post published:29/10/2026 Post category: Continuer la lectureUDB-Licence en Sciences de gestion",
     "organization": "ANAQ-Sup",
     "domain": "Gestion / Finance",
     "type": "Formation / Diplôme",
@@ -10,7 +10,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://anaqsup.sn/accreditations/udb-licence-en-sciences-de-gestion/",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "BEM-Executive Master en Finance",
@@ -23,7 +23,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://anaqsup.sn/accreditations/bem-executive-master-en-finance/",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "IPAIM-Licence Marketing et Communication",
@@ -36,7 +36,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://anaqsup.sn/accreditations/ipaim-licence-marketing-et-communication/",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "SUPDECO-Licence Transport Logistique",
@@ -49,7 +49,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://anaqsup.sn/accreditations/supdeco-licence-transport-logistique/",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "UNIPRO-Master Transport et Logistique",
@@ -62,7 +62,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://anaqsup.sn/accreditations/unipro-master-transport-et-logistique/",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "UNIPRO-Master Gestion des Ressources Humaines (GRH)",
@@ -75,7 +75,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://anaqsup.sn/accreditations/unipro-master-gestion-des-ressources-humaines-grh/",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "UNIPRO-Master en Management Qualité hygiène Sécurité environnement",
@@ -88,7 +88,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://anaqsup.sn/accreditations/unipro-master-en-management-qualite-hygiene-securite-environnement/",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "IPROSI-Licence en Sécurite des Systèmes Informatiques de l’Entreprise",
@@ -101,7 +101,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://anaqsup.sn/accreditations/iprosi-licence-en-securite-des-systemes-informatiques-de-lentreprise/",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "CEFAS-Licence en Informatique, option Génie Informatique",
@@ -114,20 +114,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://anaqsup.sn/accreditations/cefas-licence-en-informatique-option-genie-informatique/",
-    "last_verified_at": "2026-11-04"
-  },
-  {
-    "title": "École Internationale des Affaires-Licence GRH",
-    "description": "École Internationale des Affaires-Licence GRH Auteur/autrice de la publication :Monsieur Keita Post published:29/10/2026 Post category: Continuer la lectureÉcole Internationale des Affaires-Licence GRH",
-    "organization": "ANAQ-Sup",
-    "domain": "À préciser",
-    "type": "Formation / Diplôme",
-    "level": "Licence",
-    "location": "Sénégal",
-    "delivery_mode": "À préciser",
-    "verification_status": "À vérifier",
-    "source_url": "https://anaqsup.sn/accreditations/ecole-internationale-des-affaires-licence-grh/",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Année d'accréditation",
@@ -139,8 +126,7 @@
     "location": "Sénégal",
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
-    "source_url": "https://anaqsup.sn/acreditations/",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "BTS Nutrition diététique",
@@ -152,112 +138,72 @@
     "location": "Sénégal",
     "delivery_mode": "À distance",
     "verification_status": "À vérifier",
-    "source_url": "https://www.sencampus.com/formations?q=BTS%20Nutrition%20di%C3%A9t%C3%A9tique",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
-    "title": "BTS Infographie",
-    "description": "PremiumIFMENBTS Infographie2 ans (4 Semestres)Je m'informe gratuitement",
+    "title": "Licence en Architecture",
+    "description": "PremiumCCUADLicence en Architecture3 ans (6 semestres)Je m'informe gratuitement",
     "organization": "SenCampus",
     "domain": "À préciser",
+    "type": "Formation / Diplôme",
+    "level": "Licence",
+    "location": "Sénégal",
+    "delivery_mode": "À préciser",
+    "verification_status": "À vérifier",
+    "source_url": "https://www.sencampus.com/formations/licence-en-architecture-cuad",
+    "last_verified_at": "2026-11-13"
+  },
+  {
+    "title": "Licence professionnelle en communication visuelle",
+    "description": "PremiumArt'Com Sup - RabatArt et DesignLicence professionnelle en communication visuelle3 ansJe m'informe gratuitement",
+    "organization": "SenCampus",
+    "domain": "À préciser",
+    "type": "Formation / Diplôme",
+    "level": "Licence",
+    "location": "Sénégal",
+    "delivery_mode": "À préciser",
+    "verification_status": "À vérifier",
+    "source_url": "https://www.sencampus.com/formations/licence-professionnelle-communication-visuelle",
+    "last_verified_at": "2026-11-13"
+  },
+  {
+    "title": "Master en Management de Projets & Entrepreneuriat",
+    "description": "PremiumGroupe HECI Business SchoolMasterMaster en Management de Projets & Entrepreneuriat2 ans (4 Semestres)Je m'informe gratuitement",
+    "organization": "SenCampus",
+    "domain": "À préciser",
+    "type": "Formation / Diplôme",
+    "level": "Master",
+    "location": "Sénégal",
+    "delivery_mode": "À préciser",
+    "verification_status": "À vérifier",
+    "source_url": "https://www.sencampus.com/formations/master-en-management-de-projets-entrepreneuriat",
+    "last_verified_at": "2026-11-13"
+  },
+  {
+    "title": "BTS Comptabilité Gestion",
+    "description": "PremiumUUCAOBTS Comptabilité Gestion2 ans (4 Semestres)Je m'informe gratuitement",
+    "organization": "SenCampus",
+    "domain": "Gestion / Finance",
     "type": "Formation / Diplôme",
     "level": "Professionnel",
     "location": "Sénégal",
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
-    "source_url": "https://www.sencampus.com/formations/bts-infographie-formation-professionnelle-en-design-graphique-ifmen",
-    "last_verified_at": "2026-11-04"
+    "source_url": "https://www.sencampus.com/formations/bts-comptabilite-gestion-ucao",
+    "last_verified_at": "2026-11-13"
   },
   {
-    "title": "Licence Professionnelle en Finances Publiques et Fiscalité",
-    "description": "PremiumSSupdeCo - DakarLicence Professionnelle en Finances Publiques et Fiscalité3 ans ( 6 semestres)Je m'informe gratuitement",
-    "organization": "SenCampus",
-    "domain": "Gestion / Finance",
-    "type": "Formation / Diplôme",
-    "level": "Licence",
-    "location": "Sénégal",
-    "delivery_mode": "À préciser",
-    "verification_status": "À vérifier",
-    "source_url": "https://www.sencampus.com/formations/licence-professionnelle-en-finances-publiques-et-fiscalite",
-    "last_verified_at": "2026-11-04"
-  },
-  {
-    "title": "Formation Bases de Données",
-    "description": "PremiumSOLID SAFormation Bases de DonnéesJe m'informe gratuitement",
-    "organization": "SenCampus",
-    "domain": "À préciser",
-    "type": "Formation / Diplôme",
-    "level": "À préciser",
-    "location": "Sénégal",
-    "delivery_mode": "À préciser",
-    "verification_status": "À vérifier",
-    "source_url": "https://www.sencampus.com/formations/formation-bases-de-donnees-solid",
-    "last_verified_at": "2026-11-04"
-  },
-  {
-    "title": "Licence en Urbanisme",
-    "description": "PremiumCCUADLicence en Urbanisme3 ans (6 semestres)Je m'informe gratuitement",
-    "organization": "SenCampus",
-    "domain": "À préciser",
-    "type": "Formation / Diplôme",
-    "level": "Licence",
-    "location": "Sénégal",
-    "delivery_mode": "À préciser",
-    "verification_status": "À vérifier",
-    "source_url": "https://www.sencampus.com/formations/licence-en-urbanisme-cuad",
-    "last_verified_at": "2026-11-04"
-  },
-  {
-    "title": "Master en Sciences Infirmières, Option : Pédagogie et Recherche (MSIPR)",
-    "description": "PremiumIISSUniversitaireMaster en Sciences Infirmières, Option : Pédagogie et Recherche (MSIPR)2 ans (4 Semestres)Je m'informe gratuitement",
-    "organization": "SenCampus",
-    "domain": "Santé",
-    "type": "Formation / Diplôme",
-    "level": "Master",
-    "location": "Sénégal",
-    "delivery_mode": "À préciser",
-    "verification_status": "À vérifier",
-    "source_url": "https://www.sencampus.com/formations/master-en-sciences-infirmieres-option-pedagogie-et-recherche-msipr",
-    "last_verified_at": "2026-11-04"
-  },
-  {
-    "title": "Master Professionnel 2 en Régulation du Numérique (RN) - En Ligne",
-    "description": "PremiumESMTSciences et TechnologiesMaster Professionnel 2 en Régulation du Numérique (RN) - En Ligne1 anJe m'informe gratuitement",
+    "title": "Licence en Management et Economie du Numérique (LIMeN)",
+    "description": "PremiumESMTLicence en Management et Economie du Numérique (LIMeN)Licence en Management et Economie du Numérique (LIMeN)3 ansJe m'informe gratuitement",
     "organization": "SenCampus",
     "domain": "Numérique",
     "type": "Formation / Diplôme",
-    "level": "Master",
-    "location": "Sénégal",
-    "delivery_mode": "À distance",
-    "verification_status": "À vérifier",
-    "source_url": "https://www.sencampus.com/formations/master-professionnel-2-en-regulation-du-numerique-rn-en-ligne",
-    "last_verified_at": "2026-11-04"
-  },
-  {
-    "title": "Licence 1,2,3 transport logistique",
-    "description": "PremiumCentre Trainmar de DakarFormation initiale diplômanteLicence 1,2,3 transport logistiqueJe m'informe gratuitement",
-    "organization": "SenCampus",
-    "domain": "À préciser",
-    "type": "Formation / Diplôme",
     "level": "Licence",
     "location": "Sénégal",
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
-    "source_url": "https://www.sencampus.com/formations/licence-123-transport-logistique",
-    "last_verified_at": "2026-11-04"
-  },
-  {
-    "title": "Licence Qualité, Hygiène, Sécurité et Environnement (QHSE)",
-    "description": "PremiumGGroupe ISMLicence Qualité, Hygiène, Sécurité et Environnement (QHSE)3 ans (6 semestres)Je m'informe gratuitement",
-    "organization": "SenCampus",
-    "domain": "À préciser",
-    "type": "Formation / Diplôme",
-    "level": "Licence",
-    "location": "Sénégal",
-    "delivery_mode": "À préciser",
-    "verification_status": "À vérifier",
-    "source_url": "https://www.sencampus.com/formations/licence-qualite-hygiene-securite-et-environnement-qhse-ism",
-    "last_verified_at": "2026-11-04"
+    "source_url": "https://www.sencampus.com/formations/licence-en-management-et-economie-du-numerique-limen",
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Master Professionnel Génie Civil",
@@ -270,37 +216,24 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://www.sencampus.com/formations/master-professionnel-genie-civil",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
-    "title": "Master en Génie Biologique (GB)",
-    "description": "PremiumEESGIBMaster en Génie Biologique (GB)2 ans (4 Semestres)Je m'informe gratuitement",
+    "title": "BTS Gestion de Projet",
+    "description": "PremiumIIFAABrevet de Technicien SupérieurBTS Gestion de Projet2 ansJe m'informe gratuitement",
     "organization": "SenCampus",
-    "domain": "À préciser",
-    "type": "Formation / Diplôme",
-    "level": "Master",
-    "location": "Sénégal",
-    "delivery_mode": "À préciser",
-    "verification_status": "À vérifier",
-    "source_url": "https://www.sencampus.com/formations/master-en-genie-biologique-gb-esgib",
-    "last_verified_at": "2026-11-04"
-  },
-  {
-    "title": "BTS Marketing Communication",
-    "description": "PremiumUUCAOBTS Marketing Communication2 ans (4 Semestres)Je m'informe gratuitement",
-    "organization": "SenCampus",
-    "domain": "À préciser",
+    "domain": "Gestion / Finance",
     "type": "Formation / Diplôme",
     "level": "Professionnel",
     "location": "Sénégal",
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
-    "source_url": "https://www.sencampus.com/formations/bts-marketing-communication-ucao",
-    "last_verified_at": "2026-11-04"
+    "source_url": "https://www.sencampus.com/formations/bts-gestion-de-projet",
+    "last_verified_at": "2026-11-13"
   },
   {
-    "title": "Master Réseaux, Systèmes et Sécurité",
-    "description": "PremiumSSupdeCo - DakarMaster Réseaux, Systèmes et Sécurité2 ans (4 semestres)Je m'informe gratuitement",
+    "title": "Master en Génie des Procédés Industriels (GPI)",
+    "description": "PremiumEESGIBMaster en Génie des Procédés Industriels (GPI)2 ans (4 Semestres)Je m'informe gratuitement",
     "organization": "SenCampus",
     "domain": "À préciser",
     "type": "Formation / Diplôme",
@@ -308,12 +241,90 @@
     "location": "Sénégal",
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
-    "source_url": "https://www.sencampus.com/formations/master-reseaux-systemes-et-securite",
-    "last_verified_at": "2026-11-04"
+    "source_url": "https://www.sencampus.com/formations/master-en-genie-des-procedes-industriels-gpi-esgib",
+    "last_verified_at": "2026-11-13"
   },
   {
-    "title": "Formations en Gestion de Projet",
-    "description": "PremiumSOLID SAFormations en Gestion de ProjetJe m'informe gratuitement",
+    "title": "Formations en Cybersécurité",
+    "description": "PremiumSOLID SAFormations en CybersécuritéJe m'informe gratuitement",
+    "organization": "SenCampus",
+    "domain": "Numérique",
+    "type": "Formation / Diplôme",
+    "level": "À préciser",
+    "location": "Sénégal",
+    "delivery_mode": "À préciser",
+    "verification_status": "À vérifier",
+    "source_url": "https://www.sencampus.com/formations/formations-en-cybersecurite-solid",
+    "last_verified_at": "2026-11-13"
+  },
+  {
+    "title": "Master in International Business",
+    "description": "PremiumSSupdeCo - DakarMaster in International Business2 ans (4 semestres)Je m'informe gratuitement",
+    "organization": "SenCampus",
+    "domain": "À préciser",
+    "type": "Formation / Diplôme",
+    "level": "Master",
+    "location": "Sénégal",
+    "delivery_mode": "À préciser",
+    "verification_status": "À vérifier",
+    "source_url": "https://www.sencampus.com/formations/master-in-international-business",
+    "last_verified_at": "2026-11-13"
+  },
+  {
+    "title": "BTS Informatique de Gestion",
+    "description": "PremiumIFMENBTS Informatique de Gestion2 ans (4 Semestres)Je m'informe gratuitement",
+    "organization": "SenCampus",
+    "domain": "Numérique",
+    "type": "Formation / Diplôme",
+    "level": "Professionnel",
+    "location": "Sénégal",
+    "delivery_mode": "À préciser",
+    "verification_status": "À vérifier",
+    "source_url": "https://www.sencampus.com/formations/bts-informatique-de-gestion-formation-professionnelle-en-it-management-ifmen",
+    "last_verified_at": "2026-11-13"
+  },
+  {
+    "title": "Licence en Électronique, Télécommunications et Systèmes Embarqués",
+    "description": "PremiumGGroupe ISMLicence en Électronique, Télécommunications et Systèmes Embarqués3 ans (6 semestres)Je m'informe gratuitement",
+    "organization": "SenCampus",
+    "domain": "À préciser",
+    "type": "Formation / Diplôme",
+    "level": "Licence",
+    "location": "Sénégal",
+    "delivery_mode": "À préciser",
+    "verification_status": "À vérifier",
+    "source_url": "https://www.sencampus.com/formations/licence-en-electronique-telecommunications-et-systemes-embarques-ism",
+    "last_verified_at": "2026-11-13"
+  },
+  {
+    "title": "Master en Administration des Services de Soins",
+    "description": "PremiumIISSUniversitaireMaster en Administration des Services de Soins2 ans (4 Semestres)Je m'informe gratuitement",
+    "organization": "SenCampus",
+    "domain": "À préciser",
+    "type": "Formation / Diplôme",
+    "level": "Master",
+    "location": "Sénégal",
+    "delivery_mode": "À préciser",
+    "verification_status": "À vérifier",
+    "source_url": "https://www.sencampus.com/formations/master-en-administration-des-services-de-soins",
+    "last_verified_at": "2026-11-13"
+  },
+  {
+    "title": "Master en Patrimoine",
+    "description": "PremiumCCUADMaster en Patrimoine2 ans (4 Semestres)Je m'informe gratuitement",
+    "organization": "SenCampus",
+    "domain": "À préciser",
+    "type": "Formation / Diplôme",
+    "level": "Master",
+    "location": "Sénégal",
+    "delivery_mode": "À préciser",
+    "verification_status": "À vérifier",
+    "source_url": "https://www.sencampus.com/formations/master-en-patrimoine-cuad",
+    "last_verified_at": "2026-11-13"
+  },
+  {
+    "title": "ProfessionnelLes ISEP, un Bac+2 qui embaucheSix instituts publics, deux ans, un diplôme tourné vers l’emploi.",
+    "description": "OrientationCampusen, mode d’emploiCompte, INE, vœux, affectation : la procédure et les erreurs qui coûtent une année.ExcellenceLes CPGE au SénégalOuvertes en 2022 à Thiès : MPSI, PCSI, admission sur dossier en août, bourse d’excellence.ProfessionnelLes ISEP, un Bac+2 qui embaucheSix instituts publics, deux ans, un diplôme tourné vers l’emploi.VigilanceÉcole privée : diplôme reconnu ?Habilitation, accréditation ANAQ-Sup, CAMES : vérifier avant de payer.FinancementBourses et aidesBourse entière, demi-bourse, bourse sociale, aides et bourses de coopération.CalendrierL’année du bac, mois par moisInscriptions, épreuves, résultats, Campusen, CPGE, concours : la chronologie.",
     "organization": "SenCampus",
     "domain": "Gestion / Finance",
     "type": "Formation / Diplôme",
@@ -321,8 +332,55 @@
     "location": "Sénégal",
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
-    "source_url": "https://www.sencampus.com/formations/formations-en-gestion-de-projet-solid",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
+  },
+  {
+    "title": "VigilanceÉcole privée : diplôme reconnu ?Habilitation, accréditation ANAQ-Sup, CAMES : vérifier avant de payer.",
+    "description": "OrientationCampusen, mode d’emploiCompte, INE, vœux, affectation : la procédure et les erreurs qui coûtent une année.ExcellenceLes CPGE au SénégalOuvertes en 2022 à Thiès : MPSI, PCSI, admission sur dossier en août, bourse d’excellence.ProfessionnelLes ISEP, un Bac+2 qui embaucheSix instituts publics, deux ans, un diplôme tourné vers l’emploi.VigilanceÉcole privée : diplôme reconnu ?Habilitation, accréditation ANAQ-Sup, CAMES : vérifier avant de payer.FinancementBourses et aidesBourse entière, demi-bourse, bourse sociale, aides et bourses de coopération.CalendrierL’année du bac, mois par moisInscriptions, épreuves, résultats, Campusen, CPGE, concours : la chronologie.",
+    "organization": "SenCampus",
+    "domain": "Gestion / Finance",
+    "type": "Formation / Diplôme",
+    "level": "À préciser",
+    "location": "Sénégal",
+    "delivery_mode": "À préciser",
+    "verification_status": "À vérifier",
+    "last_verified_at": "2026-11-13"
+  },
+  {
+    "title": "BACBachelor",
+    "description": "BTSBTSINGIngénieurBACBachelorLICLicenceMBAMBACPGCPGEMASMasterDOCDoctorat",
+    "organization": "SenCampus",
+    "domain": "À préciser",
+    "type": "Formation / Diplôme",
+    "level": "Doctorat",
+    "location": "Sénégal",
+    "delivery_mode": "À préciser",
+    "verification_status": "À vérifier",
+    "last_verified_at": "2026-11-13"
+  },
+  {
+    "title": "LICLicence",
+    "description": "BTSBTSINGIngénieurBACBachelorLICLicenceMBAMBACPGCPGEMASMasterDOCDoctorat",
+    "organization": "SenCampus",
+    "domain": "À préciser",
+    "type": "Formation / Diplôme",
+    "level": "Doctorat",
+    "location": "Sénégal",
+    "delivery_mode": "À préciser",
+    "verification_status": "À vérifier",
+    "last_verified_at": "2026-11-13"
+  },
+  {
+    "title": "MASMaster",
+    "description": "BTSBTSINGIngénieurBACBachelorLICLicenceMBAMBACPGCPGEMASMasterDOCDoctorat",
+    "organization": "SenCampus",
+    "domain": "À préciser",
+    "type": "Formation / Diplôme",
+    "level": "Doctorat",
+    "location": "Sénégal",
+    "delivery_mode": "À préciser",
+    "verification_status": "À vérifier",
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Devenez développeur web en 5 moisBootcamp en présentiel à Dakar, avec un stage en entreprise à la fin du cursus.Voir le programme",
@@ -334,8 +392,7 @@
     "location": "Sénégal",
     "delivery_mode": "Présentiel",
     "verification_status": "À vérifier",
-    "source_url": "https://samabac.sn/advertisements/21/click",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Licence de Gestion spécialité RH",
@@ -348,7 +405,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-diplomantes/bachelor-en-gestion-option-rh",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Licence Informatique Appliquée à la Gestion des entreprises",
@@ -361,7 +418,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-diplomantes/licence-informatique-appliquee-la-gestion-des-entreprises",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Licence de Gestion spécialité Comptabilité - Finance",
@@ -374,7 +431,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-diplomantes/bachelor-en-gestion-option-compta-finance",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Bachelor Chef de Projet Digital",
@@ -387,7 +444,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-diplomantes/bachelor-chef-de-projet-digital",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Master Management de Projets",
@@ -400,7 +457,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-diplomantes/master-management-de-projet",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Master Ingénierie Financière",
@@ -413,7 +470,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-diplomantes/master-ingenierie-financiere",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Master Management des RH",
@@ -426,7 +483,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-diplomantes/master-management-des-rh",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Master Management – Vente – Relation Client",
@@ -439,7 +496,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-diplomantes/master-marketing-communication-vente-relation-client",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Master Audit et Contrôle de Gestion et aide à la Décision",
@@ -452,7 +509,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-diplomantes/master-audit-et-controle-de-gestion",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Master Qualité, Hygiène, Sécurité et Environnement (QHSE)",
@@ -465,7 +522,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-diplomantes/mba-management-de-la-qualitehygienesecurite-et-environnement",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Master Droit Des Affaires",
@@ -478,7 +535,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-diplomantes/master-droit-affaires",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Certificat développeur Mobile Android",
@@ -491,7 +548,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-isf-certifiantes/certificat-developpeur-android",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Certificat Développeur Full Stack PHP/Symphony",
@@ -504,7 +561,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-isf-certifiantes/certificat-developpeur-phpsymphony",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Certificat Développeur Full Stack Angular",
@@ -517,7 +574,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-isf-certifiantes/certificat-developpeur-angular",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Certificat Développeur Mobile IOS",
@@ -530,7 +587,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-isf-certifiantes/certificat-developpeur-mobile-ios",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Certificat CRM Salesforce",
@@ -543,7 +600,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-isf-certifiantes/certificat-crm-salesforce",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Certificat Gestion de projet avec MS Project",
@@ -556,7 +613,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-isf-certifiantes/certificat-gestion-de-projet-ms-project",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Certificat Sage ligne 100",
@@ -569,7 +626,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-isf-certifiantes/certificat-sage-ligne-100",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Certificat bureautique",
@@ -582,7 +639,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-isf-certifiantes/certificat-bureautique",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Certificat infographie",
@@ -595,7 +652,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-isf-certifiantes/certificat-infographie",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Certificat Conseiller en vente",
@@ -608,7 +665,7 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-isf-certifiantes/certificat-conseiller-en-vente",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   },
   {
     "title": "Certificat Chargé de clientèle",
@@ -621,6 +678,6 @@
     "delivery_mode": "À préciser",
     "verification_status": "À vérifier",
     "source_url": "https://online.groupeism.sn/formations-isf-certifiantes/certificat-charge-de-clientele",
-    "last_verified_at": "2026-11-04"
+    "last_verified_at": "2026-11-13"
   }
 ]

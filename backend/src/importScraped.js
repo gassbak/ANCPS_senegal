@@ -23,25 +23,39 @@ const MODALITIES = new Map([
 ]);
 
 function sourceOrigin(sourceUrl) {
+  if (typeof sourceUrl !== "string" || !sourceUrl.trim()) return undefined;
+
   try {
-    const url = new URL(sourceUrl);
+    const url = new URL(sourceUrl.trim());
     return ["http:", "https:"].includes(url.protocol) ? url.origin : undefined;
   } catch {
     return undefined;
   }
 }
 
+function hasValidOptionalSourceUrl(sourceUrl) {
+  return (
+    sourceUrl === undefined ||
+    sourceUrl === null ||
+    (typeof sourceUrl === "string" && !sourceUrl.trim()) ||
+    Boolean(sourceOrigin(sourceUrl))
+  );
+}
+
 function buildCertificationDocument(entry, references) {
   const document = {
     title: entry.title.trim(),
     description: entry.description?.trim() || undefined,
-    sourceUrl: entry.source_url,
     sourceLastVerifiedAt: entry.last_verified_at || undefined,
     lieu: entry.location?.trim() || undefined,
     organisme: references.organisme,
     type: references.type,
     nature: references.nature
   };
+
+  if (sourceOrigin(entry.source_url)) {
+    document.sourceUrl = entry.source_url.trim();
+  }
 
   const domaine = references.domaines.get(entry.domain);
   if (domaine) document.domaine = domaine;
@@ -86,7 +100,7 @@ async function importScrapedFormations(entries) {
       !entry ||
       typeof entry.title !== "string" ||
       !entry.title.trim() ||
-      !sourceOrigin(entry.source_url) ||
+      !hasValidOptionalSourceUrl(entry.source_url) ||
       typeof entry.organization !== "string" ||
       !entry.organization.trim()
     ) {
@@ -147,13 +161,15 @@ async function importScrapedFormations(entries) {
 
   const organizationRefs = new Map();
   for (const nom of organizationNames) {
-    const entry = validEntries.find((item) => item.organization.trim() === nom);
+    const entry = validEntries.find(
+      (item) => item.organization.trim() === nom && sourceOrigin(item.source_url)
+    );
     organizationRefs.set(
       nom,
       await findOrCreateReference(Organisme, nom, {
         type: "Source de formation",
         pays: "Sénégal",
-        siteWeb: sourceOrigin(entry.source_url),
+        siteWeb: entry ? sourceOrigin(entry.source_url) : undefined,
         description: "Organisme identifié à partir d'une source de formation."
       }).then((organization) => organization._id)
     );
@@ -174,17 +190,34 @@ async function importScrapedFormations(entries) {
       niveaux: levelRefs
     };
     const document = buildCertificationDocument(entry, references);
-    operationsByUrl.set(entry.source_url, {
+    const hasSourceUrl = Boolean(document.sourceUrl);
+    const operationKey = hasSourceUrl
+      ? document.sourceUrl
+      : `${document.title}:${String(document.organisme)}`;
+    const identityFilter = {
+      title: document.title,
+      organisme: document.organisme
+    };
+    const existingBySourceUrl = hasSourceUrl
+      ? await Certification.findOne({ sourceUrl: document.sourceUrl }).select("_id")
+      : null;
+    const existing =
+      existingBySourceUrl ||
+      (await Certification.findOne(identityFilter).select("_id"));
+    const update = {
+      $set: document,
+      $setOnInsert: {
+        statutVerification: statut._id,
+        published: false,
+        archived: false
+      }
+    };
+    if (!hasSourceUrl) update.$unset = { sourceUrl: "" };
+
+    operationsByUrl.set(operationKey, {
       updateOne: {
-        filter: { sourceUrl: entry.source_url },
-        update: {
-          $set: document,
-          $setOnInsert: {
-            statutVerification: statut._id,
-            published: false,
-            archived: false
-          }
-        },
+        filter: existing ? { _id: existing._id } : identityFilter,
+        update,
         upsert: true
       }
     });

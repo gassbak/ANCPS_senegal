@@ -44,6 +44,10 @@ const GENERIC_TITLES =
 const NON_COURSE_TITLES =
   /^(appel [àa] manifestation|minist[eè]re\b|portail\b|[ée]tablissements de formation)|\b(apply|filter)\b/i;
 const EDITORIAL_PATHS = /\/(actus-conseils|dossiers|actualites|category|blog)(\/|$)/i;
+const SOCIAL_HOSTS =
+  /(^|\.)((facebook|instagram|linkedin|tiktok|twitter|x|youtube|youtu)\.com|youtu\.be|wa\.me)$/i;
+const OFFICIAL_LINK_LABELS =
+  /\b(site officiel|site web|site internet|website|official website|visiter le site)\b/i;
 const MAX_DISCOVERED_PAGES = 2;
 const REQUEST_TIMEOUT_MS = 15000;
 
@@ -52,6 +56,62 @@ const cleanText = (value) =>
 
 const isUsefulTitle = (title) =>
   title.length >= 8 && title.length <= 180 && !GENERIC_TITLES.test(title);
+
+function resolveSourceUrl(href, pageUrl) {
+  if (!href) return null;
+
+  try {
+    const url = new URL(href, pageUrl);
+    if (!["http:", "https:"].includes(url.protocol)) return null;
+    if (EDITORIAL_PATHS.test(url.pathname)) return null;
+    if (/\/advertisements\/\d+\/click\/?$/i.test(url.pathname)) return null;
+    if (/\/formations\/?$/i.test(url.pathname) && url.searchParams.has("q")) {
+      return null;
+    }
+
+    url.hash = "";
+    return url.href;
+  } catch {
+    return null;
+  }
+}
+
+function getContainerSourceUrl($, container, pageUrl) {
+  const pageHost = new URL(pageUrl).hostname;
+  const links = [];
+
+  container.find("a[href]").each((_, element) => {
+    const anchor = $(element);
+    const sourceUrl = resolveSourceUrl(anchor.attr("href"), pageUrl);
+    if (!sourceUrl) return;
+
+    const url = new URL(sourceUrl);
+    if (url.hostname === pageHost || SOCIAL_HOSTS.test(url.hostname)) return;
+
+    const label = [
+      anchor.text(),
+      anchor.attr("title"),
+      anchor.attr("aria-label")
+    ]
+      .filter(Boolean)
+      .join(" ");
+    links.push({
+      sourceUrl,
+      isOfficialLink: OFFICIAL_LINK_LABELS.test(label)
+    });
+  });
+
+  const officialLink = links.find((link) => link.isOfficialLink);
+  if (officialLink) return officialLink.sourceUrl;
+  if (links.length > 0) return links[0].sourceUrl;
+
+  let pageLink = null;
+  container.find("a[href]").each((_, element) => {
+    if (pageLink) return;
+    pageLink = resolveSourceUrl($(element).attr("href"), pageUrl);
+  });
+  return pageLink;
+}
 
 function getDomain(text) {
   if (/cyber|informatique|num[eé]rique|digital|data|logiciel|d[eé]veloppe/i.test(text)) {
@@ -140,7 +200,7 @@ function extractFromPage(html, pageUrl, source) {
       location: "Sénégal",
       delivery_mode: getDeliveryMode(context),
       verification_status: "À vérifier",
-      source_url: sourceUrl,
+      ...(sourceUrl ? { source_url: sourceUrl } : {}),
       last_verified_at: new Date().toISOString().slice(0, 10)
     });
   }
@@ -151,12 +211,12 @@ function extractFromPage(html, pageUrl, source) {
     const heading = getHeading(container);
     const linkText = cleanText($(element).text());
     const href = $(element).attr("href");
-    const sourceUrl = new URL(href, pageUrl);
-    if (EDITORIAL_PATHS.test(sourceUrl.pathname)) return;
+    const sourceUrl = getContainerSourceUrl($, container, pageUrl) ||
+      resolveSourceUrl(href, pageUrl);
     const title = isUsefulTitle(heading) ? heading : linkText;
 
     if (containerText.length <= 1600) {
-      addEntry(title, containerText, sourceUrl.href);
+      addEntry(title, containerText, sourceUrl);
     }
   });
 
@@ -168,7 +228,9 @@ function extractFromPage(html, pageUrl, source) {
     if (cells.length < 2) return;
 
     const title = cells.find((cell) => isUsefulTitle(cell));
-    if (title) addEntry(title, cells.join(" | "), pageUrl);
+    if (title) {
+      addEntry(title, cells.join(" | "), getContainerSourceUrl($, $(row), pageUrl));
+    }
   });
 
   $("article, [class*='card'], [class*='formation'], [class*='programme'], [class*='course'], [class*='accreditation']")
@@ -176,9 +238,8 @@ function extractFromPage(html, pageUrl, source) {
       const container = $(element);
       const text = cleanText(container.text());
       const title = getHeading(container);
-      const href = container.find("a[href]").first().attr("href");
-      if (href && EDITORIAL_PATHS.test(new URL(href, pageUrl).pathname)) return;
-      if (text.length <= 1600) addEntry(title, text, pageUrl);
+      const sourceUrl = getContainerSourceUrl($, container, pageUrl);
+      if (text.length <= 1600) addEntry(title, text, sourceUrl);
     });
 
   return {
